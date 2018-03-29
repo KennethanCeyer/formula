@@ -1,6 +1,6 @@
 {
   "name": "formulize",
-  "description": "formula UI library",
+  "description": "formula UI generator",
   "main": "dist/formulize.umd.js",
   "authors": [
     "PIGNOSE"

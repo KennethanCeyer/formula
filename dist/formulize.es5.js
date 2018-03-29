@@ -1656,7 +1656,7 @@ var FormulizeBase = /** @class */ (function () {
     };
     FormulizeBase.prototype.getExpression = function () {
         return this.container
-            .find('.formulize-item')
+            .find('.ui-item')
             .toArray()
             .map(function (elem) { return FormulizeHelper.getDataValue(elem); });
     };
@@ -1809,4 +1809,4 @@ $.fn.formulize = Object.assign(function (options) {
 }, __assign({}, defaultOptions));
 
 export { getVersion$1 as getVersion, Formulize };
-//# sourceMappingURL=formulize.es5.js.map
+//# sourceMappingURL=ui.es5.js.map

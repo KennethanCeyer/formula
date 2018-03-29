@@ -1,5 +1,5 @@
-import { FormulizeOptions } from './option.interface';
-import { FormulizeHelper } from './formulize.helper';
+import { UIHelper } from './ui/ui.helper';
+import { FormulizeOptions } from './formulize.interface';
 
 export const defaultOptions: FormulizeOptions = {
     id: 'formulize',
@@ -14,5 +14,5 @@ export const defaultOptions: FormulizeOptions = {
         error: 'error',
         pass: 'passed'
     },
-    export: (elem: HTMLElement) => FormulizeHelper.getDataValue(elem)
+    export: (elem: HTMLElement) => UIHelper.getDataValue(elem)
 };

@@ -1,11 +1,3 @@
-export interface FormulizeOptions {
-    id: string;
-    cursor?: OptionCursor,
-    text?: OptionText,
-    import?: OptionImporter;
-    export?: OptionExporter;
-}
-
 export interface OptionCursor {
     time: CursorTime;
 }

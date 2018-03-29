@@ -1,6 +1,6 @@
-import { Position } from './formulize.interface';
+import { Position } from './ui.interface';
 
-export class FormulizeHelper {
+export class UIHelper {
     public static getDataValue(elem: HTMLElement): string {
         const jQueryElem = $(elem);
         const value = jQueryElem.data('value');

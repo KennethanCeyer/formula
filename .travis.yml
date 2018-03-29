@@ -15,4 +15,4 @@ script:
 after_success:
   - codecov
   - coveralls < ./coverage/lcov.info
-  - CODECLIMATE_REPO_TOKEN=24146c7ac4fb8970a42665003f962a808774a6f9be2dc995efc119ded56b0556 codeclimate-test-reporter < ./coverage/lcov.info
+  - CODECLIMATE_REPO_TOKEN=0d59acc244be097b9b3eaefad86d6b958e88a81b0d0a6acc987eced0204ff7c6 codeclimate-test-reporter < ./coverage/lcov.info

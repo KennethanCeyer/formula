@@ -1,4 +1,4 @@
-import { Key } from '../key.enum';
+import { Key } from './key.enum';
 
 export class FormulizeKeyHelper {
     public static isReload(keyCode: number, pressedCtrl: boolean): boolean {

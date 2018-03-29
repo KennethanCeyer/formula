@@ -1,14 +1,14 @@
-import { FormulizeOptions } from './option.interface';
-import { defaultOptions } from './option.value';
-import { ElementPosition, Position } from './formulize.interface';
-import { FormulizeHelper } from './formulize.helper';
+import { defaultOptions } from '../option.value';
+import { ElementPosition, Position } from './ui.interface';
+import { UIHelper } from './ui.helper';
 import { Key } from '../key.enum';
 import { Helper } from '../helper';
 import { convert, valid } from 'metric-parser';
-import { specialCharacters, supportedCharacters } from './formulize.value';
+import { specialCharacters, supportedCharacters } from '../formulize.value';
 import { Tree } from 'metric-parser/dist/types/tree/simple.tree/type';
+import { FormulizeOptions } from '../../dist/types/formulize/option.interface';
 
-export abstract class FormulizeBase {
+export abstract class UIBase {
     protected _elem: HTMLElement;
     protected _options: FormulizeOptions = <FormulizeOptions>{ ...defaultOptions };
     protected _position: Position = { x: 0, y: 0 };
@@ -84,7 +84,7 @@ export abstract class FormulizeBase {
         if (!this.dragged)
             return;
 
-        if (!FormulizeHelper.isOverDistance(this._position, position, 5))
+        if (!UIHelper.isOverDistance(this._position, position, 5))
             return;
 
         this.moved = true;
@@ -103,7 +103,7 @@ export abstract class FormulizeBase {
             return;
         }
 
-        const dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+        const dragElem = $(UIHelper.getDragElement(this._options.id));
         if (cursorIndex >= this.prevCursorIndex)
             dragElem.insertBefore(this.cursor);
         else
@@ -132,7 +132,7 @@ export abstract class FormulizeBase {
 
     public pick(position: Position = { x: 0, y: 0 }) {
         this.removeCursor();
-        this.cursor = $(FormulizeHelper.getCursorElement(this._options.id));
+        this.cursor = $(UIHelper.getCursorElement(this._options.id));
         this.cursor.appendTo(this.container);
 
         const closestUnitElem = this.findClosestUnit(position);
@@ -312,7 +312,7 @@ export abstract class FormulizeBase {
         }
 
         if (!this.dragElem.length) {
-            const dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+            const dragElem = $(UIHelper.getDragElement(this._options.id));
             dragElem.insertBefore(this.cursor);
             prevCursorElem.prependTo(this.dragElem);
             return;
@@ -351,7 +351,7 @@ export abstract class FormulizeBase {
         }
 
         if (!this.dragElem.length) {
-            const dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+            const dragElem = $(UIHelper.getDragElement(this._options.id));
             dragElem.insertBefore(this.cursor);
             nextCursorElem.appendTo(this.dragElem);
             return;
@@ -390,7 +390,7 @@ export abstract class FormulizeBase {
         }
 
         if (!this.dragElem.length) {
-            const dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+            const dragElem = $(UIHelper.getDragElement(this._options.id));
             dragElem.insertAfter(this.cursor);
         }
 
@@ -409,7 +409,7 @@ export abstract class FormulizeBase {
         }
 
         if (!this.dragElem.length) {
-            const dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+            const dragElem = $(UIHelper.getDragElement(this._options.id));
             dragElem.insertBefore(this.cursor);
         }
 
@@ -443,7 +443,7 @@ export abstract class FormulizeBase {
 
     public selectAll() {
         this.removeDrag();
-        const dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+        const dragElem = $(UIHelper.getDragElement(this._options.id));
         dragElem.prependTo(this.container);
         this.container
             .children(`:not(".${this._options.id}-cursor")`)
@@ -486,9 +486,9 @@ export abstract class FormulizeBase {
 
     private getExpression(): string[] {
         return this.container
-            .find('.formulize-item')
+            .find('.ui-item')
             .toArray()
-            .map(elem => FormulizeHelper.getDataValue(elem));
+            .map(elem => UIHelper.getDataValue(elem));
     }
 
     public setData(data: Tree): void {

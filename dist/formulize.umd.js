@@ -1662,7 +1662,7 @@
         };
         FormulizeBase.prototype.getExpression = function () {
             return this.container
-                .find('.formulize-item')
+                .find('.ui-item')
                 .toArray()
                 .map(function (elem) { return FormulizeHelper.getDataValue(elem); });
         };
@@ -1820,4 +1820,4 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
-//# sourceMappingURL=formulize.umd.js.map
+//# sourceMappingURL=ui.umd.js.map

@@ -1,10 +1,9 @@
 import '../style/formulize.scss';
-import { FormulizeOptions } from './formulize/option.interface';
-import { FormulizeFunction } from './formulize.interface';
-import { defaultOptions } from './formulize/option.value';
-import { Formulize } from './formulize/formulize';
+import { FormulizeFunction, FormulizeOptions } from './formulize.interface';
+import { defaultOptions } from './option.value';
+import { UI } from './ui/ui';
 
-export * from './formulize/formulize';
+export * from './ui/ui';
 
 const _MODULE_VERSION_ = '0.0.1';
 
@@ -17,7 +16,7 @@ $.fn.formulize = Object.assign<FormulizeFunction, FormulizeOptions>(
         this
             .toArray()
             .forEach(elem =>  {
-                new Formulize(elem, options)
+                new UI(elem, options)
             });
         return this;
     },

@@ -3,7 +3,7 @@
         "baseUrl": "./",
         "rootDir": "./src",
         "moduleResolution": "node",
-        "module": "es2015",
+        "module": "commonjs",
         "target": "es5",
         "lib": [
             "es2015",

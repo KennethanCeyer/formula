@@ -1,8 +1,8 @@
-import { FormulizeKeyHelper } from './key.helper';
-import { FormulizeBase } from './formulize.base';
-import { Behavior } from './formulize.interface';
+import { FormulizeKeyHelper } from '../key.helper';
+import { UIBase } from './ui.base';
+import { Behavior } from './ui.interface';
 
-export class Formulize extends FormulizeBase {
+export class UI extends UIBase {
     protected analyzeKey<T>(keyCode: number, pressedCtrl: boolean, pressedShift: boolean): T {
         const behaviors: Behavior[] = [
             { predicate: FormulizeKeyHelper.isReload, doBehavior: FormulizeKeyHelper.doReload },
