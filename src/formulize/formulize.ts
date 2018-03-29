@@ -7,53 +7,14 @@ import { Key } from '../key.enum';
 import { Helper } from '../helper';
 import { FormulizeKeyHelper } from './formulize.key.helper';
 import { specialCharacters, supportedCharacters } from './formulize.value';
+import { FormulizeBase } from './formulize.base';
 
 export namespace Formulize {
-    const defaultOption: Option = {
-        id: 'formulize',
-        cursor: {
-            time: {
-                animate: 160,
-                delay: 500
-            }
-        },
-        text: {
-            formula: 'formula',
-            error: 'error',
-            passed: 'passed'
-        },
-        export: {
-            filter: data => data,
-            node: (elem: Element) => FormulizeHelper.getDataValue(elem)
-        }
-    };
-
-    export class Formulize {
-        private _elem: Element;
-        private _option: Option = { ...defaultOption };
-        private _offset: Position = { x: 0, y :0 };
-        private dragging: boolean;
-        private container: JQuery;
-        private statusBox: JQuery;
-        private textBox: JQuery;
-        private cursor: JQuery;
-        private get dragElem(): JQuery {
-            return this.container
-                .find(`.${this._option.id}-drag`);
-        }
-
-        public constructor(elem: Element, option?: Option) {
-            this._elem = elem;
-            this._option = { ...this._option, ...option};
-
-            this.init();
-            this.attachEvents();
-        }
-
+    export class Formulize extends FormulizeBase {
         public init() {
             this.container = $(this._elem);
             this.container.addClass(`${}this._option.id}-container`);
-            this.container.wrap(`<div class="${this._optionion.id}-wrapper"></div>`);
+            this.container.wrap(`<div class="${this._option.id}-wrapper"></div>`);
 
             this.statusBox = $(`<div class="${this._option.id}-alert">${_opt.strings.formula}</div>`);
             this.statusBox.insertBefore(this.container);
@@ -64,272 +25,6 @@ export namespace Formulize {
             `);
             this.textBox.insertAfter(this.container);
             this.textBox.trigger('focus');
-        }
-
-        private blurTextBox() {
-            if (!this.cursor)
-                return;
-
-            this.cursor.remove();
-            this.removeDrag();
-        }
-
-        private startDragging(offset: Position): void {
-            this.dragging = true;
-            this._offset = offset;
-        }
-
-        private endDragging(offset: Position): void {
-            const currentDragging = this.dragging;
-            this.dragging = false;
-
-            if (currentDragging)
-                return;
-
-            this.click(offset);
-        }
-
-        private moveDragging(offset: Position): void {
-            if (!this.dragging)
-                return;
-
-            if (
-                Math.abs(this._offset.x - offset.x) <= 5 &&
-                Math.abs(this._offset.y - offset.y) <= 5
-            )
-                return;
-
-            if (this.container.hasClass('formula-active'))
-                this.click(offset);
-
-            const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-            this.removeDrag();
-            const prevPosition = this.cursor.index();
-            this.click(offset);
-            const nextPosition = this.cursor.index();
-
-            if (!this.container.find(`.${this._option.id}-drag`).length) {
-                dragElem.insertAfter(this.cursor);
-                return;
-            }
-
-            const positions = [prevPosition, nextPosition];
-            positions.sort();
-            const startPosition = positions[0];
-            const endPosition = positions[1];
-
-            if (prevPosition > nextPosition)
-                dragElem.insertBefore(this.cursor);
-            else
-                dragElem.insertAfter(this.cursor);
-
-            if (prevPosition === nextPosition)
-                return;
-
-            this.container
-                .children(`:not(".${this._option.id}-cursor")`)
-                .filter(`:gt("${startPosition}")`)
-                .filter(`:lt("${endPosition - startPosition}")`)
-                .add(this.container.children(`:not(".${this._option.id}-cursor")`).eq(startPosition))
-                .each((_, elem) => $(elem).appendTo(dragElem));
-
-            if (prevPosition > nextPosition)
-                dragElem.insertAfter(this.cursor);
-            else
-                dragElem.insertBefore(this.cursor);
-        }
-
-        private eventKeyDown(event: KeyboardEvent) {
-            event.preventDefault();
-
-            if (!this.cursor || !this.cursor.length)
-                return;
-
-            const keyCode = event.which >= Key.Numpad0 && event.which <= Key.Numpad9
-                ? event.which - Key.Zero
-                : event.which;
-
-            this.analyzeKey(keyCode, event.ctrlKey, event.shiftKey);
-            this.keyDown(Helper.keyCodeToString(keyCode, event.shiftKey), event.shiftKey);
-            this.check();
-        }
-
-        private removeBefore(): void {
-            if (this.dragElem.length) {
-                this.cursor.insertBefore(this.dragElem);
-                this.dragElem.remove();
-            } else if (this.cursor.length && this.cursor.prev().length) {
-                $prev = this.cursor.prev();
-                if ($prev.hasClass(`${this._option.id}-unit`) && $prev.text().length > 1) {
-                    text = $prev.text();
-                    this.setDecimal($prev, text.substring(0, text.length - 1).toFormulaDecimal());
-                } else {
-                    $prev.remove();
-                }
-            }
-            this.hookUpdate();
-        }
-
-        private removeAfter(): void {
-            if (this.dragElem.length) {
-                this.cursor.insertAfter(this.dragElem);
-                this.dragElem.remove();
-            } else {
-                if (this.cursor.length && this.cursor.next().length) {
-                    $next = this.cursor.next();
-                    if ($next.hasClass(`${this._option.id}-unit`) && $next.text().length > 1) {
-                        text = $next.text();
-                        this.setDecimal($next, text.substring(1, text.length).toFormulaDecimal());
-                    } else {
-                        $next.remove();
-                    }
-                }
-            }
-            this.hookUpdate();
-        }
-
-        private moveLeftCursor(draggingMode: boolean = false): void {
-            if (!this.cursor.length || !this.cursor.prev().length) {
-                this.removeDrag();
-                return;
-            }
-
-            if (!draggingMode) {
-                this.removeDrag();
-                this.cursor.insertBefore(this.cursor.prev());
-                return;
-            }
-
-            if (!this.dragElem.length) {
-                const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-                dragElem.insertAfter(this.cursor);
-            } else {
-                if (!dragElem.data('active')) {
-                    this.removeDrag();
-                    dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-                    dragElem.insertAfter(this.cursor);
-                }
-            }
-            dragElem.data('active', true);
-
-            $prev = this.cursor.prev();
-            if ($prev.hasClass(`${this._option.id}-drag`)) {
-                dragElemItem = dragElem.children('*');
-                if (dragElemItem.length < 1) {
-                    dragElem.remove();
-                } else {
-                    dragElemItem.last().insertAfter(dragElem);
-                    this.cursor.insertAfter(dragElem);
-                }
-            } else {
-                this.cursor.prev().prependTo(dragElem);
-            }
-        }
-
-        private moveUpCursor(): void {
-            if (!this.cursor.length)
-                return;
-
-            this.click({
-                x: this.cursor.position().left + this.cursor.outerWidth(),
-                y: this.cursor.position().top - this.cursor.outerHeight() / 2
-            });
-        }
-
-        private moveRightCursor(draggingMode: boolean = false): void {
-            if (!this.cursor.length || !this.cursor.next().length) {
-                this.removeDrag();
-                return;
-            }
-
-            if (!draggingMode) {
-                this.removeDrag();
-                this.cursor.insertAfter(this.cursor.next());
-            }
-
-            if (!this.dragElem.length) {
-                const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-                dragElem.insertBefore(this.cursor);
-            } else {
-                if (!this.dragElem.data('active')) {
-                    this.removeDrag();
-                    const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-                    dragElem.insertBefore(this.cursor);
-                }
-            }
-            this.dragElem.data('active', true);
-
-            const nextCursorElem = this.cursor.next();
-            if (nextCursorElem.hasClass(`${this._option.id}-drag`)) {
-                const draggedUnit = this.dragElem.children();
-                if (!draggedUnit.length)
-                    dragElem.remove();
-                else {
-                    draggedUnit.first().insertBefore(dragElem);
-                    this.cursor.insertBefore(dragElem);
-                }
-            } else
-                this.cursor.next().appendTo(dragElem);
-        }
-
-        private moveDownCursor(): void {
-            if (!this.cursor.length)
-                return;
-
-            this.click({
-                x: this.cursor.position().left + this.cursor.outerWidth(),
-                y: this.cursor.position().top + this.cursor.outerHeight() * 1.5
-            });
-        }
-
-        private moveFirstCursor(draggingMode: boolean = false): void {
-            if (!this.cursor.length || this.container.children(':first').length)
-                return;
-
-            if (!draggingMode) {
-                this.removeDrag();
-                this.cursor.insertBefore(this.container.children(':first'));
-            }
-
-            if (!this.dragElem.length) {
-                const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-                dragElem.insertAfter(this.cursor);
-            } else {
-                if (!this.dragElem.data('active')) {
-                    this.removeDrag();
-                    const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-                    dragElem.insertAfter(this.cursor);
-                }
-            }
-            this.dragElem.data('active', true);
-            this.cursor
-                .prevAll()
-                .each((_, elem) => $(elem).prependTo(dragElem));
-        }
-
-        private moveLastCursor(draggingMode: boolean = false): void {
-            if (!this.cursor.length || !this.container.children(':last').length)
-                return;
-
-            if (!draggingMode) {
-                this.removeDrag();
-                this.cursor.insertAfter(this.container.children(':last'));
-            }
-
-            if (!this.dragElem.length) {
-                const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-                dragElem.insertBefore(this.cursor);
-            } else {
-                if (!this.dragElem.data('active')) {
-                    this.removeDrag();
-                    const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-                    dragElem.insertBefore(this.cursor);
-                }
-            }
-            this.dragElem.data('active', true);
-            this.cursor
-                .nextAll()
-                .appendTo(dragElem);
         }
 
         private analyzeKey(keyCode: number, pressedCtrl: boolean, pressedShift: boolean) {
@@ -351,9 +46,9 @@ export namespace Formulize {
                 return behavior.doBehavior();
         }
 
-        private attachEvents(): void {
+        protected attachEvents(): void {
             this.textBox
-                .off('blur').on('blur', this.blurTextBox);
+                .off('blur').on('blur', this.blur);
 
             this.textBox
                 .off(`dblclick.${this._option.id}Handler`)
@@ -362,17 +57,17 @@ export namespace Formulize {
             this.textBox
                 .off(`mousedown.${this._option.id}Handler`)
                 .on(`mousedown.${this._option.id}Handler`,
-                    event => this.startDragging({ x: event.offsetX, y: event.offsetY });
+                    event => this.startDrag({ x: event.offsetX, y: event.offsetY });
 
             this.textBox
                 .off(`mouseup.${this._option.id}Handler`)
                 .on(`mouseup.${this._option.id}Handler`,
-                    event => this.endDragging({ x: event.offsetX, y: event.offsetY });
+                    event => this.endDrag({ x: event.offsetX, y: event.offsetY });
 
             this.textBox
                 .off(`mousemove.${this._option.id}Handler`)
                 .on(`mousemove.${this._option.id}Handler`,
-                    event => this.moveDragging({ x: event.offsetX, y: event.offsetY }));
+                    event => this.moveDrag({ x: event.offsetX, y: event.offsetY }));
 
             this.textBox
                 .off(`keydown.${this._option.id}Handler`)
@@ -402,24 +97,6 @@ export namespace Formulize {
 
             if (extractor)
                 extractor(isValid);
-        }
-
-        removeDrag() {
-            const dragElem = this.container.find(`.${this._option.id}-drag`);
-            dragElem
-                .children('*')
-                .each((_, elem) => $(elem).insertBefore(dragElem));
-            dragElem.remove();
-            this.hookUpdate();
-        }
-
-        selectAll() {
-            this.removeDrag();
-            const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-            dragElem.prependTo(this.container);
-            this.container
-                .children(':not(".${this._option.id}-cursor")')
-                .each((_, elem) => $(elem).appendTo(dragElem));
         }
 
         click(position: Position = { x: 0, y: 0 }) {
