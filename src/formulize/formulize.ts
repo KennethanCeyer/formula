@@ -1,8 +1,11 @@
-import { Offset, Option } from './option.interface';
+import { Position, Option } from './option.interface';
 import { FormulizeHelper } from './formulize.helper';
 import { convert, valid } from 'metric-parser';
 import { Tree } from 'metric-parser/dist/types/tree';
 import { ParserResult } from 'metric-parser/dist/types/parser/parser.result';
+import { Key } from '../key.enum';
+import { Helper } from '../helper';
+import { FormulizeKeyHelper } from './formulize.key.helper';
 
 export namespace Formulize {
     const defaultOption: Option = {
@@ -27,7 +30,7 @@ export namespace Formulize {
     export class Formulize {
         private _elem: Element;
         private _option: Option = { ...defaultOption };
-        private _offset: Offset = { x: 0, y :0 };
+        private _offset: Position = { x: 0, y :0 };
         private dragging: boolean;
         private container: JQuery;
         private statusBox: JQuery;
@@ -70,12 +73,12 @@ export namespace Formulize {
             this.removeDrag();
         }
 
-        private startDragging(offset: Offset): void {
+        private startDragging(offset: Position): void {
             this.dragging = true;
             this._offset = offset;
         }
 
-        private endDragging(offset: Offset): void {
+        private endDragging(offset: Position): void {
             const currentDragging = this.dragging;
             this.dragging = false;
 
@@ -85,7 +88,7 @@ export namespace Formulize {
             this.click(offset);
         }
 
-        private moveDragging(offset: Offset): void {
+        private moveDragging(offset: Position): void {
             if (!this.dragging)
                 return;
 
@@ -141,222 +144,227 @@ export namespace Formulize {
             if (!this.cursor || !this.cursor.length)
                 return;
 
-            const keyCode = event.which >= 96 && event.which <= 105
-                ? event.which - 48
+            const keyCode = event.which >= Key.Numpad0 && event.which <= Key.Numpad9
+                ? event.which - Key.Zero
                 : event.which;
-            this.insertKey(keyCode, event.ctrlKey, event.shiftKey);
 
-            this.keydown(keyCode.toString().toFormulaString(event.shiftKey), event.shiftKey);
+            this.analyzeKey(keyCode, event.ctrlKey, event.shiftKey);
+            this.keyDown(Helper.keyCodeToString(keyCode, event.shiftKey), event.shiftKey);
             this.check();
         }
 
-        private insertKey(keyCode: number, pressedCtrl: boolean, pressedShift: boolean) {
-            if (keyCode === 116 || (keyCode === 82 && pressedCtrl)) {
-                location.reload();
-                return;
-            }
-
-            if (keyCode === 65 && pressedCtrl) {
-                this.selectAll();
-                return;
-            }
-
-            if (keyCode === 8) {
-                const draggerElem = this.container.find('.${this._option.id}-drag');
-                if (draggerElem.length) {
-                    this.cursor.insertBefore(draggerElem);
-                    draggerElem.remove();
-                } else if (this.cursor.length && this.cursor.prev().length) {
-                    $prev = this.cursor.prev();
-                    if ($prev.hasClass(this._option.id + '-unit') && $prev.text().length > 1) {
-                        text = $prev.text();
-                        this.setDecimal($prev, text.substring(0, text.length - 1).toFormulaDecimal());
-                    } else {
-                        $prev.remove();
-                    }
-                }
-                this.check();
-                $this.triggerHandler('formula.input', this.getFormula());
-                return false;
-            }
-
-            if (keyCode === 46) {
-                draggerElem = this.container.find('.${this._option.id}-drag');
-                if (draggerElem.length) {
-                    this.cursor.insertAfter(draggerElem);
-                    draggerElem.remove();
+        private removeBefore(): void {
+            if (this.draggerElem.length) {
+                this.cursor.insertBefore(this.draggerElem);
+                this.draggerElem.remove();
+            } else if (this.cursor.length && this.cursor.prev().length) {
+                $prev = this.cursor.prev();
+                if ($prev.hasClass(this._option.id + '-unit') && $prev.text().length > 1) {
+                    text = $prev.text();
+                    this.setDecimal($prev, text.substring(0, text.length - 1).toFormulaDecimal());
                 } else {
-                    if (this.cursor.length && this.cursor.next().length) {
-                        $next = this.cursor.next();
-                        if ($next.hasClass(this._option.id + '-unit') && $next.text().length > 1) {
-                            text = $next.text();
-                            this.setDecimal($next, text.substring(1, text.length).toFormulaDecimal());
-                        } else {
-                            $next.remove();
-                        }
-                    }
-                }
-                this.check();
-                $this.triggerHandler('formula.input', this.getFormula());
-                return false;
-            }
-
-            if (keyCode === 37) {
-                if (this.cursor.length && this.cursor.prev().length) {
-                    if (event.shiftKey) {
-                        draggerElem = this.container.find('.${this._option.id}-drag');
-                        if (draggerElem.length < 1) {
-                            draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                            draggerElem.insertAfter(this.cursor);
-                        } else {
-                            if (draggerElem.data('active') === false) {
-                                this.removeDrag();
-                                draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                                draggerElem.insertAfter(this.cursor);
-                            }
-                        }
-                        draggerElem.data('active', true);
-
-                        $prev = this.cursor.prev();
-                        if ($prev.hasClass(this._option.id + '-drag')) {
-                            draggerElemItem = draggerElem.children('*');
-                            if (draggerElemItem.length < 1) {
-                                draggerElem.remove();
-                            } else {
-                                draggerElemItem.last().insertAfter(draggerElem);
-                                this.cursor.insertAfter(draggerElem);
-                            }
-                        } else {
-                            this.cursor.prev().prependTo(draggerElem);
-                        }
-                    } else {
-                        this.removeDrag();
-                        this.cursor.insertBefore(this.cursor.prev());
-                    }
-                } else {
-                    this.removeDrag();
+                    $prev.remove();
                 }
             }
+            this.check();
+            $this.triggerHandler('formula.input', this.getFormula());
+        }
 
-            if (keyCode === 38) {
-                if (this.cursor.prev().length || this.cursor.next().length) {
-                    parentPadding = {
-                        x: parseFloat(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
-                        y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
-                    };
-
-                    $item = this.cursor.prev();
-                    if ($item.length < 0) {
-                        $item = this.cursor.next();
-                    }
-                    this.click({
-                        x: this.cursor.position().left + $item.outerWidth(),
-                        y: this.cursor.position().top - $item.outerHeight() / 2
-                    });
-                } else {
-
-                }
-            }
-
-            if (keyCode === 39) {
-                // TODO: need refactor
+        private removeAfter(): void {
+            if (this.draggerElem.length) {
+                this.cursor.insertAfter(this.draggerElem);
+                this.draggerElem.remove();
+            } else {
                 if (this.cursor.length && this.cursor.next().length) {
-                    if (event.shiftKey) {
-                        if (!this.draggerElem.length) {
-                            const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                            draggerElem.insertBefore(this.cursor);
-                        } else {
-                            if (!this.draggerElem.data('active')) {
-                                this.removeDrag();
-                                const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                                draggerElem.insertBefore(this.cursor);
-                            }
-                        }
-                        this.draggerElem.data('active', true);
-
-                        const nextCursorElem = this.cursor.next();
-                        if (nextCursorElem.hasClass(`${this._option.id}-drag`)) {
-                            const draggedUnit = this.draggerElem.children();
-                            if (!draggedUnit.length)
-                                draggerElem.remove();
-                            else {
-                                draggedUnit.first().insertBefore(draggerElem);
-                                this.cursor.insertBefore(draggerElem);
-                            }
-                        } else
-                            this.cursor.next().appendTo(draggerElem);
+                    $next = this.cursor.next();
+                    if ($next.hasClass(this._option.id + '-unit') && $next.text().length > 1) {
+                        text = $next.text();
+                        this.setDecimal($next, text.substring(1, text.length).toFormulaDecimal());
                     } else {
-                        this.removeDrag();
-                        this.cursor.insertAfter(this.cursor.next());
+                        $next.remove();
                     }
-                } else
+                }
+            }
+            this.check();
+            $this.triggerHandler('formula.input', this.getFormula());
+        }
+
+        private moveLeftCursor(draggingMode: boolean = false): void {
+            if (!this.cursor.length || !this.cursor.prev().length) {
+                this.removeDrag();
+                return;
+            }
+
+            if (!draggingMode) {
+                this.removeDrag();
+                this.cursor.insertBefore(this.cursor.prev());
+                return;
+            }
+
+            if (!this.draggerElem.length) {
+                const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                draggerElem.insertAfter(this.cursor);
+            } else {
+                if (!draggerElem.data('active')) {
                     this.removeDrag();
-            }
-
-            if (keyCode === 40) {
-                if (this.cursor.prev().length || this.cursor.next().length) {
-                    parentPadding = {
-                        x: parseFloat(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
-                        y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
-                    };
-
-                    $item = this.cursor.prev();
-                    if ($item.length < 0) {
-                        $item = this.cursor.next();
-                    }
-                    this.click({
-                        x: this.cursor.position().left + $item.outerWidth(),
-                        y: this.cursor.position().top + $item.outerHeight() * 1.5
-                    });
+                    draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                    draggerElem.insertAfter(this.cursor);
                 }
             }
+            draggerElem.data('active', true);
 
-            if (keyCode === 35) {
-                if (this.cursor.length && this.container.children(':last').length) {
-                    if (event.shiftKey) {
-                        draggerElem = this.container.find('.${this._option.id}-drag');
-                        if (draggerElem.length < 1) {
-                            draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                            draggerElem.insertBefore(this.cursor);
-                        } else {
-                            if (draggerElem.data('active') === false) {
-                                this.removeDrag();
-                                draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                                draggerElem.insertBefore(this.cursor);
-                            }
-                        }
-                        draggerElem.data('active', true);
-                        this.cursor.nextAll().appendTo(draggerElem);
+            $prev = this.cursor.prev();
+            if ($prev.hasClass(this._option.id + '-drag')) {
+                draggerElemItem = draggerElem.children('*');
+                if (draggerElemItem.length < 1) {
+                    draggerElem.remove();
+                } else {
+                    draggerElemItem.last().insertAfter(draggerElem);
+                    this.cursor.insertAfter(draggerElem);
+                }
+            } else {
+                this.cursor.prev().prependTo(draggerElem);
+            }
+        }
+
+        private moveUpCursor(): void {
+            if (!this.cursor.prev().length && !this.cursor.next().length)
+                return;
+
+            parentPadding = {
+                x: parseFloat(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
+                y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
+            };
+
+            $item = this.cursor.prev();
+            if (!$item.length) {
+                $item = this.cursor.next();
+            }
+            this.click({
+                x: this.cursor.position().left + $item.outerWidth(),
+                y: this.cursor.position().top - $item.outerHeight() / 2
+            });
+        }
+
+        private moveRightCursor(draggingMode: boolean = false): void {
+            if (!this.cursor.length || !this.cursor.next().length) {
+                this.removeDrag();
+                return;
+            }
+
+            if (!draggingMode) {
+                this.removeDrag();
+                this.cursor.insertAfter(this.cursor.next());
+            }
+
+            if (!this.draggerElem.length) {
+                const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                draggerElem.insertBefore(this.cursor);
+            } else {
+                if (!this.draggerElem.data('active')) {
+                    this.removeDrag();
+                    const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                    draggerElem.insertBefore(this.cursor);
+                }
+            }
+            this.draggerElem.data('active', true);
+
+            const nextCursorElem = this.cursor.next();
+            if (nextCursorElem.hasClass(`${this._option.id}-drag`)) {
+                const draggedUnit = this.draggerElem.children();
+                if (!draggedUnit.length)
+                    draggerElem.remove();
+                else {
+                    draggedUnit.first().insertBefore(draggerElem);
+                    this.cursor.insertBefore(draggerElem);
+                }
+            } else
+                this.cursor.next().appendTo(draggerElem);
+        }
+
+        private moveDownCursor(): void {
+            if (!this.cursor.prev().length && this.cursor.next().length)
+                return;
+
+            parentPadding = {
+                x: parseFloat(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
+                y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
+            };
+
+            $item = this.cursor.prev();
+            if (!$item.length)
+                $item = this.cursor.next();
+
+            this.click({
+                x: this.cursor.position().left + $item.outerWidth(),
+                y: this.cursor.position().top + $item.outerHeight() * 1.5
+            });
+        }
+
+        private moveFirstCursor(): void {
+            if (this.cursor.length && this.container.children(':first').length) {
+                if (pressedShift) {
+                    if (this.draggerElem.length < 1) {
+                        const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                        draggerElem.insertAfter(this.cursor);
                     } else {
-                        this.removeDrag();
-                        this.cursor.insertAfter(this.container.children(':last'));
-                    }
-                }
-            }
-
-            if (keyCode === 36) {
-                if (this.cursor.length && this.container.children(':first').length) {
-                    if (event.shiftKey) {
-                        if (this.draggerElem.length < 1) {
+                        if (!this.draggerElem.data('active')) {
+                            this.removeDrag();
                             const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
                             draggerElem.insertAfter(this.cursor);
-                        } else {
-                            if (!this.draggerElem.data('active')) {
-                                this.removeDrag();
-                                const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                                draggerElem.insertAfter(this.cursor);
-                            }
                         }
-                        this.draggerElem.data('active', true);
-                        this.cursor
-                            .prevAll()
-                            .each((_, elem) => $(elem).prependTo(draggerElem));
-                    } else {
-                        this.removeDrag();
-                        this.cursor.insertBefore(this.container.children(':first'));
                     }
+                    this.draggerElem.data('active', true);
+                    this.cursor
+                        .prevAll()
+                        .each((_, elem) => $(elem).prependTo(draggerElem));
+                } else {
+                    this.removeDrag();
+                    this.cursor.insertBefore(this.container.children(':first'));
                 }
             }
+        }
+
+        private moveLastCursor(): void {
+            if (this.cursor.length && this.container.children(':last').length) {
+                if (pressedShift) {
+                    draggerElem = this.container.find('.${this._option.id}-drag');
+                    if (draggerElem.length < 1) {
+                        draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                        draggerElem.insertBefore(this.cursor);
+                    } else {
+                        if (!draggerElem.data('active')) {
+                            this.removeDrag();
+                            draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                            draggerElem.insertBefore(this.cursor);
+                        }
+                    }
+                    draggerElem.data('active', true);
+                    this.cursor.nextAll().appendTo(draggerElem);
+                } else {
+                    this.removeDrag();
+                    this.cursor.insertAfter(this.container.children(':last'));
+                }
+            }
+        }
+
+        private analyzeKey(keyCode: number, pressedCtrl: boolean, pressedShift: boolean) {
+            const behaviors = [
+                { predicate: FormulizeKeyHelper.isReload, doBehavior: FormulizeKeyHelper.doReload },
+                { predicate: FormulizeKeyHelper.isSelectAll, doBehavior: FormulizeKeyHelper.doAction(this.selectAll) },
+                { predicate: FormulizeKeyHelper.isBackspace, doBehavior: FormulizeKeyHelper.doAction(this.removeBefore) },
+                { predicate: FormulizeKeyHelper.isDelete, doBehavior: FormulizeKeyHelper.doAction(this.removeAfter) },
+                { predicate: FormulizeKeyHelper.isLeft, doBehavior: FormulizeKeyHelper.doAction(this.moveLeftCursor(pressedShift)) },
+                { predicate: FormulizeKeyHelper.isUp, doBehavior: FormulizeKeyHelper.doAction(this.moveUpCursor) },
+                { predicate: FormulizeKeyHelper.isRight, doBehavior: FormulizeKeyHelper.doAction(this.moveRightCursor(pressedShift)) },
+                { predicate: FormulizeKeyHelper.isDown, doBehavior: FormulizeKeyHelper.doAction(this.moveDownCursor) },
+                { predicate: FormulizeKeyHelper.isHome, doBehavior: FormulizeKeyHelper.doAction(this.moveFirstCursor(pressedShift)) },
+                { predicate: FormulizeKeyHelper.isEnd, doBehavior: FormulizeKeyHelper.doAction(this.moveLastCursor(pressedShift)) },
+            ];
+
+            const behavior = behaviors.find(behavior => behavior.predicate(keyCode, pressedCtrl, pressedShift));
+            if (behavior)
+                return behavior.doBehavior();
         }
 
         private attachEvents(): void {
@@ -430,7 +438,7 @@ export namespace Formulize {
                 .each((_, elem) => $(elem).appendTo(draggerElem));
         }
 
-        click(position: Offset = { x: 0, y: 0 }) {
+        click(position: Position = { x: 0, y: 0 }) {
             this.container
                 .find(`.${this._option.id}-cursor`)
                 .remove();
@@ -439,21 +447,21 @@ export namespace Formulize {
             this.cursor.appendTo(this.container);
 
             // TODO: belows code is suck, no hope, refactor right now
-            var parentPos = {
+            const parentPos = {
                 x: this.container.offset().left,
                 y: this.container.offset().top
             };
 
-            var parentPadding = {
+            const parentPadding = {
                 x: parseFloat(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
                 y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
             };
 
-            var checkArea = [];
+            const checkArea = [];
 
             // TODO: do you lost your fucking mind past me? where did the key name come from?
             this.container.children('*:not(".${this._option.id}-cursor")').each(function () {
-                var $this = $(this);
+                const $this = $(this);
                 checkArea.push({
                     x: $this.offset().left - parentPos.x + parentPadding.x,
                     y: $this.offset().top - parentPos.y,
@@ -461,8 +469,8 @@ export namespace Formulize {
                 });
             });
 
-            var $pointer = null;
-            var maxY = 0, maxDiff = 10000;
+            const $pointer = null;
+            const maxY = 0, maxDiff = 10000;
             for (idx in checkArea) {
                 check = checkArea[idx];
                 if (check.y <= position.y) {
@@ -505,7 +513,7 @@ export namespace Formulize {
                 }
             }
 
-            var loop = function () {
+            const loop = function () {
                 setTimeout(function () {
                     if (cursorElem.hasClass('inactive')) {
                         cursorElem.removeClass('inactive');
@@ -525,7 +533,7 @@ export namespace Formulize {
             this.removeDrag();
         };
 
-        keydown(key: number, pressedShift: boolean) {
+        keyDown(key: number, pressedShift: boolean) {
             const realKey = pressedShift && key >= 0 && key <= 9
                 ? [')', '!', '@', '#', '$', '%', '^', '&', 'x', '('][key]
                 : key;
@@ -550,11 +558,12 @@ export namespace Formulize {
         };
 
         insertChar(key) {
+            // TODO: need refactor
             if ((key >= 0 && key <= 9) || $.inArray(key.toLowerCase(), this.permitedKey) != -1) {
                 if ((key >= 0 && key <= 9) || key === '.') {
-                    var $unit = $(`<div class="${this._option.id}-item ${this._option.id}-unit">${key}</div>`);
-                    var $item = null;
-                    var decimal = '', merge = false;
+                    const $unit = $(`<div class="${this._option.id}-item ${this._option.id}-unit">${key}</div>`);
+                    const $item = null;
+                    const decimal = '', merge = false;
 
                     draggerElem = this.container.find('.${this._option.id}-drag');
 
@@ -569,8 +578,8 @@ export namespace Formulize {
                         this.container.append($unit);
                     }
 
-                    var $prev = $unit.prev();
-                    var $next = $unit.next();
+                    const $prev = $unit.prev();
+                    const $next = $unit.next();
 
                     if ($prev.length && $prev.hasClass(this._option.id + '-cursor')) {
                         $prev = $prev.prev();
@@ -590,13 +599,13 @@ export namespace Formulize {
                         $item.prepend($unit[0].innerHTML);
                     }
 
-                    if (merge === true) {
+                    if (merge) {
                         decimal = $item.text().toFormulaDecimal();
                         this.setDecimal($item, decimal);
                         $unit.remove();
                     }
                 } else if (key !== '') {
-                    var $operator = $('<div class="${this._option.id}-item ${this._option.id}-operator">' + key.toLowerCase() + '</div>');
+                    const $operator = $('<div class="${this._option.id}-item ${this._option.id}-operator">' + key.toLowerCase() + '</div>');
                     if (this.cursor !== null && this.cursor.length) {
                         this.cursor.before($operator);
                     } else {
@@ -609,14 +618,14 @@ export namespace Formulize {
 
                 this.hookUpdate();
             }
-        };
+        }
 
         insertFormula(data) {
             // TODO: need refactor
             if (typeof data === 'string') {
-                var data_split = data.split('');
-                for (idx in data_split) {
-                    this.insertChar.call(context, data_split[idx]);
+                const splitData = data.split('');
+                for (idx in splitData) {
+                    this.insertChar.call(context, splitData[idx]);
                 }
 
                 this.check();
@@ -624,15 +633,15 @@ export namespace Formulize {
             }
 
             for (idx in data) {
-                var item = data[idx];
+                const item = data[idx];
                 if (typeof item !== 'object') {
-                    var data_splited = item.toString().split('');
-                    for (var key in data_splited) {
+                    const data_splited = item.toString().split('');
+                    for (const key in data_splited) {
                         this.insertChar.call(context, data_splited[key]);
                     }
                 } else {
                     if (typeof this._option.import.item === 'function') {
-                        var $e = this._option.import.item.call(context, item);
+                        const $e = this._option.import.item.call(context, item);
                         if (typeof $e !== 'undefined' && $e !== null) {
                             this.insert($e);
                         }
@@ -642,7 +651,7 @@ export namespace Formulize {
 
             this.check();
             this.hookUpdate();
-        };
+        }
 
         private hookUpdate(): void {
             $(this._elem)
@@ -665,15 +674,16 @@ export namespace Formulize {
                 return;
 
             elem.empty();
-            var split = decimal.split('.');
-            var $prefix = $('<span class="${this._option.id}-prefix ${this._option.id}-decimal-highlight">' + split[0] + '</span>');
-            $prefix.appendTo(elem);
+            const split = decimal.split('.');
+            const prefix = $(`<span class="${this._option.id}-prefix ${this._option.id}-decimal-highlight">${split[0]}</span>`);
+            prefix.appendTo(elem);
 
-            if (typeof split[1] !== 'undefined') {
-                var $surfix = $('<span class="${this._option.id}-surfix ${this._option.id}-decimal-highlight">.' + split[1] + '</span>');
-                $surfix.appendTo(elem);
-            }
-        };
+            if (!split[1])
+                return;
+
+            const suffix = $(`<span class="${this._option.id}-surfix ${this._option.id}-decimal-highlight">.'${split[1]}</span>`);
+            suffix.appendTo(elem);
+        }
 
         setFormula(data) {
             this.empty();
@@ -684,7 +694,7 @@ export namespace Formulize {
             const result = convert(objectData);
             if (!result.code)
                 this.insertFormula(result.data);
-        };
+        }
 
         getFormula(extractor?: (data: ParserResult<Tree>) => void): ParserResult<Tree> {
             if (this._option.export.filter) {

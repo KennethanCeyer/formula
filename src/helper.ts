@@ -1,3 +1,5 @@
+import { Key } from './key.enum';
+
 export class Helper {
     public static toDecimal(value: string): string {
         const splitValue = value.split('.');
@@ -11,19 +13,19 @@ export class Helper {
 
     public static keyCodeToString(value: string, pressedShift: boolean) {
         const keyCode = Number(value);
-        if (keyCode === 106)
+        if (keyCode === Key.Multiply)
             return 'x';
 
-        if (((keyCode === 187 || keyCode === 61) && pressedShift === true) || keyCode === 107)
+        if (((keyCode === Key.PlusSign || keyCode === 61) && pressedShift) || keyCode === Key.Add)
             return '+';
 
-        if (keyCode === 189 || keyCode === 173 || keyCode === 109)
+        if (keyCode === Key.Dash || keyCode === 173 || keyCode === Key.Subtract)
             return '-';
 
-        if (keyCode === 190 || keyCode === 110)
+        if (keyCode === Key.Period || keyCode === Key.DecimalPoint)
             return '.';
 
-        if (keyCode === 191 || keyCode === 111)
+        if (keyCode === Key.ForwardSlash || keyCode === Key.Divide)
             return '/';
 
         return String.fromCharCode(keyCode);

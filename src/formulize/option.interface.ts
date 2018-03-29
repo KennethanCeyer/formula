@@ -30,7 +30,7 @@ export interface CursorTime {
     delay?: number;
 }
 
-export interface Offset {
+export interface Position {
     x: number;
     y: number;
 }
