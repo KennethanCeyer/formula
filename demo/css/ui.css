@@ -1,37 +1,37 @@
-.formula {
+.formulize {
     min-height: 400px;
 }
 
-.formula .formula-item,
-.formula .formula-prefix,
-.formula .formula-surfix {
+.formulize .formulize-item,
+.formulize .formulize-prefix,
+.formulize .formulize-surfix {
     font-family: 'Open Sans', Consolas, Arial;
 }
 
-.formula-wrapper .formula {
+.formulize-wrapper .formulize {
     background-color: #f2f2f2;
     border: 1px solid #d8d8d8;
     text-align: left;
     box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
 }
 
-.formula-drop {
+.formulize-drop {
     margin-top: 80px;
 }
 
-.formula-drop i {
+.formulize-drop i {
     display: block;
     font-size: 115%;
     margin-bottom: 1em;
 }
 
-.formula-drop .formula-drop-items {
+.formulize-drop .formulize-drop-items {
     margin-top: 40px;
     text-align: center;
 }
 
-.formula .formula-item.formula-custom,
-.formula-drop .formula-drop-items .formula-custom {
+.formulize .formulize-item.formulize-custom,
+.formulize-drop .formulize-drop-items .formulize-custom {
     display: inline-block;
     height: auto;
     line-height: 1.2em;
@@ -46,33 +46,33 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, .125);
 }
 
-.formula .formula-item.formula-custom-operator {
+.formulize .formulize-item.formulize-custom-operator {
     border-color: #3690ff;
     color: #3690ff;
 }
 
-.formula .formula-custom {
+.formulize .formulize-custom {
     padding: .4em 1em;
     font-size: 85%;
 }
 
-.formula-drop .formula-drop-items .formula-custom {
+.formulize-drop .formulize-drop-items .formulize-custom {
     font-size: 115%;
 }
 
-.formula-get {
+.formulize-get {
     margin-top: 160px;
 }
 
-.formula-get h4 {
+.formulize-get h4 {
     margin-bottom: 40px;
 }
 
-.formula-get .btn {
+.formulize-get .btn {
     box-shadow: 0 4px 6px rgba(0, 0, 0, .25);
 }
 
-.formula-get .formula-get-json {
+.formulize-get .formulize-get-json {
     margin-top: 20px;
     margin-bottom: 160px;
     min-height: 240px;
@@ -86,7 +86,7 @@
     text-align: left;
 }
 
-.formula-get .formula-get-json .formula-get-json-label {
+.formulize-get .formulize-get-json .formulize-get-json-label {
     position: absolute;
     top: 0;
     right: 0;

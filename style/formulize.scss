@@ -1,145 +1,127 @@
-.formula-wrapper {
-  position: relative;
-}
+.formulize-wrapper {
+    position: relative;
+    .formulize-text {
+        opacity: 0;
+        color: transparent;
+        position: absolute;
+        font-size: 0;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        text-indent: -10000px;
+        z-index: 20;
+    }
 
-.formula-wrapper .formula-text {
-  opacity: 0;
-  color: transparent;
-  position: absolute;
-  font-size: 0;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  text-indent: -10000px;
-  z-index: 20;
-}
+    .formulize-container {
+        padding: 40px;
+        cursor: text;
+        position: relative;
+        line-height: 2.8;
+        .formulize-drag {
+            display: inline;
+            padding: 12px 4px;
+            border-radius: 3px;
+            vertical-align: middle;
+            background-color: rgba(26, 94, 255, 0.15);
+        }
+        .formulize-cursor {
+            display: inline-block;
+            vertical-align: middle;
+            height: 20px;
+            width: 1px;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        .formulize-unit, .formulize-operator {
+            display: inline;
+            vertical-align: middle;
+            padding: 0 10px;
+            word-break: break-all;
+            margin: 6px;
+            border-radius: 999px;
+            background-color: #ffffff;
+        }
+        .formulize-item {
+            display: inline-block;
+            vertical-align: middle;
+            padding: 0 10px;
+            word-break: break-all;
+            margin: 6px;
+            background-color: #ffffff;
+            border-radius: 999px;
+            color: #333333;
+            height: 24px;
+            line-height: 24px;
+            position: relative;
+            overflow: hidden;
+            .formulize-type {
+                display: inline-block;
+                vertical-align: middle;
+                padding: 0 10px;
+                min-width: 80px;
+                height: 24px;
+                line-height: 24px;
+                font-size: 13px;
+                font-weight: 600;
+                word-break: break-all;
+                text-align: center;
+                box-sizing: border-box;
+                background-color: #5e636c;
+                margin-right: .8em;
+                color: #ffffff;
+            }
+        }
+        .formulize-operator {
+            display: inline-block;
+            margin-top: 0;
+            margin-bottom: 0;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            padding: 0;
+            text-align: center;
+            font-weight: 600;
+            color: #f6474e;
+            border-color: #f6474e;
+        }
+        .formulize-bracket {
+            background-color: transparent;
+            border: 0;
+            color: #12c2b7;
+        }
+    }
 
-.formula-container {
-  padding: 40px;
-  cursor: text;
-  position: relative;
-  line-height: 2.8;
-}
+    .formulize-alert {
+        position: absolute;
+        width: 140px;
+        height: 42px;
+        line-height: 38px;
+        color: #777777;
+        box-sizing: border-box;
+        border: 1px solid #d8d8d8;
+        border-right: 0;
+        border-top: 0;
+        background-color: #fafafa;
+        border-top: 3px solid #ababab;
+        text-align: center;
+        top: 0;
+        right: 1px;
+        z-index: 10;
+        &.formulize-alert-good {
+            color: #88ccab;
+            border-top-color: #88ccab;
+        }
+        &.formulize-alert-error {
+            color: #ff9090;
+            border-top-color: #ff9090;
+        }
+    }
 
-.formula-container .formula-drag {
-  display: inline;
-  padding: 12px 4px;
-  border-radius: 3px;
-  vertical-align: middle;
-  background-color: rgba(26, 94, 255, .15);
-}
+    .formulize-prefix {
+        color: rgba(0, 0, 0, 0.7);
+    }
 
-.formula-container .formula-cursor {
-  display: inline-block;
-  vertical-align: middle;
-  height: 20px;
-  width: 1px;
-  background-color: #ababab;
-  background-color: rgba(0, 0, 0, .6);
-}
-
-.formula-container .formula-unit,
-.formula-container .formula-operator,
-.formula-container .formula-item {
-  display: inline;
-  vertical-align: middle;
-  padding: 0 10px;
-  word-break: break-all;
-  margin: 6px;
-  vertical-align: middle;
-  border-radius: 999px;
-  background-color: #ffffff;
-  -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .375);
-  -moz-box-shadow: 0 3px 8px rgba(0, 0, 0, .375);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, .375);
-}
-
-.formula-container .formula-item {
-  display: inline-block;
-  border-radius: 999px;
-  color: #333333;
-  height: 24px;
-  line-height: 24px;
-  position: relative;
-  overflow: hidden;
-}
-
-.formula-container .formula-item .formula-type {
-  display: inline-block;
-  vertical-align: middle;
-  padding: 0 10px;
-  min-width: 80px;
-  height: 24px;
-  line-height: 24px;
-  font-size: 13px;
-  font-weight: 600;
-  word-break: break-all;
-  text-align: center;
-  -o-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  background-color: #5e636c;
-  margin-right: .8em;
-  color: #ffffff;
-}
-
-.formula-container .formula-operator {
-  display: inline-block;
-  margin-top: 0;
-  margin-bottom: 0;
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-  padding: 0;
-  text-align: center;
-  font-weight: 600;
-  color: #f6474e;
-  border-color: #f6474e;
-}
-
-.formula-container .formula-bracket {
-  background-color: transparent;
-  border: 0;
-  color: #12c2b7;
-}
-
-.formula-alert {
-  position: absolute;
-  width: 140px;
-  height: 42px;
-  line-height: 38px;
-  color: #777777;
-  box-sizing: border-box;
-  -o-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  border: 1px solid #d8d8d8;
-  border-right: 0;
-  border-top: 0;
-  background-color: #fafafa;
-  border-top: 3px solid #ababab;
-  text-align: center;
-  top: 0;
-  right: 1px;
-  z-index: 10;
-}
-
-.formula-alert.formula-alert-good {
-  color: #88ccab;
-  border-top-color: #88ccab;
-}
-
-.formula-alert.formula-alert-error {
-  color: #ff9090;
-  border-top-color: #ff9090;
-}
-
-.formula-prefix {
-  color: rgba(0, 0, 0, .7);
-}
-
-.formula-surfix {
-  color: rgba(0, 0, 0, .3);
+    .formulize-surfix {
+        color: rgba(0, 0, 0, 0.3);
+    }
 }

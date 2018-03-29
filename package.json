@@ -1,7 +1,7 @@
 {
   "name": "formulize",
   "version": "0.0.1",
-  "description": "formula UI library",
+  "description": "formula UI generator",
   "main": "dist/formulize.umd.js",
   "module": "dist/formulize.es5.js",
   "typings": "dist/types/formulize.d.ts",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/KennethanCeyer/formulize#readme",
   "dependencies": {
-    "metric-parser": "0.0.5"
+    "metric-parser": "0.0.7"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
@@ -49,6 +49,7 @@
     "rollup-plugin-commonjs": "^9.0.0",
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-scss": "^0.4.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.12.0",
     "ts-lint": "^4.5.1",

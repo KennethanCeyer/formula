@@ -1,5 +1,5 @@
-# Formula
-Javscript WYSWYG formula builder.
+# formulize
+formula UI generator
 
 [![npm version](https://badge.fury.io/js/jquery-formula.svg)](https://badge.fury.io/js/jquery-formula) [![Bower version](https://badge.fury.io/bo/jquery-formula.svg)](https://badge.fury.io/bo/jquery-formula) [![ghit.me](https://ghit.me/badge.svg?repo=KennethanCeyer/Formula)](https://ghit.me/repo/KennethanCeyer/Formula) [![Join the chat at https://gitter.im/KennethanCeyer/PIGNOSE](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KennethanCeyer/PIGNOSE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ----

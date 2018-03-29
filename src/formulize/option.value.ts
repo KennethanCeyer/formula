@@ -1,7 +1,7 @@
-import { Option } from './option.interface';
+import { FormulizeOptions } from './option.interface';
 import { FormulizeHelper } from './formulize.helper';
 
-export const defaultOption: Option = {
+export const defaultOptions: FormulizeOptions = {
     id: 'formulize',
     cursor: {
         time: {
@@ -12,10 +12,7 @@ export const defaultOption: Option = {
     text: {
         formula: 'formula',
         error: 'error',
-        passed: 'passed'
+        pass: 'passed'
     },
-    export: {
-        filter: data => data,
-        node: (elem: Element) => FormulizeHelper.getDataValue(elem)
-    }
+    export: (elem: HTMLElement) => FormulizeHelper.getDataValue(elem)
 };

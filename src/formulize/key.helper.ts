@@ -41,11 +41,11 @@ export class FormulizeKeyHelper {
         return keyCode === Key.End;
     }
 
-    public static doReload() {
+    public static doReload(): void {
         location.reload();
     }
 
-    public static doAction<T>(action: () => T) {
-        return action();
+    public static doAction<T>(action: () => T): () => T {
+        return action;
     }
 }

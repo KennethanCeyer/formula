@@ -1,9 +1,9 @@
 import { Position } from './formulize.interface';
 
 export class FormulizeHelper {
-    public static getDataValue(elem: Element): string {
-        const jQueryElement = $(elem);
-        const value = jQueryElement.data('value');
+    public static getDataValue(elem: HTMLElement): string {
+        const jQueryElem = $(elem);
+        const value = jQueryElem.data('value');
         return value !== undefined
             ? value
             : $(elem).text();
@@ -14,11 +14,11 @@ export class FormulizeHelper {
         Math.abs(position.y - targetPosition.y) <= distance;
     }
 
-    public static getDragElement(id: string): Element {
+    public static getDragElement(id: string): HTMLElement {
         return $(`<div class="${id}-drag"></div>`)[0];
     }
 
-    public static getCursorElement(id: string): Element {
+    public static getCursorElement(id: string): HTMLElement {
         return $(`<div class="${id}-cursor"></div>`)[0];
     }
 }

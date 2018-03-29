@@ -1,52 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
+	<meta charset="UTF-8">
+    <meta name="description" content="formula UI generator">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<meta property="og:url" content="http://www.pigno.se/barn/PIGNOSE-Formula">
 	<meta property="og:type" content="product">
 	<meta property="og:title" content="formulize">
-	<meta property="og:description" content="Javscript WYSWYG formula builder.">
+	<meta property="og:description" content="formula UI generator">
 	<meta property="og:image" content="http://www.pigno.se/barn/PIGNOSE-Formula/demo/img/cover@250.png">
 	<meta property="og:site_name" content="PIGNOSE">
 	<title>formulize</title>
-	<link rel="shortcut icon" type="image/x-icon" href="demo/img/pignose-ico.ico" />
+	<link rel="shortcut icon" type="image/x-icon" href="demo/img/pignose-ico.ico">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/themes/prism.min.css" />
-	<link rel="stylesheet" href="demo/css/ui.css" />
-	<link rel="stylesheet" href="demo/css/style.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/themes/prism.min.css">
+	<link rel="stylesheet" href="demo/css/ui.css">
+	<link rel="stylesheet" href="demo/css/style.css">
 	<link rel="stylesheet" type="text/css" href="dist/formulize.css">
 </head>
 <body>
 	<div id="wrapper">
 		<div class="header">
-			<img src="demo/img/pignose-logo.png" alt="" />
+			<img src="demo/img/pignose-logo.png" alt="">
 			<h1>formulize</h1>
-			<a href="https://github.com/KennethanCeyer/Formula" target="_blank" class="ui button black">View project on Github</a>
-			<a href="https://github.com/KennethanCeyer/Formula/archive/master.zip" target="_blank" class="ui button teal">Download zip</a>
+			<a href="https://github.com/KennethanCeyer/formulize" target="_blank" class="ui button black">View project on Github</a>
+			<a href="https://github.com/KennethanCeyer/formulize/archive/master.zip" target="_blank" class="ui button teal">Download zip</a>
 			<h4 class="version">Latest version <strong></strong></h4>
 		</div>
 		<div class="article">
 			<h3>
 				<span>Basic</span>
 			</h3>
-			<div class="formula formula-basic"></div>
+			<div class="formulize formulize-basic"></div>
 		</div>
 		<div class="article">
 			<h3>
 				<span>Advanced</span>
 			</h3>
-			<div class="formula formula-advanced"></div>
+			<div class="formulize formulize-advanced"></div>
 
-			<div class="formula-drop">
+			<div class="formulize-drop">
 				<i class="fa fa-mouse-pointer" aria-hidden="true"></i>
-				<p>You can drag and drop each of below items to the formula area.</p>
+				<p>You can drag and drop each of below items to the formulize area.</p>
 				<p>If you want to set a value on your custom element, Set <span class="ui label">data-value</span> attribute on your element.</p>
-				<div class="formula-drop-items">
-					<a href="#" class="formula-custom" data-value="3.14">PI</a>
-					<a href="#" class="formula-custom formula-custom-operator" data-value="+">Custom operator (+)</a>
-					<a href="#" class="formula-custom" data-value="3">Variable (INT 3)</a>
+				<div class="formulize-drop-items">
+					<a href="#" class="formulize-custom" data-value="3.14">PI</a>
+					<a href="#" class="formulize-custom formulize-custom-operator" data-value="+">Custom operator (+)</a>
+					<a href="#" class="formulize-custom" data-value="3">Variable (INT 3)</a>
 				</div>
 			</div>
 
@@ -252,7 +253,7 @@ console.log(result.filterData);</code></pre>
 			<h3>
 				<span>Example</span>
 			</h3>
-			<br />
+			<br>
 			<ul class="ui top pointing secondary menu">
 				<a href="#" role="presentation" class="item active" data-tab="html">HTML</a>
 				<a href="#" role="presentation" class="item" data-tab="javascript">Javascript</a>
@@ -281,6 +282,7 @@ console.log(result.filterData);</code></pre>
 		</div>
 	</div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js"></script>
     <script type="text/javascript" src="dist/formulize.umd.js"></script>
     <script type="text/javascript">
@@ -294,7 +296,7 @@ console.log(result.filterData);</code></pre>
             var data = {"operator":"+","operand1":{"operator":"+","operand1":{"value":"1","type":"unit"},"operand2":{"value":"2","type":"unit"}},"operand2":{"value":"3","type":"unit"}};
 
             // .setData({:data}) can load new expression.
-            $formula.first().formulize('setData', data);
+            //$formula.first().formulize('setData', data);
 
             // .draggable is normal jQuery UI plugin. It support to dragging the element by using mouse pick and move.
             $('.formulize-drop .formulize-drop-items .formulize-custom').draggable({
