@@ -1,10 +1,12 @@
 import { Offset, Option } from './option.interface';
 import { FormulizeHelper } from './formulize.helper';
-import { convert } from 'metric-parser';
+import { convert, valid } from 'metric-parser';
+import { Tree } from 'metric-parser/dist/types/tree';
+import { ParserResult } from 'metric-parser/dist/types/parser/parser.result';
 
 export namespace Formulize {
     const defaultOption: Option = {
-        id: 'formula',
+        id: 'formulize',
         cursor: {
             time: {
                 animate: 160,
@@ -43,7 +45,7 @@ export namespace Formulize {
         public init() {
             this.container = $(this._elem);
             this.container.addClass(`${}this._option.id}-container`);
-            this.container.wrap(`<div class="${this.option.id}-wrapper"></div>`);
+            this.container.wrap(`<div class="${this._optionion.id}-wrapper"></div>`);
 
             this.statusBox = $(`<div class="${this._option.id}-alert">${_opt.strings.formula}</div>`);
             this.statusBox.insertBefore(this.container);
@@ -162,7 +164,7 @@ export namespace Formulize {
                     dragElem.remove();
                 } else if (this.cursor.length > 0 && this.cursor.prev().length > 0) {
                     $prev = this.cursor.prev();
-                    if ($prev.hasClass(this.opt.id + '-unit') && $prev.text().length > 1) {
+                    if ($prev.hasClass(this._option.id + '-unit') && $prev.text().length > 1) {
                         text = $prev.text();
                         this.setDecimal($prev, text.substring(0, text.length - 1).toFormulaDecimal());
                     } else {
@@ -182,7 +184,7 @@ export namespace Formulize {
                 } else {
                     if (this.cursor.length > 0 && this.cursor.next().length > 0) {
                         $next = this.cursor.next();
-                        if ($next.hasClass(this.opt.id + '-unit') && $next.text().length > 1) {
+                        if ($next.hasClass(this._option.id + '-unit') && $next.text().length > 1) {
                             text = $next.text();
                             this.setDecimal($next, text.substring(1, text.length).toFormulaDecimal());
                         } else {
@@ -212,7 +214,7 @@ export namespace Formulize {
                         dragElem.data('active', true);
 
                         $prev = this.cursor.prev();
-                        if ($prev.hasClass(this.opt.id + '-drag')) {
+                        if ($prev.hasClass(this._option.id + '-drag')) {
                             dragElemItem = dragElem.children('*');
                             if (dragElemItem.length < 1) {
                                 dragElem.remove();
@@ -269,7 +271,7 @@ export namespace Formulize {
                         dragElem.data('active', true);
 
                         $next = this.cursor.next();
-                        if ($next.hasClass(this.opt.id + '-drag')) {
+                        if ($next.hasClass(this._option.id + '-drag')) {
                             dragElemItem = dragElem.children('*');
                             if (dragElemItem.length < 1) {
                                 dragElem.remove();
@@ -386,56 +388,57 @@ export namespace Formulize {
                     event => this.eventKeyDown);
         }
 
-        check(callback) {
-            var formula = this.getFormula().data;
+        check(extractor?: (valid: boolean) => void) {
+            const data = this.getFormula().data;
 
-            if (!formula)
+            if (!data)
                 return;
 
-            const result = convert(formula);
-            if (!result.code) {
-                this.alert.text(this.opt.strings.validationPassed).addClass(this.opt.id + '-alert-good').removeClass(this.opt.id + '-alert-error');
-                if (typeof callback === 'function') {
-                    callback(true);
-                }
-                return;
+            const isValid = valid(data);
+            if (isValid) {
+                this.statusBox
+                    .text(this._option.strings.validationPassed)
+                    .addClass(`${this._option.id}-alert-good`)
+                    .removeClass(`${this._option.id}-alert-error`);
+            }
+            else {
+                this.statusBox
+                    .text(this._option.strings.validationError)
+                    .removeClass(`${this._option.id}-alert-good`)
+                    .addClass(`${this._option.id}-alert-error`);
             }
 
-            this.alert.text(this.opt.strings.validationError).removeClass(this.opt.id + '-alert-good').addClass(this.opt.id + '-alert-error');
-            if (typeof callback === 'function') {
-                callback(false);
-            }
+            if (extractor)
+                extractor(isValid);
         }
 
         removeDrag() {
-            var dragElem = this.container.find('.${this._option.id}-drag');
-            dragElem.children('*').each(function () {
-                var $this = $(this);
-                $this.insertBefore(dragElem);
-            });
+            const dragElem = this.container.find(`.${this._option.id}-drag`);
+            dragElem
+                .children('*')
+                .each((_, elem) => $(elem).insertBefore(dragElem));
             dragElem.remove();
-            $this.triggerHandler('formula.input', this.getFormula());
+            this.hookUpdate();
         }
 
         selectAll() {
             this.removeDrag();
-            dragElem = $('<div class="${this._option.id}-drag"></div>');
+            const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
             dragElem.prependTo(this.container);
-            this.container.children(':not(".${this._option.id}-cursor")').each(function () {
-                var $this = $(this);
-                $this.appendTo(dragElem);
-            });
+            this.container
+                .children(':not(".${this._option.id}-cursor")')
+                .each((_, elem) => $(elem).appendTo(dragElem));
         }
 
-        click(position) {
-            this.container.find('.${this._option.id}-cursor').remove();
+        click(position: Offset = { x: 0, y: 0 }) {
+            this.container
+                .find(`.${this._option.id}-cursor`)
+                .remove();
 
-            var $cursor = $('<div class="${this._option.id}-cursor"></div>');
-            var check = null, idx = null;
-            position = position || { x: 0, y: 0 };
-            $cursor.appendTo(this.container);
-            this.cursor = $cursor;
+            this.cursor = $(`<div class="${this._option.id}-cursor"></div>`);
+            this.cursor.appendTo(this.container);
 
+            // TODO: belows code is suck, no hope, refactor right now
             var parentPos = {
                 x: this.container.offset().left,
                 y: this.container.offset().top
@@ -504,18 +507,18 @@ export namespace Formulize {
 
             var loop = function () {
                 setTimeout(function () {
-                    if ($cursor.hasClass('inactive')) {
-                        $cursor.removeClass('inactive');
-                        $cursor.stop().animate({ opacity: 1 }, this.opt.cursorAnimTime);
+                    if (cursorElem.hasClass('inactive')) {
+                        cursorElem.removeClass('inactive');
+                        cursorElem.stop().animate({ opacity: 1 }, this._option.cursorAnimTime);
                     } else {
-                        $cursor.addClass('inactive');
-                        $cursor.stop().animate({ opacity: 0 }, this.opt.cursorAnimTime);
+                        cursorElem.addClass('inactive');
+                        cursorElem.stop().animate({ opacity: 0 }, this._option.cursorAnimTime);
                     }
 
-                    if ($cursor.length > 0) {
+                    if (cursorElem.length > 0) {
                         loop();
                     }
-                }, this.opt.cursorDelayTime);
+                }, this._option.cursorDelayTime);
             };
             loop();
 
@@ -547,8 +550,6 @@ export namespace Formulize {
         }
 
         insert(item, position) {
-            var context = this;
-
             if (this.cursor === null || this.cursor.length < 1 || typeof position === 'object') {
                 this.click(position);
             }
@@ -557,21 +558,18 @@ export namespace Formulize {
                 item = $(item);
             }
 
-            item.addClass(this.opt.id + '-item');
+            item.addClass(this._option.id + '-item');
             item.insertBefore(this.cursor);
 
-            this.text.focus();
+            this.textBox.trigger('focus');
             this.check();
-
-            $this.triggerHandler('formula.input', this.getFormula());
+            this.hookUpdate();
         };
 
         insertChar(key) {
-            var context = this;
-
             if ((key >= 0 && key <= 9) || $.inArray(key.toLowerCase(), this.permitedKey) != -1) {
                 if ((key >= 0 && key <= 9) || key === '.') {
-                    var $unit = $('<div class="${this._option.id}-item ${this._option.id}-unit">' + key + '</div>');
+                    var $unit = $(`<div class="${this._option.id}-item ${this._option.id}-unit">${key}</div>`);
                     var $item = null;
                     var decimal = '', merge = false;
 
@@ -591,19 +589,19 @@ export namespace Formulize {
                     var $prev = $unit.prev();
                     var $next = $unit.next();
 
-                    if ($prev.length > 0 && $prev.hasClass(this.opt.id + '-cursor')) {
+                    if ($prev.length > 0 && $prev.hasClass(this._option.id + '-cursor')) {
                         $prev = $prev.prev();
                     }
 
-                    if ($next.length > 0 && $next.hasClass(this.opt.id + '-cursor')) {
+                    if ($next.length > 0 && $next.hasClass(this._option.id + '-cursor')) {
                         $next = $next.next();
                     }
 
-                    if ($prev.length > 0 && $prev.hasClass(this.opt.id + '-unit')) {
+                    if ($prev.length > 0 && $prev.hasClass(this._option.id + '-unit')) {
                         merge = true;
                         $item = $prev;
                         $item.append($unit[0].innerHTML);
-                    } else if ($next.length > 0 && $next.hasClass(this.opt.id + '-unit')) {
+                    } else if ($next.length > 0 && $next.hasClass(this._option.id + '-unit')) {
                         merge = true;
                         $item = $next;
                         $item.prepend($unit[0].innerHTML);
@@ -622,145 +620,156 @@ export namespace Formulize {
                         this.container.append($operator);
                     }
                     if (key === '(' || key === ')') {
-                        $operator.addClass(this.opt.id + '-bracket');
+                        $operator.addClass(this._option.id + '-bracket');
                     }
                 }
 
-                $this.triggerHandler('formula.input', this.getFormula());
+                this.hookUpdate();
             }
         };
 
         insertFormula(data) {
-            var context = this;
-            var idx = 0;
-
             if (typeof data === 'string') {
                 var data_split = data.split('');
                 for (idx in data_split) {
                     this.insertChar.call(context, data_split[idx]);
                 }
-            } else {
-                for (idx in data) {
-                    var item = data[idx];
-                    if (typeof item !== 'object') {
-                        var data_splited = item.toString().split('');
-                        for (var key in data_splited) {
-                            this.insertChar.call(context, data_splited[key]);
-                        }
-                    } else {
-                        if (typeof this.opt.import.item === 'function') {
-                            var $e = this.opt.import.item.call(context, item);
-                            if (typeof $e !== 'undefined' && $e !== null) {
-                                this.insert($e);
-                            }
+
+                this.check();
+                this.hookUpdate();
+            }
+
+            for (idx in data) {
+                var item = data[idx];
+                if (typeof item !== 'object') {
+                    var data_splited = item.toString().split('');
+                    for (var key in data_splited) {
+                        this.insertChar.call(context, data_splited[key]);
+                    }
+                } else {
+                    if (typeof this._option.import.item === 'function') {
+                        var $e = this._option.import.item.call(context, item);
+                        if (typeof $e !== 'undefined' && $e !== null) {
+                            this.insert($e);
                         }
                     }
                 }
             }
-            this.check();
 
-            $this.triggerHandler('formula.input', this.getFormula());
+            this.check();
+            this.hookUpdate();
         };
 
-        empty() {
-            var context = this;
-
-            this.container.find(':not(".${this._option.id}-cursor")').remove();
-            $this.triggerHandler('formula.input', this.getFormula());
-
-            return this.container;
+        private hookUpdate(): void {
+            $(this._elem)
+                .triggerHandler(`${this._option.id}.input`, this.getFormula());
         }
 
-        setDecimal(element, decimal) {
-            var context = this;
+        private removeCursor(): void {
+            this.container
+                .find(`:not(".${this._option.id}-cursor")`)
+                .remove();
+        }
 
-            if (decimal !== '') {
-                element.empty();
-                var split = decimal.split('.');
-                var $prefix = $('<span class="${this._option.id}-prefix ${this._option.id}-decimal-highlight">' + split[0] + '</span>');
-                $prefix.appendTo(element);
+        empty() {
+            this.removeCursor();
+            this.hookUpdate();
+        }
 
-                if (typeof split[1] !== 'undefined') {
-                    var $surfix = $('<span class="${this._option.id}-surfix ${this._option.id}-decimal-highlight">.' + split[1] + '</span>');
-                    $surfix.appendTo(element);
-                }
+        setDecimal(elem, decimal: string) {
+            if (!decimal)
+                return;
+
+            elem.empty();
+            var split = decimal.split('.');
+            var $prefix = $('<span class="${this._option.id}-prefix ${this._option.id}-decimal-highlight">' + split[0] + '</span>');
+            $prefix.appendTo(elem);
+
+            if (typeof split[1] !== 'undefined') {
+                var $surfix = $('<span class="${this._option.id}-surfix ${this._option.id}-decimal-highlight">.' + split[1] + '</span>');
+                $surfix.appendTo(elem);
             }
         };
 
         setFormula(data) {
-            var context = this;
-
             this.empty();
-            try {
-                var obj = null;
-                if (typeof data !== 'object') {
-                    obj = JSON.parse(data);
-                } else {
-                    obj = data;
-                }
+            const objectData = typeof data !== 'object'
+                ? JSON.parse(data)
+                : data;
 
-                var decodedData = new FormulaParser(obj);
-                if (decodedData.status === true) {
-                    this.insertFormula.call(context, decodedData.data);
-                }
-            } catch (e) {
-                console.trace(e.stack);
-            }
+            const result = convert(objectData);
+            if (!result.code)
+                this.insertFormula(result.data);
         };
 
-        getFormula(callback) {
-            var context = this;
+        getFormula(extractor?: (data: ParserResult<Tree>) => void): ParserResult<Tree> {
+            if (this._option.export.filter) {
+                this.container
+                    .find('.formula-item')
+                    .each((_, elem) => {
+                        const value = $(elem).data('value')
+                            ? $(elem).data('value')
+                            : $(elem).text();
+                        const item = { value };
 
-            var data = [];
-            var filterData = null;
-            var result;
+                        if ($(elem).hasClass(`${this._option.id}-unit`)) {
+                            item.type = 'unit';
+                            item.value = value.toFormulaDecimal();
+                            data.push(item);
+                            return;
+                        }
 
-            if (typeof this.opt.export.filter === 'function') {
-                this.container.find('.formula-item').each(function () {
-                    var $this = $(this);
-                    var item = {};
-                    item.value = ($this.data('value') ? $this.data('value') : $this.text());
-
-                    if ($this.hasClass(this.opt.id + '-unit')) {
-                        item.type = 'unit';
-                        item.value = item.value.toFormulaDecimal();
-                    } else if ($this.hasClass(this.opt.id + '-custom')) {
-                        item.type = 'item';
-                        if (typeof this.opt.export !== 'undefined' && typeof this.opt.export.item === 'function') {
-                            try {
-                                item.value = this.opt.export.item.call(context, $this);
-                            } catch (e) {
+                        if ($(elem).hasClass(this._option.id + '-custom')) {
+                            item.type = 'item';
+                            if (typeof this._option.export !== 'undefined' && typeof this._option.export.item === 'function') {
+                                try {
+                                    item.value = this._option.export.item.call(context, $(elem));
+                                } catch (e) {
+                                    item.value = '0';
+                                }
+                            } else {
                                 item.value = '0';
                             }
-                        } else {
-                            item.value = '0';
+                            data.push(item);
+                            return;
                         }
-                    } else if ($this.hasClass(this.opt.id + '-operator')) {
-                        item = item.value === 'x' ? '*' : item.value;
-                    }
-                    data.push(item);
-                });
 
-                data = data;
-                filterData = new FormulaParser($.extend([], data));
-                filterData.data = this.opt.export.filter(filterData.data);
+                        if ($(elem).hasClass(this._option.id + '-operator')) {
+                            item = item.value === 'x' ? '*' : item.value;
+                            data.push(item);
+                            return;
+                        }
+                    });
 
-                result = {
+                const convertResult = convert(data);
+                convertResult.data = this._option.export.filter(convertResult.data);
+
+                const result = {
                     data: data,
-                    filterData: filterData
+                    filterData: convertResult
                 };
-            } else {
-                this.container.find('.formula-item').each(function () {
-                    var $this = $(this);
-                    var value = ($this.data('value') ? $this.data('value') : $this.text());
-                    if ($this.hasClass(this.opt.id + '-unit')) {
+
+                if (extractor)
+                    extractor(result);
+
+                return result;
+            }
+
+            this.container
+                .find('.formula-item')
+                .each((_, elem) => {
+                    const value = $(elem).data('value')
+                        ? $(elem).data('value')
+                        : $(elem).text();
+
+                    if ($(elem).hasClass(this._option.id + '-unit')) {
                         value = value.toFormulaDecimal();
-                    } else if ($this.hasClass(this.opt.id + '-operator') && value === 'x') {
+                    } else if ($(elem).hasClass(this._option.id + '-operator') && value === 'x') {
                         value = '*';
-                    } else if ($this.hasClass(this.opt.id + '-custom')) {
-                        if (typeof this.opt.export !== 'undefined' && typeof this.opt.export.item === 'function') {
+                    } else if ($(elem).hasClass(this._option.id + '-custom')) {
+                        if (typeof this._option.export !== 'undefined' && typeof this._option.export.item === 'function') {
                             try {
-                                value = this.opt.export.call(context, $this);
+                                value = this._option.export.call(context, $(elem));
                             } catch (e) {
                                 value = '0';
                             }
@@ -771,15 +780,13 @@ export namespace Formulize {
                     data.push(value);
                 });
 
-                result = {
-                    data: data.join(' '),
-                    filterData: filterData
-                };
-            }
+            const result = {
+                data: data.join(' '),
+                filterData: filterData
+            };
 
-            if (typeof callback === 'function') {
-                callback(result);
-            }
+            if (extractor)
+                extractor(result);
 
             return result;
         }
