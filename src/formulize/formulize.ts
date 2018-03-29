@@ -73,7 +73,7 @@ export namespace Formulize {
             this.textBox
                 .off(`keydown.${this._option.id}Handler`)
                 .on(`keydown.${this._option.id}Handler`,
-                    event => this.eventKeyDown);
+                    event => this.hookKeyDown);
         }
 
         public check(extractor?: (valid: boolean) => void) {
@@ -100,98 +100,6 @@ export namespace Formulize {
                 extractor(isValid);
         }
 
-        public click(position: Position = { x: 0, y: 0 }) {
-            this.container
-                .find(`.${this._option.id}-cursor`)
-                .remove();
-
-            this.cursor = $(`<div class="${this._option.id}-cursor"></div>`);
-            this.cursor.appendTo(this.container);
-
-            // TODO: belows code is suck, no hope, refactor right now
-            const containerPosition = {
-                x: this.container.offset().left,
-                y: this.container.offset().top
-            };
-
-            const parentPadding = {
-                x: parseFloat(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
-                y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
-            };
-
-            const unitPositions = this.container
-                .children(`*:not(".${this._option.id}-cursor")`)
-                .map((_, elem) => (<ElementPosition>{
-                    elem,
-                    x: $(elem).offset().left - containerPosition.x + parentPadding.x,
-                    y: $(elem).offset().top - containerPosition.y
-                }));
-
-            // TODO: WTF
-            const $pointer = null;
-            const maxY = 0, maxDiff = 10000;
-            for (idx in unitPositions) {
-                check = unitPositions[idx];
-                if (check.y <= position.y) {
-                    if (check.y >= maxY * 0.5 && check.x <= position.x) {
-                        if (check.y >= maxY) {
-                            maxY = check.y;
-                        }
-                        if (position.x - check.x <= maxDiff) {
-                            maxDiff = position.x - check.x;
-                            $pointer = check.e;
-                        }
-                    }
-                }
-            }
-
-            if ($pointer === null) {
-                maxY = 0;
-                maxDiff = 10000;
-                for (idx in unitPositions) {
-                    check = unitPositions[idx];
-                    if (check.y >= maxY * 0.5 && check.x <= position.x) {
-                        if (check.y >= maxY) {
-                            maxY = check.y;
-                        }
-                        if (position.x - check.x < maxDiff) {
-                            maxDiff = position.x - check.x;
-                            $pointer = check.e;
-                        }
-                    }
-                }
-            }
-
-            if (unitPositions.length && $pointer !== null && maxY + unitPositions[0].e.outerHeight() >= position.y) {
-                this.cursor.insertAfter($pointer);
-            } else {
-                if (unitPositions.length && position.x > unitPositions[0].x) {
-                    this.cursor.appendTo(this.container);
-                } else {
-                    this.cursor.prependTo(this.container);
-                }
-            }
-
-            const loop = function () {
-                setTimeout(function () {
-                    if (cursorElem.hasClass('inactive')) {
-                        cursorElem.removeClass('inactive');
-                        cursorElem.stop().animate({ opacity: 1 }, this._option.cursorAnimTime);
-                    } else {
-                        cursorElem.addClass('inactive');
-                        cursorElem.stop().animate({ opacity: 0 }, this._option.cursorAnimTime);
-                    }
-
-                    if (cursorElem.length) {
-                        loop();
-                    }
-                }, this._option.cursorDelayTime);
-            };
-            loop();
-
-            this.removeDrag();
-        };
-
         public keyDown(key: number, pressedShift: boolean) {
             const realKey = pressedShift && key >= 0 && key <= 9 && specialCharacters[key]
                 ? specialCharacters[key]
@@ -202,7 +110,7 @@ export namespace Formulize {
 
         public insert(item, position) {
             if (!this.cursor || !this.cursor.length || typeof position === 'object')
-                this.click(position);
+                this.select(position);
 
             if (typeof item === 'string') {
                 item = $(item);
