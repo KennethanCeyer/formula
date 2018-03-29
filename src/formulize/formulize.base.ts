@@ -1,7 +1,8 @@
 import { Option } from './option.interface';
 import { defaultOption } from './option.value';
+import { FormulizeInterface, Position } from './formulize.interface';
 
-export abstract class FormulizeBase {
+export abstract class FormulizeBase implements FormulizeInterface {
     protected _elem: Element;
     protected _option: Option = { ...defaultOption };
     protected _position: Position = { x: 0, y :0 };

@@ -293,8 +293,8 @@ console.log(result.filterData);</code></pre>
             // You can load formula expression by wrting JSON type value;
             var data = {"operator":"+","operand1":{"operator":"+","operand1":{"value":"1","type":"unit"},"operand2":{"value":"2","type":"unit"}},"operand2":{"value":"3","type":"unit"}};
 
-            // .setFormula({:data}) can load new expression.
-            $formula.first().formulize('setFormula', data);
+            // .setData({:data}) can load new expression.
+            $formula.first().formulize('setData', data);
 
             // .draggable is normal jQuery UI plugin. It support to dragging the element by using mouse click and move.
             $('.formulize-drop .formulize-drop-items .formulize-custom').draggable({
@@ -327,7 +327,7 @@ console.log(result.filterData);</code></pre>
 
             $('.formulize-get .compact .item').bind('click', function(event) {
                 event.preventDefault();
-                $('.formulize-advanced').formulize('getFormula', function(data) {
+                $('.formulize-advanced').formulize('getData', function(data) {
                     console.log('Formula result:', data);
                     $('.formulize-get .formulize-get-json .formulize-get-json-data').text(JSON.stringify(data));
                 });

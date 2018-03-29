@@ -13,7 +13,7 @@ export interface OptionCursor {
 export interface OptionText {
     formula?: string;
     error?: string;
-    passed?: string;
+    pass?: string;
 }
 
 export interface OptionExport {
@@ -28,9 +28,4 @@ export type OptionExtractor = (elem: Element) => any;
 export interface CursorTime {
     animate?: number;
     delay?: number;
-}
-
-export interface Position {
-    x: number;
-    y: number;
 }

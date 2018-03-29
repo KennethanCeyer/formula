@@ -8,6 +8,7 @@ import { Helper } from '../helper';
 import { FormulizeKeyHelper } from './formulize.key.helper';
 import { specialCharacters, supportedCharacters } from './formulize.value';
 import { FormulizeBase } from './formulize.base';
+import { ElementPosition } from './formulize.interface';
 
 export namespace Formulize {
     export class Formulize extends FormulizeBase {
@@ -75,8 +76,8 @@ export namespace Formulize {
                     event => this.eventKeyDown);
         }
 
-        check(extractor?: (valid: boolean) => void) {
-            const data = this.getFormula().data;
+        public check(extractor?: (valid: boolean) => void) {
+            const data = this.getData().data;
 
             if (!data)
                 return;
@@ -84,13 +85,13 @@ export namespace Formulize {
             const isValid = valid(data);
             if (isValid) {
                 this.statusBox
-                    .text(this._option.strings.validationPassed)
+                    .text(this._option.text.validation.pass)
                     .addClass(`${this._option.id}-alert-good`)
                     .removeClass(`${this._option.id}-alert-error`);
             }
             else {
                 this.statusBox
-                    .text(this._option.strings.validationError)
+                    .text(this._option.text.validation.error)
                     .removeClass(`${this._option.id}-alert-good`)
                     .addClass(`${this._option.id}-alert-error`);
             }
@@ -99,7 +100,7 @@ export namespace Formulize {
                 extractor(isValid);
         }
 
-        click(position: Position = { x: 0, y: 0 }) {
+        public click(position: Position = { x: 0, y: 0 }) {
             this.container
                 .find(`.${this._option.id}-cursor`)
                 .remove();
@@ -108,7 +109,7 @@ export namespace Formulize {
             this.cursor.appendTo(this.container);
 
             // TODO: belows code is suck, no hope, refactor right now
-            const parentPos = {
+            const containerPosition = {
                 x: this.container.offset().left,
                 y: this.container.offset().top
             };
@@ -118,22 +119,19 @@ export namespace Formulize {
                 y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
             };
 
-            const checkArea = [];
+            const unitPositions = this.container
+                .children(`*:not(".${this._option.id}-cursor")`)
+                .map((_, elem) => (<ElementPosition>{
+                    elem,
+                    x: $(elem).offset().left - containerPosition.x + parentPadding.x,
+                    y: $(elem).offset().top - containerPosition.y
+                }));
 
-            // TODO: do you lost your fucking mind past me? where did the key name come from?
-            this.container.children('*:not(".${this._option.id}-cursor")').each(function () {
-                const $this = $(this);
-                checkArea.push({
-                    x: $this.offset().left - parentPos.x + parentPadding.x,
-                    y: $this.offset().top - parentPos.y,
-                    e: $this
-                });
-            });
-
+            // TODO: WTF
             const $pointer = null;
             const maxY = 0, maxDiff = 10000;
-            for (idx in checkArea) {
-                check = checkArea[idx];
+            for (idx in unitPositions) {
+                check = unitPositions[idx];
                 if (check.y <= position.y) {
                     if (check.y >= maxY * 0.5 && check.x <= position.x) {
                         if (check.y >= maxY) {
@@ -150,8 +148,8 @@ export namespace Formulize {
             if ($pointer === null) {
                 maxY = 0;
                 maxDiff = 10000;
-                for (idx in checkArea) {
-                    check = checkArea[idx];
+                for (idx in unitPositions) {
+                    check = unitPositions[idx];
                     if (check.y >= maxY * 0.5 && check.x <= position.x) {
                         if (check.y >= maxY) {
                             maxY = check.y;
@@ -164,10 +162,10 @@ export namespace Formulize {
                 }
             }
 
-            if (checkArea.length && $pointer !== null && maxY + checkArea[0].e.outerHeight() >= position.y) {
+            if (unitPositions.length && $pointer !== null && maxY + unitPositions[0].e.outerHeight() >= position.y) {
                 this.cursor.insertAfter($pointer);
             } else {
-                if (checkArea.length && position.x > checkArea[0].x) {
+                if (unitPositions.length && position.x > unitPositions[0].x) {
                     this.cursor.appendTo(this.container);
                 } else {
                     this.cursor.prependTo(this.container);
@@ -194,7 +192,7 @@ export namespace Formulize {
             this.removeDrag();
         };
 
-        keyDown(key: number, pressedShift: boolean) {
+        public keyDown(key: number, pressedShift: boolean) {
             const realKey = pressedShift && key >= 0 && key <= 9 && specialCharacters[key]
                 ? specialCharacters[key]
                 : key;
@@ -202,7 +200,7 @@ export namespace Formulize {
             this.insertKey(realKey);
         }
 
-        insert(item, position) {
+        public insert(item, position) {
             if (!this.cursor || !this.cursor.length || typeof position === 'object')
                 this.click(position);
 
@@ -225,7 +223,7 @@ export namespace Formulize {
             return key >= 0 && key <= 9 || key === '.';
         }
 
-        insertKey(key: number | string) {
+        public insertKey(key: number | string) {
             // TODO: need refactor
             if (this.isValidKey(key)) {
                 if (this.isNumberTokenKey(key)) {
@@ -282,7 +280,7 @@ export namespace Formulize {
             }
         }
 
-        insertFormula(data) {
+        public insertFormula(data) {
             // TODO: need refactor
             if (typeof data === 'string') {
                 const splitData = data.split('');
@@ -311,24 +309,24 @@ export namespace Formulize {
             this.hookUpdate();
         }
 
-        private hookUpdate(): void {
+        protected hookUpdate(): void {
             this.check();
             $(this._elem)
-                .triggerHandler(`${this._option.id}.input`, this.getFormula());
+                .triggerHandler(`${this._option.id}.input`, this.getData());
         }
 
-        private removeCursor(): void {
+        protected removeCursor(): void {
             this.container
                 .find(`:not(".${this._option.id}-cursor")`)
                 .remove();
         }
 
-        empty() {
+        public empty() {
             this.removeCursor();
             this.hookUpdate();
         }
 
-        setDecimal(elem, decimal: string) {
+        protected setDecimal(elem, decimal: string) {
             if (!decimal)
                 return;
 
@@ -344,7 +342,7 @@ export namespace Formulize {
             suffix.appendTo(elem);
         }
 
-        setFormula(data) {
+        public setData(data) {
             this.empty();
             const objectData = typeof data !== 'object'
                 ? JSON.parse(data)
@@ -355,7 +353,7 @@ export namespace Formulize {
                 this.insertFormula(result.data);
         }
 
-        getFormula(extractor?: (data: ParserResult<Tree>) => void): ParserResult<Tree> {
+        public getData(extractor?: (data: ParserResult<Tree>) => void): ParserResult<Tree> {
             if (this._option.export.filter) {
                 this.container
                     .find('.formula-item')
