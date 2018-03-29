@@ -6,6 +6,7 @@ import { ParserResult } from 'metric-parser/dist/types/parser/parser.result';
 import { Key } from '../key.enum';
 import { Helper } from '../helper';
 import { FormulizeKeyHelper } from './formulize.key.helper';
+import { specialCharacters, supportedCharacters } from './formulize.value';
 
 export namespace Formulize {
     const defaultOption: Option = {
@@ -159,15 +160,14 @@ export namespace Formulize {
                 this.draggerElem.remove();
             } else if (this.cursor.length && this.cursor.prev().length) {
                 $prev = this.cursor.prev();
-                if ($prev.hasClass(this._option.id + '-unit') && $prev.text().length > 1) {
+                if ($prev.hasClass(`${this._option.id}-unit`) && $prev.text().length > 1) {
                     text = $prev.text();
                     this.setDecimal($prev, text.substring(0, text.length - 1).toFormulaDecimal());
                 } else {
                     $prev.remove();
                 }
             }
-            this.check();
-            $this.triggerHandler('formula.input', this.getFormula());
+            this.hookUpdate();
         }
 
         private removeAfter(): void {
@@ -177,7 +177,7 @@ export namespace Formulize {
             } else {
                 if (this.cursor.length && this.cursor.next().length) {
                     $next = this.cursor.next();
-                    if ($next.hasClass(this._option.id + '-unit') && $next.text().length > 1) {
+                    if ($next.hasClass(`${this._option.id}-unit`) && $next.text().length > 1) {
                         text = $next.text();
                         this.setDecimal($next, text.substring(1, text.length).toFormulaDecimal());
                     } else {
@@ -185,8 +185,7 @@ export namespace Formulize {
                     }
                 }
             }
-            this.check();
-            $this.triggerHandler('formula.input', this.getFormula());
+            this.hookUpdate();
         }
 
         private moveLeftCursor(draggingMode: boolean = false): void {
@@ -214,7 +213,7 @@ export namespace Formulize {
             draggerElem.data('active', true);
 
             $prev = this.cursor.prev();
-            if ($prev.hasClass(this._option.id + '-drag')) {
+            if ($prev.hasClass(`${this._option.id}-drag`)) {
                 draggerElemItem = draggerElem.children('*');
                 if (draggerElemItem.length < 1) {
                     draggerElem.remove();
@@ -228,21 +227,12 @@ export namespace Formulize {
         }
 
         private moveUpCursor(): void {
-            if (!this.cursor.prev().length && !this.cursor.next().length)
+            if (!this.cursor.length)
                 return;
 
-            parentPadding = {
-                x: parseFloat(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
-                y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
-            };
-
-            $item = this.cursor.prev();
-            if (!$item.length) {
-                $item = this.cursor.next();
-            }
             this.click({
-                x: this.cursor.position().left + $item.outerWidth(),
-                y: this.cursor.position().top - $item.outerHeight() / 2
+                x: this.cursor.position().left + this.cursor.outerWidth(),
+                y: this.cursor.position().top - this.cursor.outerHeight() / 2
             });
         }
 
@@ -283,27 +273,18 @@ export namespace Formulize {
         }
 
         private moveDownCursor(): void {
-            if (!this.cursor.prev().length && this.cursor.next().length)
+            if (!this.cursor.length)
                 return;
 
-            parentPadding = {
-                x: parseFloat(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
-                y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
-            };
-
-            $item = this.cursor.prev();
-            if (!$item.length)
-                $item = this.cursor.next();
-
             this.click({
-                x: this.cursor.position().left + $item.outerWidth(),
-                y: this.cursor.position().top + $item.outerHeight() * 1.5
+                x: this.cursor.position().left + this.cursor.outerWidth(),
+                y: this.cursor.position().top + this.cursor.outerHeight() * 1.5
             });
         }
 
-        private moveFirstCursor(): void {
+        private moveFirstCursor(draggingMode: boolean = false): void {
             if (this.cursor.length && this.container.children(':first').length) {
-                if (pressedShift) {
+                if (draggingMode) {
                     if (this.draggerElem.length < 1) {
                         const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
                         draggerElem.insertAfter(this.cursor);
@@ -325,9 +306,9 @@ export namespace Formulize {
             }
         }
 
-        private moveLastCursor(): void {
+        private moveLastCursor(draggingMode: boolean = false): void {
             if (this.cursor.length && this.container.children(':last').length) {
-                if (pressedShift) {
+                if (draggingMode) {
                     draggerElem = this.container.find('.${this._option.id}-drag');
                     if (draggerElem.length < 1) {
                         draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
@@ -534,11 +515,11 @@ export namespace Formulize {
         };
 
         keyDown(key: number, pressedShift: boolean) {
-            const realKey = pressedShift && key >= 0 && key <= 9
-                ? [')', '!', '@', '#', '$', '%', '^', '&', 'x', '('][key]
+            const realKey = pressedShift && key >= 0 && key <= 9 && specialCharacters[key]
+                ? specialCharacters[key]
                 : key;
 
-            this.insertChar(realKey);
+            this.insertKey(realKey);
         }
 
         insert(item, position) {
@@ -553,47 +534,49 @@ export namespace Formulize {
             item.insertBefore(this.cursor);
 
             this.textBox.trigger('focus');
-            this.check();
             this.hookUpdate();
-        };
+        }
 
-        insertChar(key) {
+        private isValidKey(key: number | string): boolean {
+            return this.isNumberTokenKey(key) || supportedCharacters.includes(key);
+        }
+
+        private isNumberTokenKey(key: number | string): boolean {
+            return key >= 0 && key <= 9 || key === '.';
+        }
+
+        insertKey(key: number | string) {
             // TODO: need refactor
-            if ((key >= 0 && key <= 9) || $.inArray(key.toLowerCase(), this.permitedKey) != -1) {
-                if ((key >= 0 && key <= 9) || key === '.') {
+            if (this.isValidKey(key)) {
+                if (this.isNumberTokenKey(key)) {
                     const $unit = $(`<div class="${this._option.id}-item ${this._option.id}-unit">${key}</div>`);
-                    const $item = null;
-                    const decimal = '', merge = false;
 
-                    draggerElem = this.container.find('.${this._option.id}-drag');
-
-                    if (draggerElem.length) {
-                        this.cursor.insertBefore(draggerElem);
-                        draggerElem.remove();
+                    if (this.draggerElem.length) {
+                        this.cursor.insertBefore(this.draggerElem);
+                        this.draggerElem.remove();
                     }
 
-                    if (this.cursor !== null && this.cursor.length) {
+                    if (this.cursor && this.cursor.length)
                         this.cursor.before($unit);
-                    } else {
+                    else
                         this.container.append($unit);
-                    }
 
                     const $prev = $unit.prev();
                     const $next = $unit.next();
 
-                    if ($prev.length && $prev.hasClass(this._option.id + '-cursor')) {
+                    if ($prev.length && $prev.hasClass(`${this._option.id}-cursor`)) {
                         $prev = $prev.prev();
                     }
 
-                    if ($next.length && $next.hasClass(this._option.id + '-cursor')) {
+                    if ($next.length && $next.hasClass(`${this._option.id}-cursor`)) {
                         $next = $next.next();
                     }
 
-                    if ($prev.length && $prev.hasClass(this._option.id + '-unit')) {
+                    if ($prev.length && $prev.hasClass(`${this._option.id}-unit`)) {
                         merge = true;
                         $item = $prev;
                         $item.append($unit[0].innerHTML);
-                    } else if ($next.length && $next.hasClass(this._option.id + '-unit')) {
+                    } else if ($next.length && $next.hasClass(`${this._option.id}-unit`)) {
                         merge = true;
                         $item = $next;
                         $item.prepend($unit[0].innerHTML);
@@ -615,7 +598,6 @@ export namespace Formulize {
                         $operator.addClass(this._option.id + '-bracket');
                     }
                 }
-
                 this.hookUpdate();
             }
         }
@@ -625,10 +607,8 @@ export namespace Formulize {
             if (typeof data === 'string') {
                 const splitData = data.split('');
                 for (idx in splitData) {
-                    this.insertChar.call(context, splitData[idx]);
+                    this.insertKey.call(context, splitData[idx]);
                 }
-
-                this.check();
                 this.hookUpdate();
             }
 
@@ -637,7 +617,7 @@ export namespace Formulize {
                 if (typeof item !== 'object') {
                     const data_splited = item.toString().split('');
                     for (const key in data_splited) {
-                        this.insertChar.call(context, data_splited[key]);
+                        this.insertKey.call(context, data_splited[key]);
                     }
                 } else {
                     if (typeof this._option.import.item === 'function') {
@@ -648,12 +628,11 @@ export namespace Formulize {
                     }
                 }
             }
-
-            this.check();
             this.hookUpdate();
         }
 
         private hookUpdate(): void {
+            this.check();
             $(this._elem)
                 .triggerHandler(`${this._option.id}.input`, this.getFormula());
         }
@@ -756,7 +735,7 @@ export namespace Formulize {
                         ? $(elem).data('value')
                         : $(elem).text();
 
-                    if ($(elem).hasClass(this._option.id + '-unit')) {
+                    if ($(elem).hasClass(`${this._option.id}-unit`)) {
                         value = value.toFormulaDecimal();
                     } else if ($(elem).hasClass(this._option.id + '-operator') && value === 'x') {
                         value = '*';
