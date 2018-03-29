@@ -1,1 +1,6 @@
-node_modules
+.nyc_output/
+.rpt2_cache/
+.idea/
+node_modules/
+coverage/
+src/**/*.js

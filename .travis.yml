@@ -1,14 +1,18 @@
-language: javascript
-
+language: node_js
+os: linux
+node_js:
+  - "8"
 before_install:
- - "export DISPLAY=:99.0"
- - "sh -e /etc/init.d/xvfb start"
-
-before_script:
- - 'npm install -g grunt-cli'
- - 'npm install --save-dev'
-
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+install:
+  - npm install codecov -g
+  - npm install coveralls -g
+  - npm install codeclimate-test-reporter -g
+  - npm install
+script:
+  - npm test
 after_success:
- - bash <(curl -s https://codecov.io.bash)
-
-script: grunt test
+  - codecov
+  - coveralls < ./coverage/lcov.info
+  - CODECLIMATE_REPO_TOKEN=24146c7ac4fb8970a42665003f962a808774a6f9be2dc995efc119ded56b0556 codeclimate-test-reporter < ./coverage/lcov.info

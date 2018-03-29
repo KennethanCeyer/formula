@@ -2,88 +2,28 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<meta property="og:url" content="http://www.pigno.se/barn/PIGNOSE-Formula">
-	<meta property="og:type" content="product" />
-	<meta property="og:title" content="PIGNOSE Formula" />
-	<meta property="og:description" content="Javscript WYSWYG formula builder." />
-	<meta property="og:image" content="http://www.pigno.se/barn/PIGNOSE-Formula/demo/img/cover@250.png" />
-	<meta property="og:site_name" content="PIGNOSE" />
-	<title>PIGNOSE Formula</title>
+	<meta property="og:type" content="product">
+	<meta property="og:title" content="formulize">
+	<meta property="og:description" content="Javscript WYSWYG formula builder.">
+	<meta property="og:image" content="http://www.pigno.se/barn/PIGNOSE-Formula/demo/img/cover@250.png">
+	<meta property="og:site_name" content="PIGNOSE">
+	<title>formulize</title>
 	<link rel="shortcut icon" type="image/x-icon" href="demo/img/pignose-ico.ico" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
-	<link rel="stylesheet" href="demo/css/semantic.ui.min.css">
-	<link rel="stylesheet" href="demo/css/prism.css" />
-	<link rel="stylesheet" href="demo/css/formula-style.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/themes/prism.min.css" />
+	<link rel="stylesheet" href="demo/css/ui.css" />
 	<link rel="stylesheet" href="demo/css/style.css" />
-	<link rel="stylesheet" type="text/css" href="src/css/pignose.formula.css" />
-	<script type="text/javascript" src="demo/js/jquery.latest.min.js"></script>
-	<script type="text/javascript" src="demo/js/jquery-ui.latest.js"></script>
-	<script type="text/javascript" src="demo/js/semantic.ui.min.js"></script>
-	<script type="text/javascript" src="demo/js/prism.min.js"></script>
-	<script type="text/javascript" src="src/js/pignose.formula.build.js"></script>
-	<script type="text/javascript">
-	//<![CDATA[
-	$(function() {
-        // Plugin version confirmation.
-        $('.version strong').text('v' + $.fn.formula.getVersion());
-        
-		var $formula = $('.formula').formula();
-
-		// You can load formula expression by wrting JSON type value;
-		var data = {"operator":"+","operand1":{"operator":"+","operand1":{"value":"1","type":"unit"},"operand2":{"value":"2","type":"unit"}},"operand2":{"value":"3","type":"unit"}};
-
-        // .setFormula({:data}) can load new expression.
-		$formula.first().formula('setFormula', data);
-
-        // .draggable is normal jQuery UI plugin. It support to dragging the element by using mouse click and move.
-		$('.formula-drop .formula-drop-items .formula-custom').draggable({
-			revert: 'invalid',
-			helper: 'clone',
-			cancel: '',
-			scroll: false
-		});
-
-        // .droppable can detect drop event of draggable element.
-		$('.formula-advanced').droppable({
-			drop: function(event, ui) {
-                // You can clone drop item to move inside formula.
-				var $element = ui.draggable.clone();
-
-                // Position variable describes `where` you put the element.
-                var position = {
-                    x: event.offsetX,
-                    y: event.offsetY
-                };
-
-                // 'insert' command can put the element at some position.
-				$(this).formula('insert', $element, position);
-			}
-		});
-
-        $('.formula-advanced').bind('formula.input', function(event, data) {
-            console.log('input', data);
-        });
-
-		$('.formula-get .compact .item').bind('click', function(event) {
-			event.preventDefault();
-			$('.formula-advanced').formula('getFormula', function(data) {
-                console.log('Formula result:', data);
-                $('.formula-get .formula-get-json .formula-get-json-data').text(JSON.stringify(data));                
-            });
-		});
-
-		$('.menu .item').tab();
-	});
-	//]]>
-	</script>
+	<link rel="stylesheet" type="text/css" href="dist/formulize.css">
 </head>
 <body>
 	<div id="wrapper">
 		<div class="header">
 			<img src="demo/img/pignose-logo.png" alt="" />
-			<h1>PIGNOSE Formula</h1>
-			<a href="https://github.com/KennethanCeyer/Formula" target="_blank" class="ui button primary">View project on Github</a>
+			<h1>formulize</h1>
+			<a href="https://github.com/KennethanCeyer/Formula" target="_blank" class="ui button black">View project on Github</a>
 			<a href="https://github.com/KennethanCeyer/Formula/archive/master.zip" target="_blank" class="ui button teal">Download zip</a>
 			<h4 class="version">Latest version <strong></strong></h4>
 		</div>
@@ -128,7 +68,7 @@ console.log(result.data);
 console.log(result.filterData);</code></pre>
 			</div>
 		</div>
-		<div id="content" class="article">
+		<div id="option" class="article">
 			<h3>
 				<span>Options</span>
 			</h3>
@@ -205,7 +145,7 @@ console.log(result.filterData);</code></pre>
 				</tbody>
 			</table>
 		</div>
-		<div id="content" class="article">
+		<div id="method" class="article">
 			<h3>
 				<span>Methods</span>
 			</h3>
@@ -272,7 +212,7 @@ console.log(result.filterData);</code></pre>
 				</tbody>
 			</table>
 		</div>
-        <div id="content" class="article">
+        <div id="event" class="article">
             <h3>
                 <span>Event</span>
             </h3>
@@ -323,15 +263,15 @@ console.log(result.filterData);</code></pre>
 			</div>
 			<div role="tabpanel" class="ui tab segment" data-tab="javascript">
 					<pre><code class="language-js">$(function() {
-	$('.formula').formula();
+	$('.formulize').formulize();
 });</code></pre>
 			</div>
 			<div role="tabpanel" class="ui tab segment" data-tab="css">
-				<pre><code class="language-css">.formula {
+				<pre><code class="language-css">.formulize {
     min-height: 400px;
 }
 
-.formula-wrapper .formula {
+.formulize-wrapper .formulize {
     background-color: #f8f8f8;
     border: 1px solid #d8d8d8;
     text-align: left;
@@ -340,5 +280,65 @@ console.log(result.filterData);</code></pre>
 			</div>
 		</div>
 	</div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js"></script>
+    <script type="text/javascript" src="dist/formulize.umd.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            // Plugin version confirmation.
+            $('.version strong').text('v' + formulize.getVersion());
+
+            var $formula = $('.formulize').formulize();
+
+            // You can load formula expression by wrting JSON type value;
+            var data = {"operator":"+","operand1":{"operator":"+","operand1":{"value":"1","type":"unit"},"operand2":{"value":"2","type":"unit"}},"operand2":{"value":"3","type":"unit"}};
+
+            // .setFormula({:data}) can load new expression.
+            $formula.first().formulize('setFormula', data);
+
+            // .draggable is normal jQuery UI plugin. It support to dragging the element by using mouse click and move.
+            $('.formulize-drop .formulize-drop-items .formulize-custom').draggable({
+                revert: 'invalid',
+                helper: 'clone',
+                cancel: '',
+                scroll: false
+            });
+
+            // .droppable can detect drop event of draggable element.
+            $('.formulize-advanced').droppable({
+                drop: function(event, ui) {
+                    // You can clone drop item to move inside formula.
+                    var $element = ui.draggable.clone();
+
+                    // Position variable describes `where` you put the element.
+                    var position = {
+                        x: event.offsetX,
+                        y: event.offsetY
+                    };
+
+                    // 'insert' command can put the element at some position.
+                    $(this).formulize('insert', $element, position);
+                }
+            });
+
+            $('.formulize-advanced').bind('formula.input', function(event, data) {
+                console.log('input', data);
+            });
+
+            $('.formulize-get .compact .item').bind('click', function(event) {
+                event.preventDefault();
+                $('.formulize-advanced').formulize('getFormula', function(data) {
+                    console.log('Formula result:', data);
+                    $('.formulize-get .formulize-get-json .formulize-get-json-data').text(JSON.stringify(data));
+                });
+            });
+
+            $('.menu .item').tab();
+        });
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/prism.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/components/prism-javascript.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/components/prism-typescript.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.13.0/components/prism-json.min.js"></script>
 </body>
 </html>

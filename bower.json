@@ -1,7 +1,7 @@
 {
-  "name": "jquery-formula",
-  "description": "Javscript WYSWYG formula builder.",
-  "main": "index.html",
+  "name": "formulize",
+  "description": "formula UI library",
+  "main": "dist/formulize.umd.js",
   "authors": [
     "PIGNOSE"
   ],
