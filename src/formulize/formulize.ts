@@ -33,6 +33,10 @@ export namespace Formulize {
         private statusBox: JQuery;
         private textBox: JQuery;
         private cursor: JQuery;
+        private get draggerElem(): JQuery {
+            return this.container
+                .find(`.${this._option.id}-drag`);
+        }
 
         public constructor(elem: Element, option?: Option) {
             this._elem = elem;
@@ -94,14 +98,14 @@ export namespace Formulize {
             if (this.container.hasClass('formula-active'))
                 this.click(offset);
 
-            const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
+            const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
             this.removeDrag();
             const prevPosition = this.cursor.index();
             this.click(offset);
             const nextPosition = this.cursor.index();
 
             if (!this.container.find(`.${this._option.id}-drag`).length) {
-                dragElem.insertAfter(this.cursor);
+                draggerElem.insertAfter(this.cursor);
                 return;
             }
 
@@ -111,9 +115,9 @@ export namespace Formulize {
             const endPosition = positions[1];
 
             if (prevPosition > nextPosition)
-                dragElem.insertBefore(this.cursor);
+                draggerElem.insertBefore(this.cursor);
             else
-                dragElem.insertAfter(this.cursor);
+                draggerElem.insertAfter(this.cursor);
 
             if (prevPosition === nextPosition)
                 return;
@@ -123,15 +127,15 @@ export namespace Formulize {
                 .filter(`:gt("${startPosition}")`)
                 .filter(`:lt("${endPosition - startPosition}")`)
                 .add(this.container.children(`:not(".${this._option.id}-cursor")`).eq(startPosition))
-                .each((_, elem) => $(elem).appendTo(dragElem));
+                .each((_, elem) => $(elem).appendTo(draggerElem));
 
             if (prevPosition > nextPosition)
-                dragElem.insertAfter(this.cursor);
+                draggerElem.insertAfter(this.cursor);
             else
-                dragElem.insertBefore(this.cursor);
+                draggerElem.insertBefore(this.cursor);
         }
 
-        private eventKeyDown(event: JQuery.Event) {
+        private eventKeyDown(event: KeyboardEvent) {
             event.preventDefault();
 
             if (!this.cursor || !this.cursor.length)
@@ -158,11 +162,11 @@ export namespace Formulize {
             }
 
             if (keyCode === 8) {
-                dragElem = this.container.find('.${this._option.id}-drag');
-                if (dragElem.length > 0) {
-                    this.cursor.insertBefore(dragElem);
-                    dragElem.remove();
-                } else if (this.cursor.length > 0 && this.cursor.prev().length > 0) {
+                const draggerElem = this.container.find('.${this._option.id}-drag');
+                if (draggerElem.length) {
+                    this.cursor.insertBefore(draggerElem);
+                    draggerElem.remove();
+                } else if (this.cursor.length && this.cursor.prev().length) {
                     $prev = this.cursor.prev();
                     if ($prev.hasClass(this._option.id + '-unit') && $prev.text().length > 1) {
                         text = $prev.text();
@@ -177,12 +181,12 @@ export namespace Formulize {
             }
 
             if (keyCode === 46) {
-                dragElem = this.container.find('.${this._option.id}-drag');
-                if (dragElem.length > 0) {
-                    this.cursor.insertAfter(dragElem);
-                    dragElem.remove();
+                draggerElem = this.container.find('.${this._option.id}-drag');
+                if (draggerElem.length) {
+                    this.cursor.insertAfter(draggerElem);
+                    draggerElem.remove();
                 } else {
-                    if (this.cursor.length > 0 && this.cursor.next().length > 0) {
+                    if (this.cursor.length && this.cursor.next().length) {
                         $next = this.cursor.next();
                         if ($next.hasClass(this._option.id + '-unit') && $next.text().length > 1) {
                             text = $next.text();
@@ -198,32 +202,32 @@ export namespace Formulize {
             }
 
             if (keyCode === 37) {
-                if (this.cursor.length > 0 && this.cursor.prev().length > 0) {
+                if (this.cursor.length && this.cursor.prev().length) {
                     if (event.shiftKey) {
-                        dragElem = this.container.find('.${this._option.id}-drag');
-                        if (dragElem.length < 1) {
-                            dragElem = $('<div class="${this._option.id}-drag"></div>');
-                            dragElem.insertAfter(this.cursor);
+                        draggerElem = this.container.find('.${this._option.id}-drag');
+                        if (draggerElem.length < 1) {
+                            draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                            draggerElem.insertAfter(this.cursor);
                         } else {
-                            if (dragElem.data('active') === false) {
+                            if (draggerElem.data('active') === false) {
                                 this.removeDrag();
-                                dragElem = $('<div class="${this._option.id}-drag"></div>');
-                                dragElem.insertAfter(this.cursor);
+                                draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                                draggerElem.insertAfter(this.cursor);
                             }
                         }
-                        dragElem.data('active', true);
+                        draggerElem.data('active', true);
 
                         $prev = this.cursor.prev();
                         if ($prev.hasClass(this._option.id + '-drag')) {
-                            dragElemItem = dragElem.children('*');
-                            if (dragElemItem.length < 1) {
-                                dragElem.remove();
+                            draggerElemItem = draggerElem.children('*');
+                            if (draggerElemItem.length < 1) {
+                                draggerElem.remove();
                             } else {
-                                dragElemItem.last().insertAfter(dragElem);
-                                this.cursor.insertAfter(dragElem);
+                                draggerElemItem.last().insertAfter(draggerElem);
+                                this.cursor.insertAfter(draggerElem);
                             }
                         } else {
-                            this.cursor.prev().prependTo(dragElem);
+                            this.cursor.prev().prependTo(draggerElem);
                         }
                     } else {
                         this.removeDrag();
@@ -235,7 +239,7 @@ export namespace Formulize {
             }
 
             if (keyCode === 38) {
-                if (this.cursor.prev().length > 0 || this.cursor.next().length > 0) {
+                if (this.cursor.prev().length || this.cursor.next().length) {
                     parentPadding = {
                         x: parseFloat(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
                         y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
@@ -255,44 +259,42 @@ export namespace Formulize {
             }
 
             if (keyCode === 39) {
-                if (this.cursor.length > 0 && this.cursor.next().length > 0) {
+                // TODO: need refactor
+                if (this.cursor.length && this.cursor.next().length) {
                     if (event.shiftKey) {
-                        dragElem = this.container.find('.${this._option.id}-drag');
-                        if (dragElem.length < 1) {
-                            dragElem = $('<div class="${this._option.id}-drag"></div>');
-                            dragElem.insertBefore(this.cursor);
+                        if (!this.draggerElem.length) {
+                            const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                            draggerElem.insertBefore(this.cursor);
                         } else {
-                            if (dragElem.data('active') === false) {
+                            if (!this.draggerElem.data('active')) {
                                 this.removeDrag();
-                                dragElem = $('<div class="${this._option.id}-drag"></div>');
-                                dragElem.insertBefore(this.cursor);
+                                const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                                draggerElem.insertBefore(this.cursor);
                             }
                         }
-                        dragElem.data('active', true);
+                        this.draggerElem.data('active', true);
 
-                        $next = this.cursor.next();
-                        if ($next.hasClass(this._option.id + '-drag')) {
-                            dragElemItem = dragElem.children('*');
-                            if (dragElemItem.length < 1) {
-                                dragElem.remove();
-                            } else {
-                                dragElemItem.first().insertBefore(dragElem);
-                                this.cursor.insertBefore(dragElem);
+                        const nextCursorElem = this.cursor.next();
+                        if (nextCursorElem.hasClass(`${this._option.id}-drag`)) {
+                            const draggedUnit = this.draggerElem.children();
+                            if (!draggedUnit.length)
+                                draggerElem.remove();
+                            else {
+                                draggedUnit.first().insertBefore(draggerElem);
+                                this.cursor.insertBefore(draggerElem);
                             }
-                        } else {
-                            this.cursor.next().appendTo(dragElem);
-                        }
+                        } else
+                            this.cursor.next().appendTo(draggerElem);
                     } else {
                         this.removeDrag();
                         this.cursor.insertAfter(this.cursor.next());
                     }
-                } else {
+                } else
                     this.removeDrag();
-                }
             }
 
             if (keyCode === 40) {
-                if (this.cursor.prev().length > 0 || this.cursor.next().length > 0) {
+                if (this.cursor.prev().length || this.cursor.next().length) {
                     parentPadding = {
                         x: parseFloat(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
                         y: parseFloat(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
@@ -310,21 +312,21 @@ export namespace Formulize {
             }
 
             if (keyCode === 35) {
-                if (this.cursor.length > 0 && this.container.children(':last').length > 0) {
+                if (this.cursor.length && this.container.children(':last').length) {
                     if (event.shiftKey) {
-                        dragElem = this.container.find('.${this._option.id}-drag');
-                        if (dragElem.length < 1) {
-                            dragElem = $('<div class="${this._option.id}-drag"></div>');
-                            dragElem.insertBefore(this.cursor);
+                        draggerElem = this.container.find('.${this._option.id}-drag');
+                        if (draggerElem.length < 1) {
+                            draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                            draggerElem.insertBefore(this.cursor);
                         } else {
-                            if (dragElem.data('active') === false) {
+                            if (draggerElem.data('active') === false) {
                                 this.removeDrag();
-                                dragElem = $('<div class="${this._option.id}-drag"></div>');
-                                dragElem.insertBefore(this.cursor);
+                                draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                                draggerElem.insertBefore(this.cursor);
                             }
                         }
-                        dragElem.data('active', true);
-                        this.cursor.nextAll().appendTo(dragElem);
+                        draggerElem.data('active', true);
+                        this.cursor.nextAll().appendTo(draggerElem);
                     } else {
                         this.removeDrag();
                         this.cursor.insertAfter(this.container.children(':last'));
@@ -333,24 +335,22 @@ export namespace Formulize {
             }
 
             if (keyCode === 36) {
-                if (this.cursor.length > 0 && this.container.children(':first').length > 0) {
+                if (this.cursor.length && this.container.children(':first').length) {
                     if (event.shiftKey) {
-                        dragElem = this.container.find('.${this._option.id}-drag');
-                        if (dragElem.length < 1) {
-                            dragElem = $('<div class="${this._option.id}-drag"></div>');
-                            dragElem.insertAfter(this.cursor);
+                        if (this.draggerElem.length < 1) {
+                            const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                            draggerElem.insertAfter(this.cursor);
                         } else {
-                            if (dragElem.data('active') === false) {
+                            if (!this.draggerElem.data('active')) {
                                 this.removeDrag();
-                                dragElem = $('<div class="${this._option.id}-drag"></div>');
-                                dragElem.insertAfter(this.cursor);
+                                const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+                                draggerElem.insertAfter(this.cursor);
                             }
                         }
-                        dragElem.data('active', true);
-                        this.cursor.prevAll().each(function () {
-                            var $this = $(this);
-                            $this.prependTo(dragElem);
-                        });
+                        this.draggerElem.data('active', true);
+                        this.cursor
+                            .prevAll()
+                            .each((_, elem) => $(elem).prependTo(draggerElem));
                     } else {
                         this.removeDrag();
                         this.cursor.insertBefore(this.container.children(':first'));
@@ -413,21 +413,21 @@ export namespace Formulize {
         }
 
         removeDrag() {
-            const dragElem = this.container.find(`.${this._option.id}-drag`);
-            dragElem
+            const draggerElem = this.container.find(`.${this._option.id}-drag`);
+            draggerElem
                 .children('*')
-                .each((_, elem) => $(elem).insertBefore(dragElem));
-            dragElem.remove();
+                .each((_, elem) => $(elem).insertBefore(draggerElem));
+            draggerElem.remove();
             this.hookUpdate();
         }
 
         selectAll() {
             this.removeDrag();
-            const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
-            dragElem.prependTo(this.container);
+            const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+            draggerElem.prependTo(this.container);
             this.container
                 .children(':not(".${this._option.id}-cursor")')
-                .each((_, elem) => $(elem).appendTo(dragElem));
+                .each((_, elem) => $(elem).appendTo(draggerElem));
         }
 
         click(position: Offset = { x: 0, y: 0 }) {
@@ -451,6 +451,7 @@ export namespace Formulize {
 
             var checkArea = [];
 
+            // TODO: do you lost your fucking mind past me? where did the key name come from?
             this.container.children('*:not(".${this._option.id}-cursor")').each(function () {
                 var $this = $(this);
                 checkArea.push({
@@ -459,7 +460,6 @@ export namespace Formulize {
                     e: $this
                 });
             });
-
 
             var $pointer = null;
             var maxY = 0, maxDiff = 10000;
@@ -495,10 +495,10 @@ export namespace Formulize {
                 }
             }
 
-            if (checkArea.length > 0 && $pointer !== null && maxY + checkArea[0].e.outerHeight() >= position.y) {
+            if (checkArea.length && $pointer !== null && maxY + checkArea[0].e.outerHeight() >= position.y) {
                 this.cursor.insertAfter($pointer);
             } else {
-                if (checkArea.length > 0 && position.x > checkArea[0].x) {
+                if (checkArea.length && position.x > checkArea[0].x) {
                     this.cursor.appendTo(this.container);
                 } else {
                     this.cursor.prependTo(this.container);
@@ -515,7 +515,7 @@ export namespace Formulize {
                         cursorElem.stop().animate({ opacity: 0 }, this._option.cursorAnimTime);
                     }
 
-                    if (cursorElem.length > 0) {
+                    if (cursorElem.length) {
                         loop();
                     }
                 }, this._option.cursorDelayTime);
@@ -525,40 +525,23 @@ export namespace Formulize {
             this.removeDrag();
         };
 
-        keydown(key, shift) {
-            var context = this;
+        keydown(key: number, pressedShift: boolean) {
+            const realKey = pressedShift && key >= 0 && key <= 9
+                ? [')', '!', '@', '#', '$', '%', '^', '&', 'x', '('][key]
+                : key;
 
-            var convert = {
-                0: ')',
-                1: '!',
-                2: '@',
-                3: '#',
-                4: '$',
-                5: '%',
-                6: '^',
-                7: '&',
-                8: 'x',
-                9: '('
-            };
-
-            if (shift && (key >= 0 && key <= 9)) {
-                key = convert[key];
-            }
-            key = $.trim(key);
-
-            this.insertChar.call(context, key);
+            this.insertChar(realKey);
         }
 
         insert(item, position) {
-            if (this.cursor === null || this.cursor.length < 1 || typeof position === 'object') {
+            if (!this.cursor || !this.cursor.length || typeof position === 'object')
                 this.click(position);
-            }
 
             if (typeof item === 'string') {
                 item = $(item);
             }
 
-            item.addClass(this._option.id + '-item');
+            item.addClass(`${this._option.id}-item`);
             item.insertBefore(this.cursor);
 
             this.textBox.trigger('focus');
@@ -573,14 +556,14 @@ export namespace Formulize {
                     var $item = null;
                     var decimal = '', merge = false;
 
-                    dragElem = this.container.find('.${this._option.id}-drag');
+                    draggerElem = this.container.find('.${this._option.id}-drag');
 
-                    if (dragElem.length > 0) {
-                        this.cursor.insertBefore(dragElem);
-                        dragElem.remove();
+                    if (draggerElem.length) {
+                        this.cursor.insertBefore(draggerElem);
+                        draggerElem.remove();
                     }
 
-                    if (this.cursor !== null && this.cursor.length > 0) {
+                    if (this.cursor !== null && this.cursor.length) {
                         this.cursor.before($unit);
                     } else {
                         this.container.append($unit);
@@ -589,19 +572,19 @@ export namespace Formulize {
                     var $prev = $unit.prev();
                     var $next = $unit.next();
 
-                    if ($prev.length > 0 && $prev.hasClass(this._option.id + '-cursor')) {
+                    if ($prev.length && $prev.hasClass(this._option.id + '-cursor')) {
                         $prev = $prev.prev();
                     }
 
-                    if ($next.length > 0 && $next.hasClass(this._option.id + '-cursor')) {
+                    if ($next.length && $next.hasClass(this._option.id + '-cursor')) {
                         $next = $next.next();
                     }
 
-                    if ($prev.length > 0 && $prev.hasClass(this._option.id + '-unit')) {
+                    if ($prev.length && $prev.hasClass(this._option.id + '-unit')) {
                         merge = true;
                         $item = $prev;
                         $item.append($unit[0].innerHTML);
-                    } else if ($next.length > 0 && $next.hasClass(this._option.id + '-unit')) {
+                    } else if ($next.length && $next.hasClass(this._option.id + '-unit')) {
                         merge = true;
                         $item = $next;
                         $item.prepend($unit[0].innerHTML);
@@ -614,7 +597,7 @@ export namespace Formulize {
                     }
                 } else if (key !== '') {
                     var $operator = $('<div class="${this._option.id}-item ${this._option.id}-operator">' + key.toLowerCase() + '</div>');
-                    if (this.cursor !== null && this.cursor.length > 0) {
+                    if (this.cursor !== null && this.cursor.length) {
                         this.cursor.before($operator);
                     } else {
                         this.container.append($operator);
@@ -629,6 +612,7 @@ export namespace Formulize {
         };
 
         insertFormula(data) {
+            // TODO: need refactor
             if (typeof data === 'string') {
                 var data_split = data.split('');
                 for (idx in data_split) {
