@@ -37,7 +37,7 @@ export namespace Formulize {
         private statusBox: JQuery;
         private textBox: JQuery;
         private cursor: JQuery;
-        private get draggerElem(): JQuery {
+        private get dragElem(): JQuery {
             return this.container
                 .find(`.${this._option.id}-drag`);
         }
@@ -102,14 +102,14 @@ export namespace Formulize {
             if (this.container.hasClass('formula-active'))
                 this.click(offset);
 
-            const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
+            const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
             this.removeDrag();
             const prevPosition = this.cursor.index();
             this.click(offset);
             const nextPosition = this.cursor.index();
 
             if (!this.container.find(`.${this._option.id}-drag`).length) {
-                draggerElem.insertAfter(this.cursor);
+                dragElem.insertAfter(this.cursor);
                 return;
             }
 
@@ -119,9 +119,9 @@ export namespace Formulize {
             const endPosition = positions[1];
 
             if (prevPosition > nextPosition)
-                draggerElem.insertBefore(this.cursor);
+                dragElem.insertBefore(this.cursor);
             else
-                draggerElem.insertAfter(this.cursor);
+                dragElem.insertAfter(this.cursor);
 
             if (prevPosition === nextPosition)
                 return;
@@ -131,12 +131,12 @@ export namespace Formulize {
                 .filter(`:gt("${startPosition}")`)
                 .filter(`:lt("${endPosition - startPosition}")`)
                 .add(this.container.children(`:not(".${this._option.id}-cursor")`).eq(startPosition))
-                .each((_, elem) => $(elem).appendTo(draggerElem));
+                .each((_, elem) => $(elem).appendTo(dragElem));
 
             if (prevPosition > nextPosition)
-                draggerElem.insertAfter(this.cursor);
+                dragElem.insertAfter(this.cursor);
             else
-                draggerElem.insertBefore(this.cursor);
+                dragElem.insertBefore(this.cursor);
         }
 
         private eventKeyDown(event: KeyboardEvent) {
@@ -155,9 +155,9 @@ export namespace Formulize {
         }
 
         private removeBefore(): void {
-            if (this.draggerElem.length) {
-                this.cursor.insertBefore(this.draggerElem);
-                this.draggerElem.remove();
+            if (this.dragElem.length) {
+                this.cursor.insertBefore(this.dragElem);
+                this.dragElem.remove();
             } else if (this.cursor.length && this.cursor.prev().length) {
                 $prev = this.cursor.prev();
                 if ($prev.hasClass(`${this._option.id}-unit`) && $prev.text().length > 1) {
@@ -171,9 +171,9 @@ export namespace Formulize {
         }
 
         private removeAfter(): void {
-            if (this.draggerElem.length) {
-                this.cursor.insertAfter(this.draggerElem);
-                this.draggerElem.remove();
+            if (this.dragElem.length) {
+                this.cursor.insertAfter(this.dragElem);
+                this.dragElem.remove();
             } else {
                 if (this.cursor.length && this.cursor.next().length) {
                     $next = this.cursor.next();
@@ -200,29 +200,29 @@ export namespace Formulize {
                 return;
             }
 
-            if (!this.draggerElem.length) {
-                const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                draggerElem.insertAfter(this.cursor);
+            if (!this.dragElem.length) {
+                const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
+                dragElem.insertAfter(this.cursor);
             } else {
-                if (!draggerElem.data('active')) {
+                if (!dragElem.data('active')) {
                     this.removeDrag();
-                    draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                    draggerElem.insertAfter(this.cursor);
+                    dragElem = $(`<div class="${this._option.id}-drag"></div>`);
+                    dragElem.insertAfter(this.cursor);
                 }
             }
-            draggerElem.data('active', true);
+            dragElem.data('active', true);
 
             $prev = this.cursor.prev();
             if ($prev.hasClass(`${this._option.id}-drag`)) {
-                draggerElemItem = draggerElem.children('*');
-                if (draggerElemItem.length < 1) {
-                    draggerElem.remove();
+                dragElemItem = dragElem.children('*');
+                if (dragElemItem.length < 1) {
+                    dragElem.remove();
                 } else {
-                    draggerElemItem.last().insertAfter(draggerElem);
-                    this.cursor.insertAfter(draggerElem);
+                    dragElemItem.last().insertAfter(dragElem);
+                    this.cursor.insertAfter(dragElem);
                 }
             } else {
-                this.cursor.prev().prependTo(draggerElem);
+                this.cursor.prev().prependTo(dragElem);
             }
         }
 
@@ -247,29 +247,29 @@ export namespace Formulize {
                 this.cursor.insertAfter(this.cursor.next());
             }
 
-            if (!this.draggerElem.length) {
-                const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                draggerElem.insertBefore(this.cursor);
+            if (!this.dragElem.length) {
+                const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
+                dragElem.insertBefore(this.cursor);
             } else {
-                if (!this.draggerElem.data('active')) {
+                if (!this.dragElem.data('active')) {
                     this.removeDrag();
-                    const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                    draggerElem.insertBefore(this.cursor);
+                    const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
+                    dragElem.insertBefore(this.cursor);
                 }
             }
-            this.draggerElem.data('active', true);
+            this.dragElem.data('active', true);
 
             const nextCursorElem = this.cursor.next();
             if (nextCursorElem.hasClass(`${this._option.id}-drag`)) {
-                const draggedUnit = this.draggerElem.children();
+                const draggedUnit = this.dragElem.children();
                 if (!draggedUnit.length)
-                    draggerElem.remove();
+                    dragElem.remove();
                 else {
-                    draggedUnit.first().insertBefore(draggerElem);
-                    this.cursor.insertBefore(draggerElem);
+                    draggedUnit.first().insertBefore(dragElem);
+                    this.cursor.insertBefore(dragElem);
                 }
             } else
-                this.cursor.next().appendTo(draggerElem);
+                this.cursor.next().appendTo(dragElem);
         }
 
         private moveDownCursor(): void {
@@ -283,50 +283,53 @@ export namespace Formulize {
         }
 
         private moveFirstCursor(draggingMode: boolean = false): void {
-            if (this.cursor.length && this.container.children(':first').length) {
-                if (draggingMode) {
-                    if (this.draggerElem.length < 1) {
-                        const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                        draggerElem.insertAfter(this.cursor);
-                    } else {
-                        if (!this.draggerElem.data('active')) {
-                            this.removeDrag();
-                            const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                            draggerElem.insertAfter(this.cursor);
-                        }
-                    }
-                    this.draggerElem.data('active', true);
-                    this.cursor
-                        .prevAll()
-                        .each((_, elem) => $(elem).prependTo(draggerElem));
-                } else {
+            if (!this.cursor.length || this.container.children(':first').length)
+                return;
+
+            if (!draggingMode) {
+                this.removeDrag();
+                this.cursor.insertBefore(this.container.children(':first'));
+            }
+
+            if (!this.dragElem.length) {
+                const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
+                dragElem.insertAfter(this.cursor);
+            } else {
+                if (!this.dragElem.data('active')) {
                     this.removeDrag();
-                    this.cursor.insertBefore(this.container.children(':first'));
+                    const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
+                    dragElem.insertAfter(this.cursor);
                 }
             }
+            this.dragElem.data('active', true);
+            this.cursor
+                .prevAll()
+                .each((_, elem) => $(elem).prependTo(dragElem));
         }
 
         private moveLastCursor(draggingMode: boolean = false): void {
-            if (this.cursor.length && this.container.children(':last').length) {
-                if (draggingMode) {
-                    draggerElem = this.container.find('.${this._option.id}-drag');
-                    if (draggerElem.length < 1) {
-                        draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                        draggerElem.insertBefore(this.cursor);
-                    } else {
-                        if (!draggerElem.data('active')) {
-                            this.removeDrag();
-                            draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-                            draggerElem.insertBefore(this.cursor);
-                        }
-                    }
-                    draggerElem.data('active', true);
-                    this.cursor.nextAll().appendTo(draggerElem);
-                } else {
+            if (!this.cursor.length || !this.container.children(':last').length)
+                return;
+
+            if (!draggingMode) {
+                this.removeDrag();
+                this.cursor.insertAfter(this.container.children(':last'));
+            }
+
+            if (!this.dragElem.length) {
+                const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
+                dragElem.insertBefore(this.cursor);
+            } else {
+                if (!this.dragElem.data('active')) {
                     this.removeDrag();
-                    this.cursor.insertAfter(this.container.children(':last'));
+                    const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
+                    dragElem.insertBefore(this.cursor);
                 }
             }
+            this.dragElem.data('active', true);
+            this.cursor
+                .nextAll()
+                .appendTo(dragElem);
         }
 
         private analyzeKey(keyCode: number, pressedCtrl: boolean, pressedShift: boolean) {
@@ -402,21 +405,21 @@ export namespace Formulize {
         }
 
         removeDrag() {
-            const draggerElem = this.container.find(`.${this._option.id}-drag`);
-            draggerElem
+            const dragElem = this.container.find(`.${this._option.id}-drag`);
+            dragElem
                 .children('*')
-                .each((_, elem) => $(elem).insertBefore(draggerElem));
-            draggerElem.remove();
+                .each((_, elem) => $(elem).insertBefore(dragElem));
+            dragElem.remove();
             this.hookUpdate();
         }
 
         selectAll() {
             this.removeDrag();
-            const draggerElem = $(`<div class="${this._option.id}-drag"></div>`);
-            draggerElem.prependTo(this.container);
+            const dragElem = $(`<div class="${this._option.id}-drag"></div>`);
+            dragElem.prependTo(this.container);
             this.container
                 .children(':not(".${this._option.id}-cursor")')
-                .each((_, elem) => $(elem).appendTo(draggerElem));
+                .each((_, elem) => $(elem).appendTo(dragElem));
         }
 
         click(position: Position = { x: 0, y: 0 }) {
@@ -551,9 +554,9 @@ export namespace Formulize {
                 if (this.isNumberTokenKey(key)) {
                     const $unit = $(`<div class="${this._option.id}-item ${this._option.id}-unit">${key}</div>`);
 
-                    if (this.draggerElem.length) {
-                        this.cursor.insertBefore(this.draggerElem);
-                        this.draggerElem.remove();
+                    if (this.dragElem.length) {
+                        this.cursor.insertBefore(this.dragElem);
+                        this.dragElem.remove();
                     }
 
                     if (this.cursor && this.cursor.length)
