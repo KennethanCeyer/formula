@@ -296,7 +296,7 @@ console.log(result.filterData);</code></pre>
             // .setData({:data}) can load new expression.
             $formula.first().formulize('setData', data);
 
-            // .draggable is normal jQuery UI plugin. It support to dragging the element by using mouse select and move.
+            // .draggable is normal jQuery UI plugin. It support to dragging the element by using mouse pick and move.
             $('.formulize-drop .formulize-drop-items .formulize-custom').draggable({
                 revert: 'invalid',
                 helper: 'clone',
@@ -325,7 +325,7 @@ console.log(result.filterData);</code></pre>
                 console.log('input', data);
             });
 
-            $('.formulize-get .compact .item').bind('select', function(event) {
+            $('.formulize-get .compact .item').bind('pick', function(event) {
                 event.preventDefault();
                 $('.formulize-advanced').formulize('getData', function(data) {
                     console.log('Formula result:', data);

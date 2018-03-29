@@ -11,8 +11,7 @@ export class Helper {
         return  [prefix, suffix].join('.');
     }
 
-    public static keyCodeToString(value: string, pressedShift: boolean) {
-        const keyCode = Number(value);
+    public static getKeyCodeValue(keyCode: number, pressedShift: boolean = false): string {
         if (keyCode === Key.Multiply)
             return 'x';
 
