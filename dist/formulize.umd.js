@@ -1595,7 +1595,6 @@
             this.triggerUpdate();
         };
         UIManager.prototype.removeAfter = function () {
-            console.log('remove after');
             if (this.dragElem.length) {
                 this.cursor.insertAfter(this.dragElem);
                 this.dragElem.remove();
@@ -1614,6 +1613,42 @@
                 nextCursorElem.remove();
             this.triggerUpdate();
         };
+        UIManager.prototype.dragFirst = function () {
+            this.cursor.prevAll().prependTo(this.dragElem);
+            this.cursor.insertAfter(this.dragElem);
+        };
+        UIManager.prototype.dragLast = function () {
+            this.cursor.nextAll().appendTo(this.dragElem);
+            this.cursor.insertBefore(this.dragElem);
+        };
+        UIManager.prototype.dragLeft = function () {
+            if (UIElementHelper.isDrag(this.options.id, this.cursor.prev().get(0))) {
+                this.dragElem.prev().prependTo(this.dragElem);
+                this.moveCursorAfter(this.dragElem.get(0));
+                return;
+            }
+            if (UIElementHelper.isDrag(this.options.id, this.cursor.next().get(0))) {
+                var lastDraggedElem = this.dragElem.children().last();
+                lastDraggedElem.insertAfter(this.dragElem);
+                if (!this.dragElem.children().length)
+                    this.removeDrag();
+                return;
+            }
+        };
+        UIManager.prototype.dragRight = function () {
+            if (UIElementHelper.isDrag(this.options.id, this.cursor.next().get(0))) {
+                this.dragElem.next().appendTo(this.dragElem);
+                this.moveCursorBefore(this.dragElem.get(0));
+                return;
+            }
+            if (UIElementHelper.isDrag(this.options.id, this.cursor.prev().get(0))) {
+                var firstDraggedElem = this.dragElem.children().first();
+                firstDraggedElem.insertBefore(this.dragElem);
+                if (!this.dragElem.children().length)
+                    this.removeDrag();
+                return;
+            }
+        };
         UIManager.prototype.moveCursorBefore = function (elem) {
             if (!$(elem).length)
                 return;
@@ -1627,27 +1662,20 @@
         UIManager.prototype.moveLeftCursor = function (dragMode) {
             if (dragMode === void 0) { dragMode = false; }
             var prevCursorElem = this.cursor.prev();
-            if (!this.cursor.length || !prevCursorElem.length || !dragMode) {
-                this.removeDrag();
+            if (!this.cursor.length || !dragMode) {
                 this.moveCursorBefore(prevCursorElem.get(0));
+                this.removeDrag();
                 return;
             }
             if (!this.dragElem.length) {
+                if (!prevCursorElem.length)
+                    return;
                 var dragElem = $(UIElementHelper.getDragElement(this.options.id));
                 dragElem.insertBefore(this.cursor);
                 prevCursorElem.prependTo(this.dragElem);
                 return;
             }
-            if (prevCursorElem.hasClass(this.options.id + "-drag")) {
-                var draggedUnit = this.dragElem.children();
-                if (!draggedUnit.length) {
-                    this.dragElem.remove();
-                    return;
-                }
-                draggedUnit.last().insertAfter(this.dragElem);
-                this.moveCursorAfter(this.dragElem.get(0));
-                return;
-            }
+            this.dragLeft();
         };
         UIManager.prototype.moveUpCursor = function () {
             if (!this.cursor.length)
@@ -1660,27 +1688,20 @@
         UIManager.prototype.moveRightCursor = function (dragMode) {
             if (dragMode === void 0) { dragMode = false; }
             var nextCursorElem = this.cursor.next();
-            if (!this.cursor.length || !nextCursorElem.length || !dragMode) {
-                this.removeDrag();
+            if (!this.cursor.length || !dragMode) {
                 this.moveCursorAfter(nextCursorElem.get(0));
+                this.removeDrag();
                 return;
             }
             if (!this.dragElem.length) {
+                if (!nextCursorElem.length)
+                    return;
                 var dragElem = $(UIElementHelper.getDragElement(this.options.id));
-                dragElem.insertBefore(this.cursor);
+                dragElem.insertAfter(this.cursor);
                 nextCursorElem.appendTo(this.dragElem);
                 return;
             }
-            if (nextCursorElem.hasClass(this.options.id + "-drag")) {
-                var draggedUnit = this.dragElem.children();
-                if (!draggedUnit.length) {
-                    this.dragElem.remove();
-                    return;
-                }
-                draggedUnit.first().insertBefore(this.dragElem);
-                this.moveCursorBefore(this.dragElem.get(0));
-                return;
-            }
+            this.dragRight();
         };
         UIManager.prototype.moveDownCursor = function () {
             if (!this.cursor.length)
@@ -1691,7 +1712,6 @@
             });
         };
         UIManager.prototype.moveFirstCursor = function (dragMode) {
-            var _this = this;
             if (dragMode === void 0) { dragMode = false; }
             var firstCursorElem = this.container.children(':first');
             if (!this.cursor.length || !firstCursorElem.length || !dragMode) {
@@ -1703,10 +1723,7 @@
                 var dragElem = $(UIElementHelper.getDragElement(this.options.id));
                 dragElem.insertAfter(this.cursor);
             }
-            this.cursor
-                .prevAll()
-                .toArray()
-                .forEach(function (elem) { return $(elem).prependTo(_this.dragElem); });
+            this.dragFirst();
         };
         UIManager.prototype.moveLastCursor = function (dragMode) {
             if (dragMode === void 0) { dragMode = false; }
@@ -1720,9 +1737,7 @@
                 var dragElem = $(UIElementHelper.getDragElement(this.options.id));
                 dragElem.insertBefore(this.cursor);
             }
-            this.cursor
-                .nextAll()
-                .appendTo(this.dragElem);
+            this.dragLast();
         };
         UIManager.prototype.clear = function () {
             this.removeCursor();

@@ -214,6 +214,52 @@ export abstract class UIManager extends UiAnalyzer {
         this.triggerUpdate();
     }
 
+    protected dragFirst(): void {
+        this.cursor.prevAll().prependTo(this.dragElem);
+        this.cursor.insertAfter(this.dragElem);
+    }
+
+    protected dragLast(): void {
+        this.cursor.nextAll().appendTo(this.dragElem);
+        this.cursor.insertBefore(this.dragElem);
+    }
+
+    protected dragLeft(): void {
+        if (UIElementHelper.isDrag(this.options.id, this.cursor.prev().get(0))) {
+            this.dragElem.prev().prependTo(this.dragElem);
+            this.moveCursorAfter(this.dragElem.get(0));
+            return;
+        }
+
+        if (UIElementHelper.isDrag(this.options.id, this.cursor.next().get(0))) {
+            const lastDraggedElem = this.dragElem.children().last();
+            lastDraggedElem.insertAfter(this.dragElem);
+
+            if (!this.dragElem.children().length)
+                this.removeDrag();
+
+            return;
+        }
+    }
+
+    protected dragRight(): void {
+        if (UIElementHelper.isDrag(this.options.id, this.cursor.next().get(0))) {
+            this.dragElem.next().appendTo(this.dragElem);
+            this.moveCursorBefore(this.dragElem.get(0));
+            return;
+        }
+
+        if (UIElementHelper.isDrag(this.options.id, this.cursor.prev().get(0))) {
+            const firstDraggedElem = this.dragElem.children().first();
+            firstDraggedElem.insertBefore(this.dragElem);
+
+            if (!this.dragElem.children().length)
+                this.removeDrag();
+
+            return;
+        }
+    }
+
     private moveCursorBefore(elem: HTMLElement) {
         if (!$(elem).length)
             return;
@@ -231,30 +277,23 @@ export abstract class UIManager extends UiAnalyzer {
     protected moveLeftCursor(dragMode: boolean = false): void {
         const prevCursorElem = this.cursor.prev();
 
-        if (!this.cursor.length || !prevCursorElem.length || !dragMode) {
-            this.removeDrag();
+        if (!this.cursor.length || !dragMode) {
             this.moveCursorBefore(prevCursorElem.get(0));
+            this.removeDrag();
             return;
         }
 
         if (!this.dragElem.length) {
+            if (!prevCursorElem.length)
+                return;
+
             const dragElem = $(UIElementHelper.getDragElement(this.options.id));
             dragElem.insertBefore(this.cursor);
             prevCursorElem.prependTo(this.dragElem);
             return;
         }
 
-        if (prevCursorElem.hasClass(`${this.options.id}-drag`)) {
-            const draggedUnit = this.dragElem.children();
-            if (!draggedUnit.length) {
-                this.dragElem.remove();
-                return;
-            }
-
-            draggedUnit.last().insertAfter(this.dragElem);
-            this.moveCursorAfter(this.dragElem.get(0));
-            return;
-        }
+        this.dragLeft();
     }
 
     protected moveUpCursor(): void {
@@ -270,31 +309,23 @@ export abstract class UIManager extends UiAnalyzer {
     protected moveRightCursor(dragMode: boolean = false): void {
         const nextCursorElem = this.cursor.next();
 
-        if (!this.cursor.length || !nextCursorElem.length || !dragMode) {
-            this.removeDrag();
+        if (!this.cursor.length || !dragMode) {
             this.moveCursorAfter(nextCursorElem.get(0));
+            this.removeDrag();
             return;
         }
 
         if (!this.dragElem.length) {
+            if (!nextCursorElem.length)
+                return;
+
             const dragElem = $(UIElementHelper.getDragElement(this.options.id));
-            dragElem.insertBefore(this.cursor);
+            dragElem.insertAfter(this.cursor);
             nextCursorElem.appendTo(this.dragElem);
             return;
         }
 
-        if (nextCursorElem.hasClass(`${this.options.id}-drag`)) {
-            const draggedUnit = this.dragElem.children();
-            if (!draggedUnit.length) {
-                this.dragElem.remove();
-                return;
-            }
-
-            draggedUnit.first().insertBefore(this.dragElem)
-            this.moveCursorBefore(this.dragElem.get(0));
-            return;
-        }
-
+        this.dragRight();
     }
 
     protected moveDownCursor(): void {
@@ -320,10 +351,7 @@ export abstract class UIManager extends UiAnalyzer {
             dragElem.insertAfter(this.cursor);
         }
 
-        this.cursor
-            .prevAll()
-            .toArray()
-            .forEach(elem => $(elem).prependTo(this.dragElem));
+        this.dragFirst();
     }
 
     protected moveLastCursor(dragMode: boolean = false): void {
@@ -339,9 +367,7 @@ export abstract class UIManager extends UiAnalyzer {
             dragElem.insertBefore(this.cursor);
         }
 
-        this.cursor
-            .nextAll()
-            .appendTo(this.dragElem);
+        this.dragLast();
     }
 
     public clear() {

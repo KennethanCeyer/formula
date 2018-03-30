@@ -18,6 +18,10 @@ export declare abstract class UIManager extends UiAnalyzer {
     protected selectRange(start: number, end: number): void;
     protected removeBefore(): void;
     protected removeAfter(): void;
+    protected dragFirst(): void;
+    protected dragLast(): void;
+    protected dragLeft(): void;
+    protected dragRight(): void;
     private moveCursorBefore(elem);
     private moveCursorAfter(elem);
     protected moveLeftCursor(dragMode?: boolean): void;
