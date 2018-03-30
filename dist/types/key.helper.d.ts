@@ -11,4 +11,5 @@ export declare class FormulizeKeyHelper {
     static isEnd(keyCode: number): boolean;
     static doReload(): void;
     static doAction<T>(action: () => T): () => T;
+    static getValue(keyCode: number, pressedShift?: boolean): string;
 }

@@ -26,7 +26,8 @@ export default {
                 compilerOptions: {
                     module: 'es2015'
                 }
-            }
+            },
+            useTsconfigDeclarationDir: true
         }),
         commonjs(),
         resolve(),

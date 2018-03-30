@@ -11,8 +11,3 @@ export interface FormulizeFunction {
 }
 export interface FormulizePlugin extends FormulizeFunction {
 }
-declare global  {
-    interface JQuery {
-        formulize: FormulizePlugin;
-    }
-}
