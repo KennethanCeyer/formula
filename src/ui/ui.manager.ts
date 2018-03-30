@@ -8,7 +8,7 @@ import { UIElementHelper } from './ui.element.helper';
 
 export abstract class UIManager extends UiAnalyzer {
     protected prevCursorIndex = 0;
-    protected _position: Position = { x: 0, y: 0 };
+    protected prevPosition: Position = { x: 0, y: 0 };
     protected dragged: boolean;
     protected moved: boolean;
 
@@ -59,7 +59,8 @@ export abstract class UIManager extends UiAnalyzer {
     protected startDrag(position: Position): void {
         this.dragged = true;
         this.moved = false;
-        this._position = position;
+        this.prevPosition = position;
+        this.prevCursorIndex = this.cursorIndex;
     }
 
     protected endDrag(position: Position): void {
@@ -77,33 +78,27 @@ export abstract class UIManager extends UiAnalyzer {
         if (!this.dragged)
             return;
 
-        if (!UIHelper.isOverDistance(this._position, position, 5))
-            return;
-
-        this.moved = true;
-        this.removeDrag();
-
-        const cursorIndex = this.cursorIndex;
-        this.pick(position);
-        const positions = [this.prevCursorIndex, cursorIndex];
-        positions.sort();
-
-        const startPosition = positions[0];
-        const endPosition = positions[1];
-
-        if (startPosition === endPosition) {
-            this.prevCursorIndex = cursorIndex;
+        if (!this.moved) {
+            this.moved = UIHelper.isOverDistance(this.prevPosition, position, 5);
             return;
         }
 
+        this.removeDrag();
+        this.pick(position);
+
+        if (this.prevCursorIndex === this.cursorIndex)
+            return;
+
+        const positions = [this.prevCursorIndex, this.cursorIndex];
+        positions.sort();
+
         const dragElem = $(UIElementHelper.getDragElement(this.options.id));
-        if (cursorIndex >= this.prevCursorIndex)
+        if (this.cursorIndex >= this.prevCursorIndex)
             dragElem.insertBefore(this.cursor);
         else
             dragElem.insertAfter(this.cursor);
 
-        this.selectRange(startPosition, endPosition);
-        this.prevCursorIndex = cursorIndex;
+        this.selectRange(positions[0], positions[1]);
     }
 
     private findClosestUnit(position: Position): HTMLElement {
@@ -162,8 +157,7 @@ export abstract class UIManager extends UiAnalyzer {
             .filter(`:gt("${start}")`)
             .filter(`:lt("${end - start}")`)
             .add(this.container.children(`:not(".${this.options.id}-cursor")`).eq(start))
-            .toArray()
-            .forEach(elem => () => $(elem).appendTo(this.dragElem));
+            .appendTo(this.dragElem);
     }
 
     protected removeBefore(): void {

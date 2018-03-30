@@ -10,7 +10,7 @@ export class UIHelper {
     }
 
     public static isOverDistance(position: Position, targetPosition: Position, distance: number): boolean {
-        return Math.abs(position.x - targetPosition.x) <= distance &&
-        Math.abs(position.y - targetPosition.y) <= distance;
+        return Math.abs(position.x - targetPosition.x) > distance ||
+        Math.abs(position.y - targetPosition.y) > distance;
     }
 }

@@ -3,7 +3,7 @@ import { Position } from './ui.interface';
 import { Tree } from 'metric-parser/dist/types/tree/simple.tree/type';
 export declare abstract class UIManager extends UiAnalyzer {
     protected prevCursorIndex: number;
-    protected _position: Position;
+    protected prevPosition: Position;
     protected dragged: boolean;
     protected moved: boolean;
     pick(position?: Position): void;

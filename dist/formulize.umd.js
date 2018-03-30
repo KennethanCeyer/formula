@@ -60,8 +60,8 @@
                 : value;
         };
         UIHelper.isOverDistance = function (position, targetPosition, distance) {
-            return Math.abs(position.x - targetPosition.x) <= distance &&
-                Math.abs(position.y - targetPosition.y) <= distance;
+            return Math.abs(position.x - targetPosition.x) > distance ||
+                Math.abs(position.y - targetPosition.y) > distance;
         };
         return UIHelper;
     }());
@@ -1449,7 +1449,7 @@
         function UIManager() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.prevCursorIndex = 0;
-            _this._position = { x: 0, y: 0 };
+            _this.prevPosition = { x: 0, y: 0 };
             return _this;
         }
         UIManager.prototype.pick = function (position) {
@@ -1491,7 +1491,8 @@
         UIManager.prototype.startDrag = function (position) {
             this.dragged = true;
             this.moved = false;
-            this._position = position;
+            this.prevPosition = position;
+            this.prevCursorIndex = this.cursorIndex;
         };
         UIManager.prototype.endDrag = function (position) {
             this.dragged = false;
@@ -1504,27 +1505,22 @@
         UIManager.prototype.moveDrag = function (position) {
             if (!this.dragged)
                 return;
-            if (!UIHelper.isOverDistance(this._position, position, 5))
-                return;
-            this.moved = true;
-            this.removeDrag();
-            var cursorIndex = this.cursorIndex;
-            this.pick(position);
-            var positions = [this.prevCursorIndex, cursorIndex];
-            positions.sort();
-            var startPosition = positions[0];
-            var endPosition = positions[1];
-            if (startPosition === endPosition) {
-                this.prevCursorIndex = cursorIndex;
+            if (!this.moved) {
+                this.moved = UIHelper.isOverDistance(this.prevPosition, position, 5);
                 return;
             }
+            this.removeDrag();
+            this.pick(position);
+            if (this.prevCursorIndex === this.cursorIndex)
+                return;
+            var positions = [this.prevCursorIndex, this.cursorIndex];
+            positions.sort();
             var dragElem = $(UIElementHelper.getDragElement(this.options.id));
-            if (cursorIndex >= this.prevCursorIndex)
+            if (this.cursorIndex >= this.prevCursorIndex)
                 dragElem.insertBefore(this.cursor);
             else
                 dragElem.insertAfter(this.cursor);
-            this.selectRange(startPosition, endPosition);
-            this.prevCursorIndex = cursorIndex;
+            this.selectRange(positions[0], positions[1]);
         };
         UIManager.prototype.findClosestUnit = function (position) {
             var containerPosition = {
@@ -1564,7 +1560,6 @@
                 : undefined;
         };
         UIManager.prototype.selectRange = function (start, end) {
-            var _this = this;
             if (!this.dragElem.length)
                 return;
             this.container
@@ -1572,8 +1567,7 @@
                 .filter(":gt(\"" + start + "\")")
                 .filter(":lt(\"" + (end - start) + "\")")
                 .add(this.container.children(":not(\"." + this.options.id + "-cursor\")").eq(start))
-                .toArray()
-                .forEach(function (elem) { return function () { return $(elem).appendTo(_this.dragElem); }; });
+                .appendTo(this.dragElem);
         };
         UIManager.prototype.removeBefore = function () {
             if (this.dragElem.length) {
