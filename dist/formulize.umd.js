@@ -38,11 +38,26 @@
         return t;
     };
 
+    var StringHelper = /** @class */ (function () {
+        function StringHelper() {
+        }
+        StringHelper.isNumeric = function (value) {
+            return /^-?[\d,]+\.?\d*$/.test(value);
+        };
+        StringHelper.toNumber = function (value) {
+            return value.replace(/[^\d-\.]/g, '');
+        };
+        return StringHelper;
+    }());
+
     var UIHelper = /** @class */ (function () {
         function UIHelper() {
         }
         UIHelper.getDataValue = function (elem) {
-            return $(elem).data('value') || $(elem).text();
+            var value = $(elem).data('value') || $(elem).text();
+            return StringHelper.isNumeric(value)
+                ? StringHelper.toNumber(value)
+                : value;
         };
         UIHelper.isOverDistance = function (position, targetPosition, distance) {
             return Math.abs(position.x - targetPosition.x) <= distance &&
@@ -243,7 +258,7 @@
                 ? keyCode - (Key.Numpad0 - Key.Zero)
                 : keyCode;
             if (numberKeyCode >= Key.Zero && numberKeyCode <= Key.Nine) {
-                var numberValue = String.fromCharCode(keyCode);
+                var numberValue = String.fromCharCode(numberKeyCode);
                 return pressedShift
                     ? specialCharacters[Number(numberValue)]
                     : numberValue;
@@ -262,13 +277,18 @@
         UIElementHelper.getCursorElement = function (id) {
             return $("<div class=\"" + id + "-cursor\"></div>")[0];
         };
-        UIElementHelper.getUnitElement = function (id, text) {
-            return $("<div class=\"" + id + "-item " + id + "-unit\">" + text + "</div>")[0];
+        UIElementHelper.getUnitElement = function (id, value) {
+            return $("<div class=\"" + id + "-item " + id + "-unit\">" + value + "</div>")[0];
+        };
+        UIElementHelper.getOperatorElement = function (id, value) {
+            return $("<div class=\"" + id + "-item " + id + "-operator\">" + value.toLowerCase() + "</div>")[0];
         };
         UIElementHelper.getTextBoxElement = function (id) {
             return $("<textarea id=\"" + id + "-text\" name=\"" + id + "-text\" class=\"" + id + "-text\"></textarea>")[0];
         };
         UIElementHelper.isUnit = function (id, elem) {
+            if (!elem)
+                return false;
             return $(elem).hasClass(id + "-unit");
         };
         return UIElementHelper;
@@ -548,7 +568,7 @@
         return BuilderHelper;
     }());
 
-    var StringHelper = /** @class */ (function () {
+    var StringHelper$1 = /** @class */ (function () {
         function StringHelper() {
         }
         StringHelper.format = function (value) {
@@ -579,7 +599,7 @@
             _this.error = error;
             Object.setPrototypeOf(_this, ParserError.prototype);
             if (args.length)
-                _this.error = __assign$1({}, _this.error, { text: StringHelper.format.apply(StringHelper, [_this.error.text].concat(args)) });
+                _this.error = __assign$1({}, _this.error, { text: StringHelper$1.format.apply(StringHelper$1, [_this.error.text].concat(args)) });
             _this.code = _this.error.code;
             _this.text = _this.error.text;
             _this.message = _this.text;
@@ -1342,12 +1362,10 @@
         function FormulizeTokenHelper() {
         }
         FormulizeTokenHelper.toDecimal = function (value) {
-            var splitValue = value.split('.');
-            var prefix = splitValue[0]
-                .replace(/[^\d.]*/gi, '')
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            var suffix = (splitValue[1] || '').replace(/[^\d.]*/gi, '');
-            return [prefix, suffix].join('.');
+            var splitValue = StringHelper.toNumber(value).split('.');
+            if (splitValue.length)
+                splitValue[0] = splitValue[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return splitValue.join('.');
         };
         FormulizeTokenHelper.isValid = function (value) {
             return FormulizeTokenHelper.isNumeric(value) || FormulizeTokenHelper.supportValue(value);
@@ -1357,6 +1375,9 @@
         };
         FormulizeTokenHelper.isBracket = function (value) {
             return /^[()]$/.test(value);
+        };
+        FormulizeTokenHelper.isComma = function (value) {
+            return value === ',';
         };
         FormulizeTokenHelper.supportValue = function (value) {
             return supportedCharacters.includes(value);
@@ -1404,7 +1425,7 @@
         };
         UIManager.prototype.getExpression = function () {
             return this.container
-                .find('.ui-item')
+                .find("." + this.options.id + "-item")
                 .toArray()
                 .map(function (elem) { return UIHelper.getDataValue(elem); });
         };
@@ -1491,9 +1512,9 @@
             var split = decimalValue.split('.');
             var prefix = $("<span class=\"" + this.options.id + "-prefix " + this.options.id + "-decimal-highlight\">" + split[0] + "</span>");
             prefix.appendTo($(elem));
-            if (!split[1])
+            if (split[1] === undefined)
                 return;
-            var suffix = $("<span class=\"" + this.options.id + "-surfix " + this.options.id + "-decimal-highlight\">.'" + split[1] + "</span>");
+            var suffix = $("<span class=\"" + this.options.id + "-surfix " + this.options.id + "-decimal-highlight\">." + split[1] + "</span>");
             suffix.appendTo($(elem));
         };
         UIManager.prototype.selectRange = function (start, end) {
@@ -1691,7 +1712,7 @@
             if (!this.cursor || !this.cursor.length || position)
                 this.pick(position);
             if (typeof obj === 'string' || typeof obj === 'number') {
-                this.insertKey(obj);
+                this.insertValue(String(obj));
                 return;
             }
             if (!(obj instanceof HTMLElement))
@@ -1700,12 +1721,12 @@
             $(obj).insertBefore(this.cursor);
             this.triggerUpdate();
         };
-        UIManager.prototype.insertKey = function (key) {
+        UIManager.prototype.insertValue = function (value) {
             var _this = this;
-            if (!FormulizeTokenHelper.isValid(key))
+            if (!FormulizeTokenHelper.isValid(value))
                 return;
-            if (FormulizeTokenHelper.isNumeric(key)) {
-                var unitElem = $(UIElementHelper.getUnitElement(this.options.id, key));
+            if (FormulizeTokenHelper.isNumeric(value)) {
+                var unitElem = $(UIElementHelper.getUnitElement(this.options.id, value));
                 if (this.dragElem.length) {
                     this.cursor.insertBefore(this.dragElem);
                     this.dragElem.remove();
@@ -1714,15 +1735,15 @@
                     this.cursor.before(unitElem);
                 else
                     this.container.append(unitElem);
-                var prevUnitElem = unitElem.prevUntil(":not(." + this.options.id + "-cursor)");
-                var nextUnitElem = unitElem.nextUntil(":not(." + this.options.id + "-cursor)");
-                var targetUnitElem = [prevUnitElem, nextUnitElem]
-                    .find(function (elem) { return elem.length && UIElementHelper.isUnit(_this.options.id, elem[0]); });
+                var prevElem = unitElem.prev();
+                var nextElem = unitElem.next();
+                var targetUnitElem = [prevElem, nextElem]
+                    .find(function (elem) { return UIElementHelper.isUnit(_this.options.id, elem.get(0)); });
                 if (!targetUnitElem)
                     return;
-                if (targetUnitElem === prevUnitElem)
+                if (targetUnitElem === prevElem)
                     targetUnitElem.append(unitElem[0].innerHTML);
-                if (targetUnitElem === nextUnitElem)
+                if (targetUnitElem === nextElem)
                     targetUnitElem.prepend(unitElem[0].innerHTML);
                 var text = targetUnitElem.text();
                 this.setCursorValue(targetUnitElem.get(0), text);
@@ -1730,14 +1751,12 @@
                 this.triggerUpdate();
                 return;
             }
-            if (!key)
-                return;
-            var operatorElem = $("<div class=\"" + this.options.id + "-item " + this.options.id + "-operator\">" + key.toLowerCase() + "</div>");
+            var operatorElem = $(UIElementHelper.getOperatorElement(this.options.id, value));
             if (this.cursor && this.cursor.length)
                 this.cursor.before(operatorElem);
             else
                 this.container.append(operatorElem);
-            if (FormulizeTokenHelper.isBracket(key))
+            if (FormulizeTokenHelper.isBracket(value))
                 operatorElem.addClass(this.options.id + "-bracket");
         };
         UIManager.prototype.insertData = function (data) {
@@ -1790,7 +1809,7 @@
             var key = FormulizeKeyHelper.getValue(event.which, event.shiftKey);
             if (key === undefined)
                 return;
-            this.insertKey(key);
+            this.insertValue(key);
             this.validate();
         };
         return UIHook;

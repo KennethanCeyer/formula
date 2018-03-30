@@ -17,7 +17,7 @@ export abstract class UIHook extends UIManager {
         if (key === undefined)
             return;
 
-        this.insertKey(key);
+        this.insertValue(key);
         this.validate();
     }
 }

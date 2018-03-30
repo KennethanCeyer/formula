@@ -1,14 +1,12 @@
 import { supportedCharacters } from './values';
+import { StringHelper } from './string.helper';
 
 export class FormulizeTokenHelper {
     public static toDecimal(value: string): string {
-        const splitValue = value.split('.');
-        const prefix = splitValue[0]
-            .replace(/[^\d.]*/gi, '')
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        const suffix = (splitValue[1] || '').replace(/[^\d.]*/gi, '');
-
-        return  [prefix, suffix].join('.');
+        const splitValue = StringHelper.toNumber(value).split('.');
+        if (splitValue.length)
+            splitValue[0] = splitValue[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return  splitValue.join('.');
     }
 
     public static isValid(value: string): boolean {
@@ -21,6 +19,10 @@ export class FormulizeTokenHelper {
 
     public static isBracket(value: string): boolean {
         return /^[()]$/.test(value);
+    }
+
+    public static isComma(value: string): boolean {
+        return value === ',';
     }
 
     public static supportValue(value: string): boolean {

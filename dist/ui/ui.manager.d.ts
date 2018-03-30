@@ -32,7 +32,7 @@ export declare abstract class UIManager extends UiAnalyzer {
     removeDrag(): void;
     selectAll(): void;
     insert(obj: string | number | HTMLElement, position?: Position): void;
-    insertKey(key: string): void;
+    insertValue(value: string): void;
     insertData(data: string | string[] | any[]): void;
     validate(extractor?: (valid: boolean) => void): void;
 }

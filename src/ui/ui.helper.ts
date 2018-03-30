@@ -1,8 +1,12 @@
 import { Position } from './ui.interface';
+import { StringHelper } from '../string.helper';
 
 export class UIHelper {
     public static getDataValue(elem: HTMLElement): string {
-        return $(elem).data('value') || $(elem).text();
+        const value = $(elem).data('value') || $(elem).text();
+        return StringHelper.isNumeric(value)
+            ? StringHelper.toNumber(value)
+            : value;
     }
 
     public static isOverDistance(position: Position, targetPosition: Position, distance: number): boolean {

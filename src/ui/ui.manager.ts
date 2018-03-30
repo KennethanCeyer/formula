@@ -51,7 +51,7 @@ export abstract class UIManager extends UiAnalyzer {
 
     private getExpression(): string[] {
         return this.container
-            .find('.ui-item')
+            .find(`.${this.options.id}-item`)
             .toArray()
             .map(elem => UIHelper.getDataValue(elem));
     }
@@ -144,7 +144,7 @@ export abstract class UIManager extends UiAnalyzer {
         const filteredUnitPositions = closestUnitPositions.filter(unitPosition => unitPosition.y === maxY).length
             ? closestUnitPositions.filter(unitPosition => unitPosition.y === maxY)
             : closestUnitPositions.filter(unitPosition => unitPosition.y <= position.y);
-        filteredUnitPositions.sort((a, b) => a.diff.x - b.diff.x || a.diff.y - b.diff.y)
+        filteredUnitPositions.sort((a, b) => a.diff.x - b.diff.x || a.diff.y - b.diff.y);
 
         const closestUnitPosition = filteredUnitPositions.shift();
 
@@ -163,10 +163,10 @@ export abstract class UIManager extends UiAnalyzer {
         const prefix = $(`<span class="${this.options.id}-prefix ${this.options.id}-decimal-highlight">${split[0]}</span>`);
         prefix.appendTo($(elem));
 
-        if (!split[1])
+        if (split[1] === undefined)
             return;
 
-        const suffix = $(`<span class="${this.options.id}-surfix ${this.options.id}-decimal-highlight">.'${split[1]}</span>`);
+        const suffix = $(`<span class="${this.options.id}-surfix ${this.options.id}-decimal-highlight">.${split[1]}</span>`);
         suffix.appendTo($(elem));
     }
 
@@ -402,7 +402,7 @@ export abstract class UIManager extends UiAnalyzer {
             this.pick(position);
 
         if (typeof obj === 'string' || typeof obj === 'number') {
-            this.insertKey(<string>obj);
+            this.insertValue(String(obj));
             return;
         }
 
@@ -415,12 +415,12 @@ export abstract class UIManager extends UiAnalyzer {
         this.triggerUpdate();
     }
 
-    public insertKey(key: string): void {
-        if (!FormulizeTokenHelper.isValid(key))
+    public insertValue(value: string): void {
+        if (!FormulizeTokenHelper.isValid(value))
             return;
 
-        if (FormulizeTokenHelper.isNumeric(key)) {
-            const unitElem = $(UIElementHelper.getUnitElement(this.options.id, key));
+        if (FormulizeTokenHelper.isNumeric(value)) {
+            const unitElem = $(UIElementHelper.getUnitElement(this.options.id, value));
 
             if (this.dragElem.length) {
                 this.cursor.insertBefore(this.dragElem);
@@ -432,19 +432,19 @@ export abstract class UIManager extends UiAnalyzer {
             else
                 this.container.append(unitElem);
 
-            const prevUnitElem = unitElem.prevUntil(`:not(.${this.options.id}-cursor)`);
-            const nextUnitElem = unitElem.nextUntil(`:not(.${this.options.id}-cursor)`);
+            const prevElem = unitElem.prev();
+            const nextElem = unitElem.next();
 
-            const targetUnitElem = [prevUnitElem, nextUnitElem]
-                .find(elem => elem.length && UIElementHelper.isUnit(this.options.id, elem[0]));
+            const targetUnitElem = [prevElem, nextElem]
+                .find(elem => UIElementHelper.isUnit(this.options.id, elem.get(0)));
 
             if (!targetUnitElem)
                 return;
 
-            if (targetUnitElem === prevUnitElem)
+            if (targetUnitElem === prevElem)
                 targetUnitElem.append(unitElem[0].innerHTML);
 
-            if (targetUnitElem === nextUnitElem)
+            if (targetUnitElem === nextElem)
                 targetUnitElem.prepend(unitElem[0].innerHTML);
 
             const text = targetUnitElem.text();
@@ -455,17 +455,13 @@ export abstract class UIManager extends UiAnalyzer {
             return;
         }
 
-        if (!key)
-            return;
-
-        const operatorElem = $(`<div class="${this.options.id}-item ${this.options.id}-operator">${key.toLowerCase()}</div>`);
-
+        const operatorElem = $(UIElementHelper.getOperatorElement(this.options.id, value));
         if (this.cursor && this.cursor.length)
             this.cursor.before(operatorElem);
         else
             this.container.append(operatorElem);
 
-        if (FormulizeTokenHelper.isBracket(key))
+        if (FormulizeTokenHelper.isBracket(value))
             operatorElem.addClass(`${this.options.id}-bracket`);
     }
 

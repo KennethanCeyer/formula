@@ -71,7 +71,7 @@ export class FormulizeKeyHelper {
             : keyCode;
 
         if (numberKeyCode >= Key.Zero && numberKeyCode <= Key.Nine) {
-            const numberValue = String.fromCharCode(keyCode);
+            const numberValue = String.fromCharCode(numberKeyCode);
             return pressedShift
                 ? specialCharacters[Number(numberValue)]
                 : numberValue;
