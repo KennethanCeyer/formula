@@ -1,14 +1,15 @@
 import { FormulizeOptions } from '../formulize.interface';
 export declare abstract class UIDom {
-    protected elem: HTMLElement;
-    protected options: FormulizeOptions;
     protected container: JQuery;
     protected statusBox: JQuery;
     protected textBox: JQuery;
     protected cursor: JQuery;
+    protected elem: HTMLElement;
+    protected options: FormulizeOptions;
     protected readonly cursorIndex: number;
     protected readonly dragElem: JQuery;
-    constructor(elem: HTMLElement, options?: FormulizeOptions);
+    protected initializeDOM(): void;
+    protected isAlreadyInitialized(): boolean;
     protected attachEvents(): void;
     protected getPrevUnit(elem: HTMLElement): HTMLElement;
     protected getNextUnit(elem: HTMLElement): HTMLElement;

@@ -337,18 +337,7 @@
     }());
 
     var UIDom = /** @class */ (function () {
-        function UIDom(elem, options) {
-            if (options === void 0) { options = __assign({}, defaultOptions); }
-            this.elem = elem;
-            this.options = options;
-            this.container = $(this.elem);
-            this.container.addClass(this.options.id + "-container");
-            this.container.wrap("<div class=\"" + this.options.id + "-wrapper\"></div>");
-            this.statusBox = $("<div class=\"" + this.options.id + "-alert\">" + this.options.text.formula + "</div>");
-            this.statusBox.insertBefore(this.container);
-            this.textBox = $(UIElementHelper.getTextBoxElement(this.options.id));
-            this.textBox.insertAfter(this.container);
-            this.textBox.trigger('focus');
+        function UIDom() {
         }
         Object.defineProperty(UIDom.prototype, "cursorIndex", {
             get: function () {
@@ -367,6 +356,22 @@
             enumerable: true,
             configurable: true
         });
+        UIDom.prototype.initializeDOM = function () {
+            this.container = $(this.elem);
+            this.container.addClass(this.options.id + "-container");
+            this.container.wrap("<div class=\"" + this.options.id + "-wrapper\"></div>");
+            this.statusBox = $("<div class=\"" + this.options.id + "-alert\">" + this.options.text.formula + "</div>");
+            this.statusBox.insertBefore(this.container);
+            this.textBox = $(UIElementHelper.getTextBoxElement(this.options.id));
+            this.textBox.insertAfter(this.container);
+            this.textBox.trigger('focus');
+        };
+        UIDom.prototype.isAlreadyInitialized = function () {
+            var selfAndContainer = $(this.elem)
+                .closest("." + this.options.id + "-container")
+                .add(this.elem);
+            return !!selfAndContainer.filter("." + this.options.id + "-container").length;
+        };
         UIDom.prototype.attachEvents = function () {
             throw new Error('method not implemented');
         };
@@ -1861,7 +1866,13 @@
     var UIBase = /** @class */ (function (_super) {
         __extends(UIBase, _super);
         function UIBase(elem, options) {
-            var _this = _super.call(this, elem, options) || this;
+            if (options === void 0) { options = __assign({}, defaultOptions); }
+            var _this = _super.call(this) || this;
+            _this.elem = elem;
+            _this.options = options;
+            if (_this.isAlreadyInitialized())
+                return _this;
+            _this.initializeDOM();
             _this.attachEvents();
             return _this;
         }

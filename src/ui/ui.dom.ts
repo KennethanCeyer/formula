@@ -8,6 +8,8 @@ export abstract class UIDom {
     protected statusBox: JQuery;
     protected textBox: JQuery;
     protected cursor: JQuery;
+    protected elem: HTMLElement;
+    protected options: FormulizeOptions;
 
     protected get cursorIndex(): number {
         return this.cursor
@@ -20,7 +22,7 @@ export abstract class UIDom {
             .find(`.${this.options.id}-drag`);
     }
 
-    constructor(protected elem: HTMLElement, protected options: FormulizeOptions = { ...defaultOptions }) {
+    protected initializeDOM() {
         this.container = $(this.elem);
         this.container.addClass(`${this.options.id}-container`);
         this.container.wrap(`<div class="${this.options.id}-wrapper"></div>`);
@@ -31,6 +33,13 @@ export abstract class UIDom {
         this.textBox = $(UIElementHelper.getTextBoxElement(this.options.id));
         this.textBox.insertAfter(this.container);
         this.textBox.trigger('focus');
+    }
+
+    protected isAlreadyInitialized(): boolean {
+        const selfAndContainer = $(this.elem)
+            .closest(`.${this.options.id}-container`)
+            .add(this.elem);
+        return !!selfAndContainer.filter(`.${this.options.id}-container`).length;
     }
 
     protected attachEvents() {
