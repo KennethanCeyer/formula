@@ -3,13 +3,12 @@
   "version": "0.0.1",
   "description": "formula UI generator",
   "main": "dist/formulize.umd.js",
-  "module": "dist/formulize.es5.js",
   "typings": "dist/types/formulize.d.ts",
   "scripts": {
     "lint": "tslint -t codeFrame 'src/**/*.ts'",
     "build": "tsc --module commonjs && rollup -c rollup.config.ts",
     "typedoc": "typedoc --out docs --target es6 --theme minimal --mode file src --exclude **/*.spec.ts",
-    "test": "nyc mocha"
+    "test": "nyc mocha --opts test/mocha.opts"
   },
   "repository": {
     "type": "git",

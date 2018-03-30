@@ -48,4 +48,23 @@ export class FormulizeKeyHelper {
     public static doAction<T>(action: () => T): () => T {
         return action;
     }
+
+    public static getValue(keyCode: number, pressedShift: boolean = false): string {
+        if (keyCode === Key.Multiply)
+            return 'x';
+
+        if (((keyCode === Key.PlusSign || keyCode === 61) && pressedShift) || keyCode === Key.Add)
+            return '+';
+
+        if (keyCode === Key.Dash || keyCode === 173 || keyCode === Key.Subtract)
+            return '-';
+
+        if (keyCode === Key.Period || keyCode === Key.DecimalPoint)
+            return '.';
+
+        if (keyCode === Key.ForwardSlash || keyCode === Key.Divide)
+            return '/';
+
+        return String.fromCharCode(keyCode);
+    }
 }

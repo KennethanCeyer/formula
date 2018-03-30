@@ -38,27 +38,17 @@
         return t;
     };
 
-    var FormulizeHelper = /** @class */ (function () {
-        function FormulizeHelper() {
+    var UIHelper = /** @class */ (function () {
+        function UIHelper() {
         }
-        FormulizeHelper.getDataValue = function (elem) {
-            var jQueryElem = $(elem);
-            var value = jQueryElem.data('value');
-            return value !== undefined
-                ? value
-                : $(elem).text();
+        UIHelper.getDataValue = function (elem) {
+            return $(elem).data('value') || $(elem).text();
         };
-        FormulizeHelper.isOverDistance = function (position, targetPosition, distance) {
+        UIHelper.isOverDistance = function (position, targetPosition, distance) {
             return Math.abs(position.x - targetPosition.x) <= distance &&
                 Math.abs(position.y - targetPosition.y) <= distance;
         };
-        FormulizeHelper.getDragElement = function (id) {
-            return $("<div class=\"" + id + "-drag\"></div>")[0];
-        };
-        FormulizeHelper.getCursorElement = function (id) {
-            return $("<div class=\"" + id + "-cursor\"></div>")[0];
-        };
-        return FormulizeHelper;
+        return UIHelper;
     }());
 
     var defaultOptions = {
@@ -74,7 +64,7 @@
             error: 'error',
             pass: 'passed'
         },
-        export: function (elem) { return FormulizeHelper.getDataValue(elem); }
+        export: function (elem) { return UIHelper.getDataValue(elem); }
     };
 
     var Key;
@@ -234,21 +224,7 @@
         FormulizeKeyHelper.doAction = function (action) {
             return action;
         };
-        return FormulizeKeyHelper;
-    }());
-
-    var Helper = /** @class */ (function () {
-        function Helper() {
-        }
-        Helper.toDecimal = function (value) {
-            var splitValue = value.split('.');
-            var prefix = splitValue[0]
-                .replace(/[^\d.]*/gi, '')
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            var suffix = (splitValue[1] || '').replace(/[^\d.]*/gi, '');
-            return [prefix, suffix].join('.');
-        };
-        Helper.getKeyCodeValue = function (keyCode, pressedShift) {
+        FormulizeKeyHelper.getValue = function (keyCode, pressedShift) {
             if (pressedShift === void 0) { pressedShift = false; }
             if (keyCode === Key.Multiply)
                 return 'x';
@@ -262,8 +238,84 @@
                 return '/';
             return String.fromCharCode(keyCode);
         };
-        return Helper;
+        return FormulizeKeyHelper;
     }());
+
+    var specialCharacters = [')', '!', '@', '#', '$', '%', '^', '&', 'x', '('];
+    var supportedCharacters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 'x', '*', '/', '.', '+', '-', '%', '^', '(', ')'];
+
+    var UIElementHelper = /** @class */ (function () {
+        function UIElementHelper() {
+        }
+        UIElementHelper.getDragElement = function (id) {
+            return $("<div class=\"" + id + "-drag\"></div>")[0];
+        };
+        UIElementHelper.getCursorElement = function (id) {
+            return $("<div class=\"" + id + "-cursor\"></div>")[0];
+        };
+        UIElementHelper.getTextBoxElement = function (id) {
+            return $("<textarea id=\"" + id + "-text\" name=\"" + id + "-text\" class=\"" + id + "-text\"></textarea>")[0];
+        };
+        return UIElementHelper;
+    }());
+
+    var UIDom = /** @class */ (function () {
+        function UIDom(elem, options) {
+            if (options === void 0) { options = __assign({}, defaultOptions); }
+            this.elem = elem;
+            this.options = options;
+            this.container = $(this.elem);
+            this.container.addClass(this.options.id + "-container");
+            this.container.wrap("<div class=\"" + this.options.id + "-wrapper\"></div>");
+            this.statusBox = $("<div class=\"" + this.options.id + "-alert\">" + this.options.text.formula + "</div>");
+            this.statusBox.insertBefore(this.container);
+            this.textBox = $(UIElementHelper.getTextBoxElement(this.options.id));
+            this.textBox.insertAfter(this.container);
+            this.textBox.trigger('focus');
+        }
+        Object.defineProperty(UIDom.prototype, "cursorIndex", {
+            get: function () {
+                return this.cursor
+                    ? this.cursor.index()
+                    : 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UIDom.prototype, "dragElem", {
+            get: function () {
+                return this.container
+                    .find("." + this.options.id + "-drag");
+            },
+            enumerable: true,
+            configurable: true
+        });
+        UIDom.prototype.attachEvents = function () {
+            throw new Error('method not implemented');
+        };
+        UIDom.prototype.removeCursor = function () {
+            this.container
+                .find("." + this.options.id + "-cursor")
+                .remove();
+        };
+        UIDom.prototype.removeUnit = function () {
+            this.container
+                .find(":not(\"." + this.options.id + "-cursor\")")
+                .remove();
+        };
+        return UIDom;
+    }());
+
+    var UiAnalyzer = /** @class */ (function (_super) {
+        __extends(UiAnalyzer, _super);
+        function UiAnalyzer() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        UiAnalyzer.prototype.analyzeKey = function (keyCode, pressedCtrl, pressedShift) {
+            throw new Error('method not implemented');
+        };
+        return UiAnalyzer;
+    }(UIDom));
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -1271,55 +1323,79 @@
         return builder.build(data).code === success;
     }
 
-    var specialCharacters = [')', '!', '@', '#', '$', '%', '^', '&', 'x', '('];
-    var supportedCharacters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 'x', '*', '/', '.', '+', '-', '%', '^', '(', ')'];
-
-    var FormulizeBase = /** @class */ (function () {
-        function FormulizeBase(elem, options) {
-            this._options = __assign({}, defaultOptions);
-            this._position = { x: 0, y: 0 };
-            this.prevCursorIndex = 0;
-            this._elem = elem;
-            this._options = __assign({}, this._options, options);
-            this.container = $(this._elem);
-            this.container.addClass(this._options.id + "-container");
-            this.container.wrap("<div class=\"" + this._options.id + "-wrapper\"></div>");
-            this.statusBox = $("<div class=\"" + this._options.id + "-alert\">" + this._options.text.formula + "</div>");
-            this.statusBox.insertBefore(this.container);
-            this.textBox = $("\n            <textarea\n              id=\"" + this._options.id + "-text\"\n              name=\"" + this._options.id + "-text\"\n              class=\"" + this._options.id + "-text\"\n                ></textarea>\n        ");
-            this.textBox.insertAfter(this.container);
-            this.textBox.trigger('focus');
-            this.attachEvents();
+    var FormulizeTokenHelper = /** @class */ (function () {
+        function FormulizeTokenHelper() {
         }
-        Object.defineProperty(FormulizeBase.prototype, "dragElem", {
-            get: function () {
-                return this.container
-                    .find("." + this._options.id + "-drag");
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(FormulizeBase.prototype, "cursorIndex", {
-            get: function () {
-                return this.cursor
-                    ? this.cursor.index()
-                    : 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        FormulizeBase.prototype.attachEvents = function () {
-            throw new Error('method not implemented');
+        FormulizeTokenHelper.toDecimal = function (value) {
+            var splitValue = value.split('.');
+            var prefix = splitValue[0]
+                .replace(/[^\d.]*/gi, '')
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            var suffix = (splitValue[1] || '').replace(/[^\d.]*/gi, '');
+            return [prefix, suffix].join('.');
         };
-        FormulizeBase.prototype.analyzeKey = function (keyCode, pressedCtrl, pressedShift) {
-            throw new Error('method not implemented');
+        FormulizeTokenHelper.isNumeric = function (value) {
+            return /[0-9\.]/.test(value);
         };
-        FormulizeBase.prototype.startDrag = function (position) {
+        FormulizeTokenHelper.isBracket = function (value) {
+            return /^[()]$/.test(value);
+        };
+        FormulizeTokenHelper.supportValue = function (value) {
+            return supportedCharacters.includes(value);
+        };
+        return FormulizeTokenHelper;
+    }());
+
+    var UIManager = /** @class */ (function (_super) {
+        __extends(UIManager, _super);
+        function UIManager() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.prevCursorIndex = 0;
+            _this._position = { x: 0, y: 0 };
+            return _this;
+        }
+        UIManager.prototype.pick = function (position) {
+            if (position === void 0) { position = { x: 0, y: 0 }; }
+            this.removeCursor();
+            this.cursor = $(UIElementHelper.getCursorElement(this.options.id));
+            this.cursor.appendTo(this.container);
+            var closestUnitElem = this.findClosestUnit(position);
+            if (closestUnitElem)
+                this.cursor.insertAfter(closestUnitElem);
+            else
+                this.cursor.prependTo(this.container);
+            this.removeDrag();
+        };
+        UIManager.prototype.setData = function (data) {
+            this.clear();
+            var result = convert(data);
+            if (!result.code)
+                this.insertData(result.data);
+        };
+        UIManager.prototype.getData = function (extractor) {
+            var expression = this.getExpression();
+            var result = convert(expression);
+            if (extractor)
+                extractor(result.data);
+            return result.data;
+        };
+        UIManager.prototype.triggerUpdate = function () {
+            this.validate();
+            $(this.elem)
+                .triggerHandler(this.options.id + ".input", this.getData());
+        };
+        UIManager.prototype.getExpression = function () {
+            return this.container
+                .find('.ui-item')
+                .toArray()
+                .map(function (elem) { return UIHelper.getDataValue(elem); });
+        };
+        UIManager.prototype.startDrag = function (position) {
             this.dragged = true;
             this.moved = false;
             this._position = position;
         };
-        FormulizeBase.prototype.endDrag = function (position) {
+        UIManager.prototype.endDrag = function (position) {
             this.dragged = false;
             if (this.moved) {
                 return;
@@ -1327,10 +1403,10 @@
             this.moved = false;
             this.pick(position);
         };
-        FormulizeBase.prototype.moveDrag = function (position) {
+        UIManager.prototype.moveDrag = function (position) {
             if (!this.dragged)
                 return;
-            if (!FormulizeHelper.isOverDistance(this._position, position, 5))
+            if (!UIHelper.isOverDistance(this._position, position, 5))
                 return;
             this.moved = true;
             this.removeDrag();
@@ -1344,7 +1420,7 @@
                 this.prevCursorIndex = cursorIndex;
                 return;
             }
-            var dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+            var dragElem = $(UIElementHelper.getDragElement(this.options.id));
             if (cursorIndex >= this.prevCursorIndex)
                 dragElem.insertBefore(this.cursor);
             else
@@ -1352,32 +1428,7 @@
             this.selectRange(startPosition, endPosition);
             this.prevCursorIndex = cursorIndex;
         };
-        FormulizeBase.prototype.setCursorValue = function (elem, value) {
-            if (!value)
-                return;
-            $(elem).empty();
-            var decimalValue = Helper.toDecimal(value);
-            var split = decimalValue.split('.');
-            var prefix = $("<span class=\"" + this._options.id + "-prefix " + this._options.id + "-decimal-highlight\">" + split[0] + "</span>");
-            prefix.appendTo($(elem));
-            if (!split[1])
-                return;
-            var suffix = $("<span class=\"" + this._options.id + "-surfix " + this._options.id + "-decimal-highlight\">.'" + split[1] + "</span>");
-            suffix.appendTo($(elem));
-        };
-        FormulizeBase.prototype.pick = function (position) {
-            if (position === void 0) { position = { x: 0, y: 0 }; }
-            this.removeCursor();
-            this.cursor = $(FormulizeHelper.getCursorElement(this._options.id));
-            this.cursor.appendTo(this.container);
-            var closestUnitElem = this.findClosestUnit(position);
-            if (closestUnitElem)
-                this.cursor.insertAfter(closestUnitElem);
-            else
-                this.cursor.prependTo(this.container);
-            this.removeDrag();
-        };
-        FormulizeBase.prototype.findClosestUnit = function (position) {
+        UIManager.prototype.findClosestUnit = function (position) {
             var containerPosition = {
                 x: this.container.offset().left,
                 y: this.container.offset().top
@@ -1387,7 +1438,7 @@
                 y: Number(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
             };
             var unitPositions = this.container
-                .children("*:not(\"." + this._options.id + "-cursor\")")
+                .children("*:not(\"." + this.options.id + "-cursor\")")
                 .toArray()
                 .map(function (elem) { return ({
                 elem: elem,
@@ -1414,97 +1465,80 @@
                 ? closestUnitPosition.elem
                 : undefined;
         };
-        FormulizeBase.prototype.selectRange = function (start, end) {
+        UIManager.prototype.setCursorValue = function (elem, value) {
+            if (!value)
+                return;
+            $(elem).empty();
+            var decimalValue = FormulizeTokenHelper.toDecimal(value);
+            var split = decimalValue.split('.');
+            var prefix = $("<span class=\"" + this.options.id + "-prefix " + this.options.id + "-decimal-highlight\">" + split[0] + "</span>");
+            prefix.appendTo($(elem));
+            if (!split[1])
+                return;
+            var suffix = $("<span class=\"" + this.options.id + "-surfix " + this.options.id + "-decimal-highlight\">.'" + split[1] + "</span>");
+            suffix.appendTo($(elem));
+        };
+        UIManager.prototype.selectRange = function (start, end) {
             var _this = this;
             if (!this.dragElem.length)
                 return;
             this.container
-                .children(":not(\"." + this._options.id + "-cursor\")")
+                .children(":not(\"." + this.options.id + "-cursor\")")
                 .filter(":gt(\"" + start + "\")")
                 .filter(":lt(\"" + (end - start) + "\")")
-                .add(this.container.children(":not(\"." + this._options.id + "-cursor\")").eq(start))
+                .add(this.container.children(":not(\"." + this.options.id + "-cursor\")").eq(start))
                 .toArray()
                 .forEach(function (elem) { return function () { return $(elem).appendTo(_this.dragElem); }; });
         };
-        FormulizeBase.prototype.hookKeyDown = function (event) {
-            event.preventDefault();
-            if (!this.cursor || !this.cursor.length)
-                return;
-            var keyCode = event.which >= Key.Numpad0 && event.which <= Key.Numpad9
-                ? event.which - Key.Zero
-                : event.which;
-            this.analyzeKey(keyCode, event.ctrlKey, event.shiftKey);
-            var key = Helper.getKeyCodeValue(keyCode, event.shiftKey);
-            var realKey = event.shiftKey && /[0-9]/.test(key) && specialCharacters[Number(key)]
-                ? specialCharacters[Number(key)]
-                : key;
-            this.insertKey(realKey);
-            this.validate();
-        };
-        FormulizeBase.prototype.hookUpdate = function () {
-            this.validate();
-            $(this._elem)
-                .triggerHandler(this._options.id + ".input", this.getData());
-        };
-        FormulizeBase.prototype.removeBefore = function () {
+        UIManager.prototype.removeBefore = function () {
             if (this.dragElem.length) {
                 this.cursor.insertBefore(this.dragElem);
                 this.dragElem.remove();
-                this.hookUpdate();
+                this.triggerUpdate();
                 return;
             }
             var prevCursorElem = this.cursor.prev();
             if (!this.cursor.length || !prevCursorElem.length)
                 return;
-            if (prevCursorElem.hasClass(this._options.id + "-unit") &&
+            if (prevCursorElem.hasClass(this.options.id + "-unit") &&
                 prevCursorElem.text().length > 1) {
                 var text = prevCursorElem.text();
                 this.setCursorValue(prevCursorElem.get(0), text.substring(0, text.length - 1));
             }
             else
                 prevCursorElem.remove();
-            this.hookUpdate();
+            this.triggerUpdate();
         };
-        FormulizeBase.prototype.removeAfter = function () {
+        UIManager.prototype.removeAfter = function () {
             if (this.dragElem.length) {
                 this.cursor.insertAfter(this.dragElem);
                 this.dragElem.remove();
-                this.hookUpdate();
+                this.triggerUpdate();
                 return;
             }
             var nextCursorElem = this.cursor.next();
             if (!this.cursor.length || nextCursorElem.length)
                 return;
-            if (nextCursorElem.hasClass(this._options.id + "-unit") &&
+            if (nextCursorElem.hasClass(this.options.id + "-unit") &&
                 nextCursorElem.text().length > 1) {
                 var text = nextCursorElem.text();
                 this.setCursorValue(nextCursorElem.get(0), text.substring(1, text.length));
             }
             else
                 nextCursorElem.remove();
-            this.hookUpdate();
+            this.triggerUpdate();
         };
-        FormulizeBase.prototype.removeCursor = function () {
-            this.container
-                .find("." + this._options.id + "-cursor")
-                .remove();
-        };
-        FormulizeBase.prototype.removeUnit = function () {
-            this.container
-                .find(":not(\"." + this._options.id + "-cursor\")")
-                .remove();
-        };
-        FormulizeBase.prototype.moveCursorBefore = function (elem) {
+        UIManager.prototype.moveCursorBefore = function (elem) {
             if (!$(elem).length)
                 return;
             this.cursor.insertBefore($(elem));
         };
-        FormulizeBase.prototype.moveCursorAfter = function (elem) {
+        UIManager.prototype.moveCursorAfter = function (elem) {
             if (!$(elem).length)
                 return;
             this.cursor.insertAfter($(elem));
         };
-        FormulizeBase.prototype.moveLeftCursor = function (dragMode) {
+        UIManager.prototype.moveLeftCursor = function (dragMode) {
             if (dragMode === void 0) { dragMode = false; }
             var prevCursorElem = this.cursor.prev();
             if (!this.cursor.length || !prevCursorElem.length || !dragMode) {
@@ -1513,12 +1547,12 @@
                 return;
             }
             if (!this.dragElem.length) {
-                var dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+                var dragElem = $(UIElementHelper.getDragElement(this.options.id));
                 dragElem.insertBefore(this.cursor);
                 prevCursorElem.prependTo(this.dragElem);
                 return;
             }
-            if (prevCursorElem.hasClass(this._options.id + "-drag")) {
+            if (prevCursorElem.hasClass(this.options.id + "-drag")) {
                 var draggedUnit = this.dragElem.children();
                 if (!draggedUnit.length) {
                     this.dragElem.remove();
@@ -1529,7 +1563,7 @@
                 return;
             }
         };
-        FormulizeBase.prototype.moveUpCursor = function () {
+        UIManager.prototype.moveUpCursor = function () {
             if (!this.cursor.length)
                 return;
             this.pick({
@@ -1537,7 +1571,7 @@
                 y: this.cursor.position().top - this.cursor.outerHeight() / 2
             });
         };
-        FormulizeBase.prototype.moveRightCursor = function (dragMode) {
+        UIManager.prototype.moveRightCursor = function (dragMode) {
             if (dragMode === void 0) { dragMode = false; }
             var nextCursorElem = this.cursor.next();
             if (!this.cursor.length || !nextCursorElem.length || !dragMode) {
@@ -1546,12 +1580,12 @@
                 return;
             }
             if (!this.dragElem.length) {
-                var dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+                var dragElem = $(UIElementHelper.getDragElement(this.options.id));
                 dragElem.insertBefore(this.cursor);
                 nextCursorElem.appendTo(this.dragElem);
                 return;
             }
-            if (nextCursorElem.hasClass(this._options.id + "-drag")) {
+            if (nextCursorElem.hasClass(this.options.id + "-drag")) {
                 var draggedUnit = this.dragElem.children();
                 if (!draggedUnit.length) {
                     this.dragElem.remove();
@@ -1562,7 +1596,7 @@
                 return;
             }
         };
-        FormulizeBase.prototype.moveDownCursor = function () {
+        UIManager.prototype.moveDownCursor = function () {
             if (!this.cursor.length)
                 return;
             this.pick({
@@ -1570,7 +1604,7 @@
                 y: this.cursor.position().top + this.cursor.outerHeight() * 1.5
             });
         };
-        FormulizeBase.prototype.moveFirstCursor = function (dragMode) {
+        UIManager.prototype.moveFirstCursor = function (dragMode) {
             var _this = this;
             if (dragMode === void 0) { dragMode = false; }
             var firstCursorElem = this.container.children(':first');
@@ -1580,7 +1614,7 @@
                 return;
             }
             if (!this.dragElem.length) {
-                var dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+                var dragElem = $(UIElementHelper.getDragElement(this.options.id));
                 dragElem.insertAfter(this.cursor);
             }
             this.cursor
@@ -1588,7 +1622,7 @@
                 .toArray()
                 .forEach(function (elem) { return $(elem).prependTo(_this.dragElem); });
         };
-        FormulizeBase.prototype.moveLastCursor = function (dragMode) {
+        UIManager.prototype.moveLastCursor = function (dragMode) {
             if (dragMode === void 0) { dragMode = false; }
             var lastCursorElem = this.container.children(':last');
             if (!this.cursor.length || !lastCursorElem.length || !dragMode) {
@@ -1597,90 +1631,43 @@
                 return;
             }
             if (!this.dragElem.length) {
-                var dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+                var dragElem = $(UIElementHelper.getDragElement(this.options.id));
                 dragElem.insertBefore(this.cursor);
             }
             this.cursor
                 .nextAll()
                 .appendTo(this.dragElem);
         };
-        FormulizeBase.prototype.clear = function () {
+        UIManager.prototype.clear = function () {
             this.removeCursor();
             this.removeUnit();
-            this.hookUpdate();
+            this.triggerUpdate();
         };
-        FormulizeBase.prototype.blur = function () {
+        UIManager.prototype.blur = function () {
             if (!this.cursor)
                 return;
             this.cursor.remove();
             this.removeDrag();
         };
-        FormulizeBase.prototype.removeDrag = function () {
+        UIManager.prototype.removeDrag = function () {
             var _this = this;
             this.dragElem
                 .children('*')
                 .toArray()
                 .forEach(function (elem) { return $(elem).insertBefore(_this.dragElem); });
             this.dragElem.remove();
-            this.hookUpdate();
+            this.triggerUpdate();
         };
-        FormulizeBase.prototype.selectAll = function () {
+        UIManager.prototype.selectAll = function () {
             this.removeDrag();
-            var dragElem = $(FormulizeHelper.getDragElement(this._options.id));
+            var dragElem = $(UIElementHelper.getDragElement(this.options.id));
             dragElem.prependTo(this.container);
             this.container
-                .children(":not(\"." + this._options.id + "-cursor\")")
+                .children(":not(\"." + this.options.id + "-cursor\")")
                 .toArray()
                 .forEach(function (elem) { return $(elem).appendTo(dragElem); });
         };
-        FormulizeBase.prototype.validate = function (extractor) {
-            var data = this.getData();
-            if (!data)
-                return;
-            var isValid = valid(data);
-            console.log('isValid', isValid, this.statusBox, this._options);
-            if (isValid) {
-                this.statusBox
-                    .text(this._options.text.pass)
-                    .addClass(this._options.id + "-alert-good")
-                    .removeClass(this._options.id + "-alert-error");
-            }
-            else {
-                this.statusBox
-                    .text(this._options.text.error)
-                    .removeClass(this._options.id + "-alert-good")
-                    .addClass(this._options.id + "-alert-error");
-            }
-            if (extractor)
-                extractor(isValid);
-        };
-        FormulizeBase.prototype.isValidKey = function (key) {
-            return this.isNumberTokenKey(key) || supportedCharacters.includes(key);
-        };
-        FormulizeBase.prototype.isNumberTokenKey = function (key) {
-            return /[0-9]/.test(key) || key === '.';
-        };
-        FormulizeBase.prototype.getExpression = function () {
-            return this.container
-                .find('.ui-item')
-                .toArray()
-                .map(function (elem) { return FormulizeHelper.getDataValue(elem); });
-        };
-        FormulizeBase.prototype.setData = function (data) {
-            this.clear();
-            var result = convert(data);
-            if (!result.code)
-                this.insertData(result.data);
-        };
-        FormulizeBase.prototype.getData = function (extractor) {
-            var expression = this.getExpression();
-            console.log('expression', expression);
-            var result = convert(expression);
-            if (extractor)
-                extractor(result.data);
-            return result.data;
-        };
-        FormulizeBase.prototype.insert = function (obj, position) {
+        UIManager.prototype.insert = function (obj, position) {
             if (!obj)
                 return;
             if (!this.cursor || !this.cursor.length || position)
@@ -1691,16 +1678,16 @@
             }
             if (!(obj instanceof HTMLElement))
                 return;
-            $(obj).addClass(this._options.id + "-item");
+            $(obj).addClass(this.options.id + "-item");
             $(obj).insertBefore(this.cursor);
-            this.hookUpdate();
+            this.triggerUpdate();
         };
-        FormulizeBase.prototype.insertKey = function (key) {
+        UIManager.prototype.insertKey = function (key) {
             var _this = this;
             if (!this.isValidKey(key))
                 return;
-            if (this.isNumberTokenKey(key)) {
-                var unitElem = $("<div class=\"" + this._options.id + "-item " + this._options.id + "-unit\">" + key + "</div>");
+            if (FormulizeTokenHelper.isNumeric(key)) {
+                var unitElem = $("<div class=\"" + this.options.id + "-item " + this.options.id + "-unit\">" + key + "</div>");
                 if (this.dragElem.length) {
                     this.cursor.insertBefore(this.dragElem);
                     this.dragElem.remove();
@@ -1709,10 +1696,10 @@
                     this.cursor.before(unitElem);
                 else
                     this.container.append(unitElem);
-                var prevUnitElem = unitElem.prevUntil(":not(." + this._options.id + "-cursor)");
-                var nextUnitElem = unitElem.nextUntil(":not(." + this._options.id + "-cursor)");
+                var prevUnitElem = unitElem.prevUntil(":not(." + this.options.id + "-cursor)");
+                var nextUnitElem = unitElem.nextUntil(":not(." + this.options.id + "-cursor)");
                 var targetUnitElem = [prevUnitElem, nextUnitElem]
-                    .find(function (elem) { return elem.length && elem.hasClass(_this._options.id + "-unit"); });
+                    .find(function (elem) { return elem.length && elem.hasClass(_this.options.id + "-unit"); });
                 if (!targetUnitElem)
                     return;
                 if (targetUnitElem === prevUnitElem)
@@ -1722,42 +1709,99 @@
                 var text = targetUnitElem.text();
                 this.setCursorValue(targetUnitElem.get(0), text);
                 unitElem.remove();
-                this.hookUpdate();
+                this.triggerUpdate();
                 return;
             }
             if (!key)
                 return;
-            var operatorElem = $("<div class=\"" + this._options.id + "-item " + this._options.id + "-operator\">" + key.toLowerCase() + "</div>");
+            var operatorElem = $("<div class=\"" + this.options.id + "-item " + this.options.id + "-operator\">" + key.toLowerCase() + "</div>");
             if (this.cursor && this.cursor.length)
                 this.cursor.before(operatorElem);
             else
                 this.container.append(operatorElem);
-            if (key === '(' || key === ')')
-                operatorElem.addClass(this._options.id + "-bracket");
+            if (FormulizeTokenHelper.isBracket(key))
+                operatorElem.addClass(this.options.id + "-bracket");
         };
-        FormulizeBase.prototype.insertData = function (data) {
+        UIManager.prototype.insertData = function (data) {
             var _this = this;
             var arrayData = typeof data === 'string'
                 ? data.split('')
                 : data;
             arrayData
                 .forEach(function (value) {
-                var inputValue = typeof value === 'string' || !_this._options.import
+                var inputValue = typeof value === 'string' || !_this.options.import
                     ? value
-                    : _this._options.import(value);
+                    : _this.options.import(value);
                 _this.insert(inputValue);
             });
-            this.hookUpdate();
+            this.triggerUpdate();
         };
-        return FormulizeBase;
-    }());
+        UIManager.prototype.validate = function (extractor) {
+            var data = this.getData();
+            if (!data)
+                return;
+            var isValid = valid(data);
+            console.log('isValid', isValid, this.statusBox, this.options);
+            if (isValid) {
+                this.statusBox
+                    .text(this.options.text.pass)
+                    .addClass(this.options.id + "-alert-good")
+                    .removeClass(this.options.id + "-alert-error");
+            }
+            else {
+                this.statusBox
+                    .text(this.options.text.error)
+                    .removeClass(this.options.id + "-alert-good")
+                    .addClass(this.options.id + "-alert-error");
+            }
+            if (extractor)
+                extractor(isValid);
+        };
+        UIManager.prototype.isValidKey = function (key) {
+            return FormulizeTokenHelper.isNumeric(key) || FormulizeTokenHelper.supportValue(key);
+        };
+        return UIManager;
+    }(UiAnalyzer));
 
-    var Formulize = /** @class */ (function (_super) {
-        __extends(Formulize, _super);
-        function Formulize() {
+    var UIHook = /** @class */ (function (_super) {
+        __extends(UIHook, _super);
+        function UIHook() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        Formulize.prototype.analyzeKey = function (keyCode, pressedCtrl, pressedShift) {
+        UIHook.prototype.hookKeyDown = function (event) {
+            event.preventDefault();
+            if (!this.cursor || !this.cursor.length)
+                return;
+            var keyCode = event.which >= Key.Numpad0 && event.which <= Key.Numpad9
+                ? event.which - Key.Zero
+                : event.which;
+            this.analyzeKey(keyCode, event.ctrlKey, event.shiftKey);
+            var key = FormulizeKeyHelper.getValue(keyCode, event.shiftKey);
+            var realKey = event.shiftKey && /[0-9]/.test(key) && specialCharacters[Number(key)]
+                ? specialCharacters[Number(key)]
+                : key;
+            this.insertKey(realKey);
+            this.validate();
+        };
+        return UIHook;
+    }(UIManager));
+
+    var UIBase = /** @class */ (function (_super) {
+        __extends(UIBase, _super);
+        function UIBase(elem, options) {
+            var _this = _super.call(this, elem, options) || this;
+            _this.attachEvents();
+            return _this;
+        }
+        return UIBase;
+    }(UIHook));
+
+    var UI = /** @class */ (function (_super) {
+        __extends(UI, _super);
+        function UI() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        UI.prototype.analyzeKey = function (keyCode, pressedCtrl, pressedShift) {
             var _this = this;
             var behaviors = [
                 { predicate: FormulizeKeyHelper.isReload, doBehavior: FormulizeKeyHelper.doReload },
@@ -1775,31 +1819,31 @@
             if (behavior)
                 return behavior.doBehavior();
         };
-        Formulize.prototype.attachEvents = function () {
+        UI.prototype.attachEvents = function () {
             var _this = this;
             this.textBox
                 .off('blur')
                 .on('blur', function () { return _this.blur(); });
             this.textBox
-                .off("dblclick." + this._options.id + "Handler")
-                .on("dblclick." + this._options.id + "Handler", this.selectAll);
+                .off("dblclick." + this.options.id + "Handler")
+                .on("dblclick." + this.options.id + "Handler", this.selectAll);
             this.textBox
-                .off("mousedown." + this._options.id + "Handler")
-                .on("mousedown." + this._options.id + "Handler", function (event) { return _this.startDrag({ x: event.offsetX, y: event.offsetY }); });
+                .off("mousedown." + this.options.id + "Handler")
+                .on("mousedown." + this.options.id + "Handler", function (event) { return _this.startDrag({ x: event.offsetX, y: event.offsetY }); });
             this.textBox
-                .off("mouseup." + this._options.id + "Handler")
-                .on("mouseup." + this._options.id + "Handler", function (event) { return _this.endDrag({ x: event.offsetX, y: event.offsetY }); });
+                .off("mouseup." + this.options.id + "Handler")
+                .on("mouseup." + this.options.id + "Handler", function (event) { return _this.endDrag({ x: event.offsetX, y: event.offsetY }); });
             this.textBox
-                .off("mousemove." + this._options.id + "Handler")
-                .on("mousemove." + this._options.id + "Handler", function (event) { return _this.moveDrag({ x: event.offsetX, y: event.offsetY }); });
+                .off("mousemove." + this.options.id + "Handler")
+                .on("mousemove." + this.options.id + "Handler", function (event) { return _this.moveDrag({ x: event.offsetX, y: event.offsetY }); });
             this.textBox
-                .off("keydown." + this._options.id + "Handler")
-                .on("keydown." + this._options.id + "Handler", function (event) {
+                .off("keydown." + this.options.id + "Handler")
+                .on("keydown." + this.options.id + "Handler", function (event) {
                 _this.hookKeyDown(event);
             });
         };
-        return Formulize;
-    }(FormulizeBase));
+        return UI;
+    }(UIBase));
 
     var _MODULE_VERSION_$1 = '0.0.1';
     function getVersion$1() {
@@ -1809,15 +1853,15 @@
         this
             .toArray()
             .forEach(function (elem) {
-            new Formulize(elem, options);
+            new UI(elem, options);
         });
         return this;
     }, __assign({}, defaultOptions));
 
     exports.getVersion = getVersion$1;
-    exports.Formulize = Formulize;
+    exports.UI = UI;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
-//# sourceMappingURL=ui.umd.js.map
+//# sourceMappingURL=formulize.umd.js.map

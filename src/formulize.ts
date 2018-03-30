@@ -3,9 +3,9 @@ import { FormulizeFunction, FormulizeOptions } from './formulize.interface';
 import { defaultOptions } from './option.value';
 import { UI } from './ui/ui';
 
-export * from './ui/ui';
-
 const _MODULE_VERSION_ = '0.0.1';
+
+export * from './ui/ui';
 
 export function getVersion(): string {
     return _MODULE_VERSION_;

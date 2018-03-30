@@ -12,19 +12,22 @@ const libraryName = 'formulize';
 export default {
     input: `src/${libraryName}.ts`,
     output: [
-        { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
-        { file: pkg.module, format: 'es', sourcemap: true },
+        { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true }
     ],
     external: [],
     watch: {
         include: 'src/**',
     },
     plugins: [
-        scss({
-            output: `dist/${libraryName}.css`
-        }),
+        scss(),
         json(),
-        typescript({ useTsconfigDeclarationDir: true }),
+        typescript({
+            tsconfigOverride: {
+                compilerOptions: {
+                    module: 'es2015'
+                }
+            }
+        }),
         commonjs(),
         resolve(),
         sourceMaps(),

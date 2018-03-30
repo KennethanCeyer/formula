@@ -27,27 +27,27 @@ export class UI extends UIBase {
             .on('blur', () => this.blur());
 
         this.textBox
-            .off(`dblclick.${this._options.id}Handler`)
-            .on(`dblclick.${this._options.id}Handler`, this.selectAll);
+            .off(`dblclick.${this.options.id}Handler`)
+            .on(`dblclick.${this.options.id}Handler`, this.selectAll);
 
         this.textBox
-            .off(`mousedown.${this._options.id}Handler`)
-            .on(`mousedown.${this._options.id}Handler`,
+            .off(`mousedown.${this.options.id}Handler`)
+            .on(`mousedown.${this.options.id}Handler`,
                 event => this.startDrag({ x: event.offsetX, y: event.offsetY }));
 
         this.textBox
-            .off(`mouseup.${this._options.id}Handler`)
-            .on(`mouseup.${this._options.id}Handler`,
+            .off(`mouseup.${this.options.id}Handler`)
+            .on(`mouseup.${this.options.id}Handler`,
                 event => this.endDrag({ x: event.offsetX, y: event.offsetY }));
 
         this.textBox
-            .off(`mousemove.${this._options.id}Handler`)
-            .on(`mousemove.${this._options.id}Handler`,
+            .off(`mousemove.${this.options.id}Handler`)
+            .on(`mousemove.${this.options.id}Handler`,
                 event => this.moveDrag({ x: event.offsetX, y: event.offsetY }));
 
         this.textBox
-            .off(`keydown.${this._options.id}Handler`)
-            .on(`keydown.${this._options.id}Handler`,
+            .off(`keydown.${this.options.id}Handler`)
+            .on(`keydown.${this.options.id}Handler`,
                 (event: any) => {
                     this.hookKeyDown(event);
                 });
