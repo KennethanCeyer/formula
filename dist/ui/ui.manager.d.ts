@@ -15,7 +15,6 @@ export declare abstract class UIManager extends UiAnalyzer {
     protected endDrag(position: Position): void;
     protected moveDrag(position: Position): void;
     private findClosestUnit(position);
-    protected setCursorValue(elem: HTMLElement, value: string): void;
     protected selectRange(start: number, end: number): void;
     protected removeBefore(): void;
     protected removeAfter(): void;

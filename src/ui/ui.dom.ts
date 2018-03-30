@@ -1,6 +1,7 @@
 import { FormulizeOptions } from '../formulize.interface';
 import { defaultOptions } from '../option.value';
 import { UIElementHelper } from './ui.element.helper';
+import { FormulizeTokenHelper } from '../token.helper';
 
 export abstract class UIDom {
     protected container: JQuery;
@@ -34,6 +35,59 @@ export abstract class UIDom {
 
     protected attachEvents() {
         throw new Error('method not implemented');
+    }
+
+    protected getPrevUnit(elem: HTMLElement): HTMLElement {
+        const prevElement = $(elem).prev();
+        return UIElementHelper.isCursor(this.options.id, prevElement.get(0))
+            ? prevElement.prev().get(0)
+            : prevElement.get(0);
+    }
+
+    protected getNextUnit(elem: HTMLElement): HTMLElement {
+        const nextElem = $(elem).next();
+        return UIElementHelper.isCursor(this.options.id, nextElem.get(0))
+            ? nextElem.next().get(0)
+            : nextElem.get(0);
+    }
+
+    protected mergeUnit(baseElem: HTMLElement): void {
+        const prevElem = $(this.getPrevUnit(baseElem));
+        const nextElem = $(this.getNextUnit(baseElem));
+
+        const unitElem = [prevElem, nextElem]
+            .find(elem => UIElementHelper.isUnit(this.options.id, elem.get(0)));
+
+        if (!unitElem)
+            return;
+
+        if (unitElem === prevElem) {
+            prevElem.prependTo(baseElem);
+            this.cursor.insertAfter(baseElem);
+        } else if (unitElem === nextElem) {
+            nextElem.appendTo(baseElem);
+            this.cursor.insertBefore(baseElem);
+        }
+
+        const text = $(baseElem).text();
+        this.setUnitValue(baseElem, text);
+    }
+
+    protected setUnitValue(elem: HTMLElement, value: string) {
+        if (value === undefined)
+            return;
+
+        $(elem).empty();
+        const decimalValue = FormulizeTokenHelper.toDecimal(value);
+        const split = decimalValue.split('.');
+        const prefix = $(UIElementHelper.getUnitDecimalElement(this.options.id, 'prefix', split[0]));
+        prefix.appendTo($(elem));
+
+        if (split[1] === undefined)
+            return;
+
+        const suffix = $(UIElementHelper.getUnitDecimalElement(this.options.id, 'suffix', `.${split[1]}`));
+        suffix.appendTo($(elem));
     }
 
     protected removeCursor(): void {

@@ -19,7 +19,7 @@ export default {
         include: 'src/**',
     },
     plugins: [
-        scss(),
+        scss({ output: `dist/${libraryName}.css` }),
         json(),
         typescript({
             tsconfigOverride: {

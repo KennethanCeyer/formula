@@ -1,14 +1,5 @@
-.formulize {
-    min-height: 400px;
-}
-
-.formulize .formulize-item,
-.formulize .formulize-prefix,
-.formulize .formulize-surfix {
-    font-family: 'Open Sans', Consolas, Arial;
-}
-
 .formulize-wrapper .formulize {
+    min-height: 400px;
     background-color: #f2f2f2;
     border: 1px solid #d8d8d8;
     text-align: left;

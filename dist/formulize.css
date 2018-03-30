@@ -29,7 +29,7 @@
       width: 1px;
       background-color: rgba(0, 0, 0, 0.6); }
     .formulize-wrapper .formulize-container .formulize-unit, .formulize-wrapper .formulize-container .formulize-operator {
-      display: inline;
+      display: inline-block;
       vertical-align: middle;
       padding: 0 10px;
       word-break: break-all;
@@ -88,10 +88,9 @@
     color: #777777;
     box-sizing: border-box;
     border: 1px solid #d8d8d8;
-    border-right: 0;
-    border-top: 0;
-    background-color: #fafafa;
     border-top: 3px solid #ababab;
+    border-right: 0;
+    background-color: #fafafa;
     text-align: center;
     top: 0;
     right: 1px;
@@ -104,5 +103,23 @@
       border-top-color: #ff9090; }
   .formulize-wrapper .formulize-prefix {
     color: rgba(0, 0, 0, 0.7); }
-  .formulize-wrapper .formulize-surfix {
+  .formulize-wrapper .formulize-suffix {
     color: rgba(0, 0, 0, 0.3); }
+
+@-webkit-keyframes blink {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@-moz-keyframes blink {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+
+@keyframes blink {
+  0% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }

@@ -153,23 +153,6 @@ export abstract class UIManager extends UiAnalyzer {
             : undefined;
     }
 
-    protected setCursorValue(elem: HTMLElement, value: string) {
-        if (!value)
-            return;
-
-        $(elem).empty();
-        const decimalValue = FormulizeTokenHelper.toDecimal(value);
-        const split = decimalValue.split('.');
-        const prefix = $(`<span class="${this.options.id}-prefix ${this.options.id}-decimal-highlight">${split[0]}</span>`);
-        prefix.appendTo($(elem));
-
-        if (split[1] === undefined)
-            return;
-
-        const suffix = $(`<span class="${this.options.id}-surfix ${this.options.id}-decimal-highlight">.${split[1]}</span>`);
-        suffix.appendTo($(elem));
-    }
-
     protected selectRange(start: number, end: number): void {
         if (!this.dragElem.length)
             return;
@@ -200,7 +183,7 @@ export abstract class UIManager extends UiAnalyzer {
             prevCursorElem.text().length > 1
         ) {
             const text = prevCursorElem.text();
-            this.setCursorValue(prevCursorElem.get(0), text.substring(0, text.length - 1));
+            this.setUnitValue(prevCursorElem.get(0), text.substring(0, text.length - 1));
         } else
             prevCursorElem.remove();
 
@@ -216,7 +199,7 @@ export abstract class UIManager extends UiAnalyzer {
         }
 
         const nextCursorElem = this.cursor.next();
-        if (!this.cursor.length || nextCursorElem.length)
+        if (!this.cursor.length || !nextCursorElem.length)
             return;
 
         if (
@@ -224,7 +207,7 @@ export abstract class UIManager extends UiAnalyzer {
             nextCursorElem.text().length > 1
         ) {
             const text = nextCursorElem.text();
-            this.setCursorValue(nextCursorElem.get(0), text.substring(1, text.length));
+            this.setUnitValue(nextCursorElem.get(0), text.substring(1, text.length));
         } else
             nextCursorElem.remove();
 
@@ -432,24 +415,7 @@ export abstract class UIManager extends UiAnalyzer {
             else
                 this.container.append(unitElem);
 
-            const prevElem = unitElem.prev();
-            const nextElem = unitElem.next();
-
-            const targetUnitElem = [prevElem, nextElem]
-                .find(elem => UIElementHelper.isUnit(this.options.id, elem.get(0)));
-
-            if (!targetUnitElem)
-                return;
-
-            if (targetUnitElem === prevElem)
-                targetUnitElem.append(unitElem[0].innerHTML);
-
-            if (targetUnitElem === nextElem)
-                targetUnitElem.prepend(unitElem[0].innerHTML);
-
-            const text = targetUnitElem.text();
-            this.setCursorValue(targetUnitElem.get(0), text);
-            unitElem.remove();
+            this.mergeUnit(unitElem[0]);
 
             this.triggerUpdate();
             return;

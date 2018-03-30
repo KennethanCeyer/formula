@@ -280,18 +280,60 @@
         UIElementHelper.getUnitElement = function (id, value) {
             return $("<div class=\"" + id + "-item " + id + "-unit\">" + value + "</div>")[0];
         };
+        UIElementHelper.getUnitDecimalElement = function (id, side, value) {
+            return $("<span class=\"" + id + "-" + side + " " + id + "-decimal-highlight\">" + value + "</span>")[0];
+        };
         UIElementHelper.getOperatorElement = function (id, value) {
             return $("<div class=\"" + id + "-item " + id + "-operator\">" + value.toLowerCase() + "</div>")[0];
         };
         UIElementHelper.getTextBoxElement = function (id) {
             return $("<textarea id=\"" + id + "-text\" name=\"" + id + "-text\" class=\"" + id + "-text\"></textarea>")[0];
         };
-        UIElementHelper.isUnit = function (id, elem) {
+        UIElementHelper.isElementType = function (id, type, elem) {
             if (!elem)
-                return false;
-            return $(elem).hasClass(id + "-unit");
+                return;
+            return $(elem).hasClass(id + "-" + type);
+        };
+        UIElementHelper.isDrag = function (id, elem) {
+            return UIElementHelper.isElementType(id, 'drag', elem);
+        };
+        UIElementHelper.isCursor = function (id, elem) {
+            return UIElementHelper.isElementType(id, 'cursor', elem);
+        };
+        UIElementHelper.isUnit = function (id, elem) {
+            return UIElementHelper.isElementType(id, 'unit', elem);
+        };
+        UIElementHelper.isOperator = function (id, elem) {
+            return UIElementHelper.isElementType(id, 'operator', elem);
         };
         return UIElementHelper;
+    }());
+
+    var FormulizeTokenHelper = /** @class */ (function () {
+        function FormulizeTokenHelper() {
+        }
+        FormulizeTokenHelper.toDecimal = function (value) {
+            var splitValue = StringHelper.toNumber(value).split('.');
+            if (splitValue.length)
+                splitValue[0] = splitValue[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return splitValue.join('.');
+        };
+        FormulizeTokenHelper.isValid = function (value) {
+            return FormulizeTokenHelper.isNumeric(value) || FormulizeTokenHelper.supportValue(value);
+        };
+        FormulizeTokenHelper.isNumeric = function (value) {
+            return /[0-9\.]/.test(value);
+        };
+        FormulizeTokenHelper.isBracket = function (value) {
+            return /^[()]$/.test(value);
+        };
+        FormulizeTokenHelper.isComma = function (value) {
+            return value === ',';
+        };
+        FormulizeTokenHelper.supportValue = function (value) {
+            return supportedCharacters.includes(value);
+        };
+        return FormulizeTokenHelper;
     }());
 
     var UIDom = /** @class */ (function () {
@@ -327,6 +369,50 @@
         });
         UIDom.prototype.attachEvents = function () {
             throw new Error('method not implemented');
+        };
+        UIDom.prototype.getPrevUnit = function (elem) {
+            var prevElement = $(elem).prev();
+            return UIElementHelper.isCursor(this.options.id, prevElement.get(0))
+                ? prevElement.prev().get(0)
+                : prevElement.get(0);
+        };
+        UIDom.prototype.getNextUnit = function (elem) {
+            var nextElem = $(elem).next();
+            return UIElementHelper.isCursor(this.options.id, nextElem.get(0))
+                ? nextElem.next().get(0)
+                : nextElem.get(0);
+        };
+        UIDom.prototype.mergeUnit = function (baseElem) {
+            var _this = this;
+            var prevElem = $(this.getPrevUnit(baseElem));
+            var nextElem = $(this.getNextUnit(baseElem));
+            var unitElem = [prevElem, nextElem]
+                .find(function (elem) { return UIElementHelper.isUnit(_this.options.id, elem.get(0)); });
+            if (!unitElem)
+                return;
+            if (unitElem === prevElem) {
+                prevElem.prependTo(baseElem);
+                this.cursor.insertAfter(baseElem);
+            }
+            else if (unitElem === nextElem) {
+                nextElem.appendTo(baseElem);
+                this.cursor.insertBefore(baseElem);
+            }
+            var text = $(baseElem).text();
+            this.setUnitValue(baseElem, text);
+        };
+        UIDom.prototype.setUnitValue = function (elem, value) {
+            if (value === undefined)
+                return;
+            $(elem).empty();
+            var decimalValue = FormulizeTokenHelper.toDecimal(value);
+            var split = decimalValue.split('.');
+            var prefix = $(UIElementHelper.getUnitDecimalElement(this.options.id, 'prefix', split[0]));
+            prefix.appendTo($(elem));
+            if (split[1] === undefined)
+                return;
+            var suffix = $(UIElementHelper.getUnitDecimalElement(this.options.id, 'suffix', "." + split[1]));
+            suffix.appendTo($(elem));
         };
         UIDom.prototype.removeCursor = function () {
             this.container
@@ -1358,33 +1444,6 @@
         return builder.build(data).code === success;
     }
 
-    var FormulizeTokenHelper = /** @class */ (function () {
-        function FormulizeTokenHelper() {
-        }
-        FormulizeTokenHelper.toDecimal = function (value) {
-            var splitValue = StringHelper.toNumber(value).split('.');
-            if (splitValue.length)
-                splitValue[0] = splitValue[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            return splitValue.join('.');
-        };
-        FormulizeTokenHelper.isValid = function (value) {
-            return FormulizeTokenHelper.isNumeric(value) || FormulizeTokenHelper.supportValue(value);
-        };
-        FormulizeTokenHelper.isNumeric = function (value) {
-            return /[0-9\.]/.test(value);
-        };
-        FormulizeTokenHelper.isBracket = function (value) {
-            return /^[()]$/.test(value);
-        };
-        FormulizeTokenHelper.isComma = function (value) {
-            return value === ',';
-        };
-        FormulizeTokenHelper.supportValue = function (value) {
-            return supportedCharacters.includes(value);
-        };
-        return FormulizeTokenHelper;
-    }());
-
     var UIManager = /** @class */ (function (_super) {
         __extends(UIManager, _super);
         function UIManager() {
@@ -1504,19 +1563,6 @@
                 ? closestUnitPosition.elem
                 : undefined;
         };
-        UIManager.prototype.setCursorValue = function (elem, value) {
-            if (!value)
-                return;
-            $(elem).empty();
-            var decimalValue = FormulizeTokenHelper.toDecimal(value);
-            var split = decimalValue.split('.');
-            var prefix = $("<span class=\"" + this.options.id + "-prefix " + this.options.id + "-decimal-highlight\">" + split[0] + "</span>");
-            prefix.appendTo($(elem));
-            if (split[1] === undefined)
-                return;
-            var suffix = $("<span class=\"" + this.options.id + "-surfix " + this.options.id + "-decimal-highlight\">." + split[1] + "</span>");
-            suffix.appendTo($(elem));
-        };
         UIManager.prototype.selectRange = function (start, end) {
             var _this = this;
             if (!this.dragElem.length)
@@ -1542,13 +1588,14 @@
             if (prevCursorElem.hasClass(this.options.id + "-unit") &&
                 prevCursorElem.text().length > 1) {
                 var text = prevCursorElem.text();
-                this.setCursorValue(prevCursorElem.get(0), text.substring(0, text.length - 1));
+                this.setUnitValue(prevCursorElem.get(0), text.substring(0, text.length - 1));
             }
             else
                 prevCursorElem.remove();
             this.triggerUpdate();
         };
         UIManager.prototype.removeAfter = function () {
+            console.log('remove after');
             if (this.dragElem.length) {
                 this.cursor.insertAfter(this.dragElem);
                 this.dragElem.remove();
@@ -1556,12 +1603,12 @@
                 return;
             }
             var nextCursorElem = this.cursor.next();
-            if (!this.cursor.length || nextCursorElem.length)
+            if (!this.cursor.length || !nextCursorElem.length)
                 return;
             if (nextCursorElem.hasClass(this.options.id + "-unit") &&
                 nextCursorElem.text().length > 1) {
                 var text = nextCursorElem.text();
-                this.setCursorValue(nextCursorElem.get(0), text.substring(1, text.length));
+                this.setUnitValue(nextCursorElem.get(0), text.substring(1, text.length));
             }
             else
                 nextCursorElem.remove();
@@ -1722,7 +1769,6 @@
             this.triggerUpdate();
         };
         UIManager.prototype.insertValue = function (value) {
-            var _this = this;
             if (!FormulizeTokenHelper.isValid(value))
                 return;
             if (FormulizeTokenHelper.isNumeric(value)) {
@@ -1735,19 +1781,7 @@
                     this.cursor.before(unitElem);
                 else
                     this.container.append(unitElem);
-                var prevElem = unitElem.prev();
-                var nextElem = unitElem.next();
-                var targetUnitElem = [prevElem, nextElem]
-                    .find(function (elem) { return UIElementHelper.isUnit(_this.options.id, elem.get(0)); });
-                if (!targetUnitElem)
-                    return;
-                if (targetUnitElem === prevElem)
-                    targetUnitElem.append(unitElem[0].innerHTML);
-                if (targetUnitElem === nextElem)
-                    targetUnitElem.prepend(unitElem[0].innerHTML);
-                var text = targetUnitElem.text();
-                this.setCursorValue(targetUnitElem.get(0), text);
-                unitElem.remove();
+                this.mergeUnit(unitElem[0]);
                 this.triggerUpdate();
                 return;
             }
