@@ -33,7 +33,7 @@
             background-color: rgba(0, 0, 0, 0.6);
         }
         .formulize-unit, .formulize-operator {
-            display: inline;
+            display: inline-block;
             vertical-align: middle;
             padding: 0 10px;
             word-break: break-all;
@@ -99,10 +99,9 @@
         color: #777777;
         box-sizing: border-box;
         border: 1px solid #d8d8d8;
-        border-right: 0;
-        border-top: 0;
-        background-color: #fafafa;
         border-top: 3px solid #ababab;
+        border-right: 0;
+        background-color: #fafafa;
         text-align: center;
         top: 0;
         right: 1px;
