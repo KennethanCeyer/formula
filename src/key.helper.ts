@@ -1,4 +1,5 @@
 import { Key } from './key.enum';
+import { specialCharacters } from './values';
 
 export class FormulizeKeyHelper {
     public static isReload(keyCode: number, pressedCtrl: boolean): boolean {
@@ -65,6 +66,17 @@ export class FormulizeKeyHelper {
         if (keyCode === Key.ForwardSlash || keyCode === Key.Divide)
             return '/';
 
-        return String.fromCharCode(keyCode);
+        const numberKeyCode = keyCode >= Key.Numpad0 && keyCode <= Key.Numpad9
+            ? keyCode - (Key.Numpad0 - Key.Zero)
+            : keyCode;
+
+        if (numberKeyCode >= Key.Zero && numberKeyCode <= Key.Nine) {
+            const numberValue = String.fromCharCode(keyCode);
+            return pressedShift
+                ? specialCharacters[Number(numberValue)]
+                : numberValue;
+        }
+
+        return undefined;
     }
 }

@@ -3,7 +3,7 @@ import { UIBase } from './ui.base';
 import { Behavior } from './ui.interface';
 
 export class UI extends UIBase {
-    protected analyzeKey<T>(keyCode: number, pressedCtrl: boolean, pressedShift: boolean): T {
+    protected analyzeKey<T>(keyCode: number, pressedCtrl: boolean, pressedShift: boolean): boolean {
         const behaviors: Behavior[] = [
             { predicate: FormulizeKeyHelper.isReload, doBehavior: FormulizeKeyHelper.doReload },
             { predicate: FormulizeKeyHelper.isSelectAll, doBehavior: FormulizeKeyHelper.doAction(() => this.selectAll()) },
@@ -17,8 +17,12 @@ export class UI extends UIBase {
             { predicate: FormulizeKeyHelper.isEnd, doBehavior: FormulizeKeyHelper.doAction(() => this.moveLastCursor(pressedShift)) }
         ];
         const behavior = behaviors.find(behavior => behavior.predicate(keyCode, pressedCtrl, pressedShift));
-        if (behavior)
-            return behavior.doBehavior();
+
+        if (!behavior)
+            return false;
+
+        behavior.doBehavior();
+        return true;
     }
 
     protected attachEvents(): void {

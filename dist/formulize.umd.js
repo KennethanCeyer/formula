@@ -185,6 +185,9 @@
         Key[Key["Quote"] = 222] = "Quote";
     })(Key || (Key = {}));
 
+    var specialCharacters = [')', '!', '@', '#', '$', '%', '^', '&', 'x', '('];
+    var supportedCharacters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 'x', '*', '/', '.', '+', '-', '%', '^', '(', ')'];
+
     var FormulizeKeyHelper = /** @class */ (function () {
         function FormulizeKeyHelper() {
         }
@@ -236,13 +239,19 @@
                 return '.';
             if (keyCode === Key.ForwardSlash || keyCode === Key.Divide)
                 return '/';
-            return String.fromCharCode(keyCode);
+            var numberKeyCode = keyCode >= Key.Numpad0 && keyCode <= Key.Numpad9
+                ? keyCode - (Key.Numpad0 - Key.Zero)
+                : keyCode;
+            if (numberKeyCode >= Key.Zero && numberKeyCode <= Key.Nine) {
+                var numberValue = String.fromCharCode(keyCode);
+                return pressedShift
+                    ? specialCharacters[Number(numberValue)]
+                    : numberValue;
+            }
+            return undefined;
         };
         return FormulizeKeyHelper;
     }());
-
-    var specialCharacters = [')', '!', '@', '#', '$', '%', '^', '&', 'x', '('];
-    var supportedCharacters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 'x', '*', '/', '.', '+', '-', '%', '^', '(', ')'];
 
     var UIElementHelper = /** @class */ (function () {
         function UIElementHelper() {
@@ -253,8 +262,14 @@
         UIElementHelper.getCursorElement = function (id) {
             return $("<div class=\"" + id + "-cursor\"></div>")[0];
         };
+        UIElementHelper.getUnitElement = function (id, text) {
+            return $("<div class=\"" + id + "-item " + id + "-unit\">" + text + "</div>")[0];
+        };
         UIElementHelper.getTextBoxElement = function (id) {
             return $("<textarea id=\"" + id + "-text\" name=\"" + id + "-text\" class=\"" + id + "-text\"></textarea>")[0];
+        };
+        UIElementHelper.isUnit = function (id, elem) {
+            return $(elem).hasClass(id + "-unit");
         };
         return UIElementHelper;
     }());
@@ -1334,6 +1349,9 @@
             var suffix = (splitValue[1] || '').replace(/[^\d.]*/gi, '');
             return [prefix, suffix].join('.');
         };
+        FormulizeTokenHelper.isValid = function (value) {
+            return FormulizeTokenHelper.isNumeric(value) || FormulizeTokenHelper.supportValue(value);
+        };
         FormulizeTokenHelper.isNumeric = function (value) {
             return /[0-9\.]/.test(value);
         };
@@ -1652,7 +1670,7 @@
         UIManager.prototype.removeDrag = function () {
             var _this = this;
             this.dragElem
-                .children('*')
+                .children()
                 .toArray()
                 .forEach(function (elem) { return $(elem).insertBefore(_this.dragElem); });
             this.dragElem.remove();
@@ -1684,10 +1702,10 @@
         };
         UIManager.prototype.insertKey = function (key) {
             var _this = this;
-            if (!this.isValidKey(key))
+            if (!FormulizeTokenHelper.isValid(key))
                 return;
             if (FormulizeTokenHelper.isNumeric(key)) {
-                var unitElem = $("<div class=\"" + this.options.id + "-item " + this.options.id + "-unit\">" + key + "</div>");
+                var unitElem = $(UIElementHelper.getUnitElement(this.options.id, key));
                 if (this.dragElem.length) {
                     this.cursor.insertBefore(this.dragElem);
                     this.dragElem.remove();
@@ -1699,7 +1717,7 @@
                 var prevUnitElem = unitElem.prevUntil(":not(." + this.options.id + "-cursor)");
                 var nextUnitElem = unitElem.nextUntil(":not(." + this.options.id + "-cursor)");
                 var targetUnitElem = [prevUnitElem, nextUnitElem]
-                    .find(function (elem) { return elem.length && elem.hasClass(_this.options.id + "-unit"); });
+                    .find(function (elem) { return elem.length && UIElementHelper.isUnit(_this.options.id, elem[0]); });
                 if (!targetUnitElem)
                     return;
                 if (targetUnitElem === prevUnitElem)
@@ -1741,7 +1759,6 @@
             if (!data)
                 return;
             var isValid = valid(data);
-            console.log('isValid', isValid, this.statusBox, this.options);
             if (isValid) {
                 this.statusBox
                     .text(this.options.text.pass)
@@ -1757,9 +1774,6 @@
             if (extractor)
                 extractor(isValid);
         };
-        UIManager.prototype.isValidKey = function (key) {
-            return FormulizeTokenHelper.isNumeric(key) || FormulizeTokenHelper.supportValue(key);
-        };
         return UIManager;
     }(UiAnalyzer));
 
@@ -1772,15 +1786,11 @@
             event.preventDefault();
             if (!this.cursor || !this.cursor.length)
                 return;
-            var keyCode = event.which >= Key.Numpad0 && event.which <= Key.Numpad9
-                ? event.which - Key.Zero
-                : event.which;
-            this.analyzeKey(keyCode, event.ctrlKey, event.shiftKey);
-            var key = FormulizeKeyHelper.getValue(keyCode, event.shiftKey);
-            var realKey = event.shiftKey && /[0-9]/.test(key) && specialCharacters[Number(key)]
-                ? specialCharacters[Number(key)]
-                : key;
-            this.insertKey(realKey);
+            this.analyzeKey(event.which, event.ctrlKey, event.shiftKey);
+            var key = FormulizeKeyHelper.getValue(event.which, event.shiftKey);
+            if (key === undefined)
+                return;
+            this.insertKey(key);
             this.validate();
         };
         return UIHook;
@@ -1816,8 +1826,10 @@
                 { predicate: FormulizeKeyHelper.isEnd, doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveLastCursor(pressedShift); }) }
             ];
             var behavior = behaviors.find(function (behavior) { return behavior.predicate(keyCode, pressedCtrl, pressedShift); });
-            if (behavior)
-                return behavior.doBehavior();
+            if (!behavior)
+                return false;
+            behavior.doBehavior();
+            return true;
         };
         UI.prototype.attachEvents = function () {
             var _this = this;

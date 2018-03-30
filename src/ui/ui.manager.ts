@@ -144,8 +144,10 @@ export abstract class UIManager extends UiAnalyzer {
         const filteredUnitPositions = closestUnitPositions.filter(unitPosition => unitPosition.y === maxY).length
             ? closestUnitPositions.filter(unitPosition => unitPosition.y === maxY)
             : closestUnitPositions.filter(unitPosition => unitPosition.y <= position.y);
-        filteredUnitPositions.sort((a, b) => a.diff.x - b.diff.x || a.diff.y - b.diff.y);
+        filteredUnitPositions.sort((a, b) => a.diff.x - b.diff.x || a.diff.y - b.diff.y)
+
         const closestUnitPosition = filteredUnitPositions.shift();
+
         return closestUnitPosition
             ? closestUnitPosition.elem
             : undefined;
@@ -375,7 +377,7 @@ export abstract class UIManager extends UiAnalyzer {
 
     public removeDrag() {
         this.dragElem
-            .children('*')
+            .children()
             .toArray()
             .forEach(elem => $(elem).insertBefore(this.dragElem));
         this.dragElem.remove();
@@ -414,11 +416,11 @@ export abstract class UIManager extends UiAnalyzer {
     }
 
     public insertKey(key: string): void {
-        if (!this.isValidKey(key))
+        if (!FormulizeTokenHelper.isValid(key))
             return;
 
         if (FormulizeTokenHelper.isNumeric(key)) {
-            const unitElem = $(`<div class="${this.options.id}-item ${this.options.id}-unit">${key}</div>`);
+            const unitElem = $(UIElementHelper.getUnitElement(this.options.id, key));
 
             if (this.dragElem.length) {
                 this.cursor.insertBefore(this.dragElem);
@@ -434,7 +436,7 @@ export abstract class UIManager extends UiAnalyzer {
             const nextUnitElem = unitElem.nextUntil(`:not(.${this.options.id}-cursor)`);
 
             const targetUnitElem = [prevUnitElem, nextUnitElem]
-                .find(elem => elem.length && elem.hasClass(`${this.options.id}-unit`));
+                .find(elem => elem.length && UIElementHelper.isUnit(this.options.id, elem[0]));
 
             if (!targetUnitElem)
                 return;
@@ -489,7 +491,6 @@ export abstract class UIManager extends UiAnalyzer {
             return;
 
         const isValid = valid(data);
-        console.log('isValid', isValid, this.statusBox, this.options);
         if (isValid) {
             this.statusBox
                 .text(this.options.text.pass)
@@ -505,9 +506,5 @@ export abstract class UIManager extends UiAnalyzer {
 
         if (extractor)
             extractor(isValid);
-    }
-
-    protected isValidKey(key: string): boolean {
-        return FormulizeTokenHelper.isNumeric(key) || FormulizeTokenHelper.supportValue(key);
     }
 }

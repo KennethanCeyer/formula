@@ -35,5 +35,4 @@ export declare abstract class UIManager extends UiAnalyzer {
     insertKey(key: string): void;
     insertData(data: string | string[] | any[]): void;
     validate(extractor?: (valid: boolean) => void): void;
-    protected isValidKey(key: string): boolean;
 }

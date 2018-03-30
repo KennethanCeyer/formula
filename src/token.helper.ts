@@ -11,6 +11,10 @@ export class FormulizeTokenHelper {
         return  [prefix, suffix].join('.');
     }
 
+    public static isValid(value: string): boolean {
+        return FormulizeTokenHelper.isNumeric(value) || FormulizeTokenHelper.supportValue(value);
+    }
+
     public static isNumeric(value: string): boolean {
         return /[0-9\.]/.test(value);
     }
