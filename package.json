@@ -10,6 +10,35 @@
     "typedoc": "typedoc --out docs --target es6 --theme minimal --mode file src --exclude **/*.spec.ts",
     "test": "nyc mocha --opts test/mocha.opts"
   },
+  "files": [
+    "dist"
+  ],
+  "nyc": {
+    "all": true,
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "includes": [
+      "src/**/!(*.spec).ts"
+    ],
+    "exclude": [
+      "**/*.spec.ts",
+      "**/*.interface.ts",
+      "**/*.d.ts",
+      "rollup.config.ts",
+      "coverage",
+      "docs/",
+      "dist/",
+      "demo/"
+    ],
+    "reporter": [
+      "lcov",
+      "json"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KennethanCeyer/formulize.git"
