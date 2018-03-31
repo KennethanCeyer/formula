@@ -68,12 +68,6 @@
 
     var defaultOptions = {
         id: 'formulize',
-        cursor: {
-            time: {
-                animate: 160,
-                delay: 500
-            }
-        },
         text: {
             formula: 'formula',
             error: 'error',
