@@ -6,15 +6,42 @@ export class UI extends UIBase {
     protected analyzeKey<T>(keyCode: number, pressedCtrl: boolean, pressedShift: boolean): boolean {
         const behaviors: Behavior[] = [
             { predicate: FormulizeKeyHelper.isReload, doBehavior: FormulizeKeyHelper.doReload },
-            { predicate: FormulizeKeyHelper.isSelectAll, doBehavior: FormulizeKeyHelper.doAction(() => this.selectAll()) },
-            { predicate: FormulizeKeyHelper.isBackspace, doBehavior: FormulizeKeyHelper.doAction(() => this.removeBefore()) },
-            { predicate: FormulizeKeyHelper.isDelete, doBehavior: FormulizeKeyHelper.doAction(() => this.removeAfter()) },
-            { predicate: FormulizeKeyHelper.isLeft, doBehavior: FormulizeKeyHelper.doAction(() => this.moveLeftCursor(pressedShift)) },
-            { predicate: FormulizeKeyHelper.isUp, doBehavior: FormulizeKeyHelper.doAction(() => this.moveUpCursor()) },
-            { predicate: FormulizeKeyHelper.isRight, doBehavior: FormulizeKeyHelper.doAction(() => this.moveRightCursor(pressedShift)) },
-            { predicate: FormulizeKeyHelper.isDown, doBehavior: FormulizeKeyHelper.doAction(() => this.moveDownCursor()) },
-            { predicate: FormulizeKeyHelper.isHome, doBehavior: FormulizeKeyHelper.doAction(() => this.moveFirstCursor(pressedShift)) },
-            { predicate: FormulizeKeyHelper.isEnd, doBehavior: FormulizeKeyHelper.doAction(() => this.moveLastCursor(pressedShift)) }
+            {
+                predicate: FormulizeKeyHelper.isSelectAll,
+                doBehavior: FormulizeKeyHelper.doAction(() => this.selectAll())
+            },
+            {
+                predicate: FormulizeKeyHelper.isBackspace,
+                doBehavior: FormulizeKeyHelper.doAction(() => this.removeBefore())
+            },
+            {
+                predicate: FormulizeKeyHelper.isDelete,
+                doBehavior: FormulizeKeyHelper.doAction(() => this.removeAfter())
+            },
+            {
+                predicate: FormulizeKeyHelper.isLeft,
+                doBehavior: FormulizeKeyHelper.doAction(() => this.moveLeftCursor(pressedShift))
+            },
+            {
+                predicate: FormulizeKeyHelper.isUp,
+                doBehavior: FormulizeKeyHelper.doAction(() => this.moveUpCursor())
+            },
+            {
+                predicate: FormulizeKeyHelper.isRight,
+                doBehavior: FormulizeKeyHelper.doAction(() => this.moveRightCursor(pressedShift))
+            },
+            {
+                predicate: FormulizeKeyHelper.isDown,
+                doBehavior: FormulizeKeyHelper.doAction(() => this.moveDownCursor())
+            },
+            {
+                predicate: FormulizeKeyHelper.isHome,
+                doBehavior: FormulizeKeyHelper.doAction(() => this.moveFirstCursor(pressedShift))
+            },
+            {
+                predicate: FormulizeKeyHelper.isEnd,
+                doBehavior: FormulizeKeyHelper.doAction(() => this.moveLastCursor(pressedShift))
+            }
         ];
         const behavior = behaviors.find(behavior => behavior.predicate(keyCode, pressedCtrl, pressedShift));
 

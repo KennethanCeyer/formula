@@ -9,5 +9,3 @@ export interface FormulizeOptions {
 export interface FormulizeFunction {
     (options: FormulizeOptions): JQuery;
 }
-export interface FormulizePlugin extends FormulizeFunction {
-}

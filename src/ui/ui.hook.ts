@@ -1,8 +1,5 @@
-import { specialCharacters } from '../values';
-import { Key } from '../key.enum';
 import { UIManager } from './ui.manager';
 import { FormulizeKeyHelper } from '../key.helper';
-import { FormulizeTokenHelper } from '../token.helper';
 
 export abstract class UIHook extends UIManager {
     protected hookKeyDown(event: JQuery.Event<KeyboardEvent>): void {

@@ -1,6 +1,6 @@
-import { FormulizeOptions } from '../../dist/types/formulize/option.interface';
-import { UIHook } from './ui.hook';
 import { defaultOptions } from '../option.value';
+import { UIHook } from './ui.hook';
+import { FormulizeOptions } from '../formulize.interface';
 
 export abstract class UIBase extends UIHook {
     public constructor(elem: HTMLElement, options: FormulizeOptions = { ...defaultOptions }) {

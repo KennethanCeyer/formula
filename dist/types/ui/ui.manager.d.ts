@@ -1,21 +1,22 @@
-import { UiAnalyzer } from './ui.analyzer';
-import { Position } from './ui.interface';
 import { Tree } from 'metric-parser/dist/types/tree/simple.tree/type';
-export declare abstract class UIManager extends UiAnalyzer {
+import { Position } from './ui.interface';
+import { UIAnalyzer } from './ui.analyzer';
+export declare abstract class UIManager extends UIAnalyzer {
     protected prevCursorIndex: number;
     protected prevPosition: Position;
     protected dragged: boolean;
     protected moved: boolean;
     pick(position?: Position): void;
     setData(data: Tree): void;
-    getData(extractor?: (data: Tree) => void): Tree;
+    getData<T extends Tree>(extractor?: (data: T) => void): T;
     protected triggerUpdate(): void;
     private getExpression();
     protected startDrag(position: Position): void;
     protected endDrag(position: Position): void;
     protected moveDrag(position: Position): void;
     private findClosestUnit(position);
-    protected selectRange(start: number, end: number): void;
+    selectAll(): void;
+    selectRange(start: number, end: number): void;
     protected removeBefore(): void;
     protected removeAfter(): void;
     protected dragFirst(): void;
@@ -33,9 +34,8 @@ export declare abstract class UIManager extends UiAnalyzer {
     clear(): void;
     blur(): void;
     removeDrag(): void;
-    selectAll(): void;
-    insert(obj: string | number | HTMLElement, position?: Position): void;
+    insert(obj: string | number | HTMLElement | JQuery, position?: Position): void;
     insertValue(value: string): void;
     insertData(data: string | string[] | any[]): void;
-    validate(extractor?: (valid: boolean) => void): void;
+    validate(extractor?: (valid: boolean) => void): boolean;
 }

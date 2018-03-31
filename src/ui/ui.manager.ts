@@ -1,12 +1,12 @@
-import { UiAnalyzer } from './ui.analyzer';
-import { UIHelper } from './ui.helper';
-import { ElementPosition, Position } from './ui.interface';
 import { convert, valid } from 'metric-parser';
 import { FormulizeTokenHelper } from '../token.helper';
 import { Tree } from 'metric-parser/dist/types/tree/simple.tree/type';
 import { UIElementHelper } from './ui.element.helper';
+import { ElementPosition, Position } from './ui.interface';
+import { UIAnalyzer } from './ui.analyzer';
+import { UIHelper } from './ui.helper';
 
-export abstract class UIManager extends UiAnalyzer {
+export abstract class UIManager extends UIAnalyzer {
     protected prevCursorIndex = 0;
     protected prevPosition: Position = { x: 0, y: 0 };
     protected dragged: boolean;
@@ -33,7 +33,7 @@ export abstract class UIManager extends UiAnalyzer {
             this.insertData(result.data);
     }
 
-    public getData(extractor?: (data: Tree) => void): Tree {
+    public getData<T extends Tree>(extractor?: (data: T) => void): T {
         const expression = this.getExpression();
         const result = convert(expression);
 
@@ -148,7 +148,16 @@ export abstract class UIManager extends UiAnalyzer {
             : undefined;
     }
 
-    protected selectRange(start: number, end: number): void {
+    public selectAll(): void {
+        this.removeDrag();
+        const dragElem = $(UIElementHelper.getDragElement(this.options.id));
+        dragElem.prependTo(this.container);
+        this.container
+            .children(`:not(".${this.options.id}-cursor")`)
+            .appendTo(dragElem);
+    }
+
+    public selectRange(start: number, end: number): void {
         if (!this.dragElem.length)
             return;
 
@@ -364,13 +373,13 @@ export abstract class UIManager extends UiAnalyzer {
         this.dragLast();
     }
 
-    public clear() {
+    public clear(): void {
         this.removeCursor();
         this.removeUnit();
         this.triggerUpdate();
     }
 
-    public blur() {
+    public blur(): void {
         if (!this.cursor)
             return;
 
@@ -378,7 +387,7 @@ export abstract class UIManager extends UiAnalyzer {
         this.removeDrag();
     }
 
-    public removeDrag() {
+    public removeDrag(): void {
         this.dragElem
             .children()
             .toArray()
@@ -387,17 +396,7 @@ export abstract class UIManager extends UiAnalyzer {
         this.triggerUpdate();
     }
 
-    public selectAll() {
-        this.removeDrag();
-        const dragElem = $(UIElementHelper.getDragElement(this.options.id));
-        dragElem.prependTo(this.container);
-        this.container
-            .children(`:not(".${this.options.id}-cursor")`)
-            .toArray()
-            .forEach(elem => $(elem).appendTo(dragElem));
-    }
-
-    public insert(obj: string | number | HTMLElement, position?: Position) {
+    public insert(obj: string | number | HTMLElement | JQuery, position?: Position): void {
         if (!obj)
             return;
 
@@ -409,7 +408,7 @@ export abstract class UIManager extends UiAnalyzer {
             return;
         }
 
-        if (!(obj instanceof HTMLElement))
+        if (!(obj instanceof HTMLElement || obj instanceof jQuery))
             return;
 
         $(obj).addClass(`${this.options.id}-item`);
@@ -451,7 +450,7 @@ export abstract class UIManager extends UiAnalyzer {
             operatorElem.addClass(`${this.options.id}-bracket`);
     }
 
-    public insertData(data: string | string[] | any[]) {
+    public insertData(data: string | string[] | any[]): void {
         const arrayData = typeof data === 'string'
             ? data.split('')
             : data;
@@ -466,7 +465,7 @@ export abstract class UIManager extends UiAnalyzer {
         this.triggerUpdate();
     }
 
-    public validate(extractor?: (valid: boolean) => void) {
+    public validate(extractor?: (valid: boolean) => void): boolean {
         const data = this.getData();
 
         if (!data)
@@ -488,5 +487,7 @@ export abstract class UIManager extends UiAnalyzer {
 
         if (extractor)
             extractor(isValid);
+
+        return isValid;
     }
 }

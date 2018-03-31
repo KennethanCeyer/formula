@@ -1,14 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway');
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Lato');
+@import url('https://fonts.googleapis.com/css?family=Inconsolata');
 
 html, body {
     position: relative;
     height: 100%;
     font-size: 16px;
-}
-
-html, body, span, p, div, h1, h2, h3, h4, h5, h6, a, ul, ol, li, th, td, dt, dl, dd, b, strong, i {
-    font-family: 'Raleway', 'Open Sans', 'helvetica', 'sans-serif';
+    font-family: 'Lato', 'helvetica', 'sans-serif';
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -16,8 +14,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 pre, code, code span {
-    font-size: 14px;
-    font-family: 'Consolas', sans-serif !important;
+    font-size: 16px;
+    font-family: 'Inconsolata', 'Consolas', sans-serif !important;
     text-shadow: none !important;
     text-align: left;
 }
@@ -26,58 +24,105 @@ pre, code, code span {
     padding-bottom: 40px;
 }
 
+.inline pre {
+    display: inline;
+    padding: 0 !important;
+    text-align: left;
+    background-color: transparent !important;
+}
+
+.inline pre,
+.inline pre code,
+.inline pre code span {
+    font-size: inherit;
+}
+
+.code {
+    font-weight: 600;
+    font-family: 'Inconsolata', 'Consolas', sans-serif !important;
+}
+
+.ui.segment {
+    padding: 40px;
+}
+
+.ui.segment .ui.header {
+    width: 100%;
+    border-bottom: 1px solid #f2f2f2;
+    margin: 0 0 40px !important;
+    padding: 0 0 20px 0;
+}
+
+.ui.table {
+    font-size: 15px;
+    font-family: 'Raleway', 'Consolas', sans-serif !important;
+}
+
+.ui.button.thin {
+    font-weight: 400;
+}
+
+.label .fas,
+.label .fab,
+.button .fas,
+.button .fab {
+    margin-right: .6em;
+}
+
 .center {
-    text-align: center;
+    text-align: center !important;
 }
 
 .header {
-    max-width: 1200px;
-    width: 80%;
-    margin: 0 auto;
-    padding-top: 40px;
+    max-width: 1440px;
+    width: 90%;
+    margin: 40px auto 20px;
     text-align: center;
 }
 
 .header h1 {
+    font-family: 'Raleway', 'Lato', 'helvetica', 'sans-serif';
     font-size: 24px;
-    font-weight: 400;
+    font-weight: 600;
+    margin: 20px 0 40px;
     color: #333333;
 }
 
 .header .version {
+    font-family: 'Raleway', 'Lato', 'helvetica', 'sans-serif';
     margin: 20px auto 0;
     margin-top: 20px;
     padding-top: 20px;
     max-width: 320px;
     width: 100%;
     border-top: 1px solid #f8f8f8;
-    font-family: 'Raleway', 'helvetica', 'sans-serif';
 }
 
 .article {
-    max-width: 1200px;
-    width: 80%;
+    max-width: 1440px;
+    width: 90%;
     margin: 0 auto;
-    margin-top: 40px;
-    padding-top: 40px;
+    margin-top: 80px;
+    padding-top: 80px;
     border-top: 1px solid #efefef;
-    text-align: center;
 }
 
-.article > h3 {
+.article h3 {
+    font-family: 'Raleway', 'Lato', 'helvetica', 'sans-serif';
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     position: relative;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 22px;
 }
 
-.article > h3 span {
+.article h3 span {
+    font-family: 'Raleway', 'Lato', 'helvetica', 'sans-serif';
     position: relative;
     z-index: 10;
 }
 
-.article > h3:after {
+.article h3:after {
     display: block;
     position: absolute;
     content: '';
@@ -118,7 +163,11 @@ pre, code, code span {
 
 .article :not(pre) > code[class*="language-"], .article pre[class*="language-"] {
     background-color: #f5f6f9;
-    padding: 1.6em 2em !important;
+    padding: 1.6em 2em;
+}
+
+.beta-mark {
+    font-style: italic;
 }
 
 .token.function,
@@ -136,31 +185,6 @@ pre, code, code span {
 
 .token.atrule, .token.attr-value, .token.keyword {
     color: #626368;
-}
-
-.guide {
-    padding: 1.2em 1.6em;
-    max-width: 360px;
-    margin: 1.6em auto;
-    background-color: #f8f8f8;
-    line-height: 2;
-}
-
-.guide h5 {
-    margin: 0;
-    padding: 0;
-    font-size: 110%;
-}
-
-.guide .guide-dates {
-    margin-top: 1.6em;
-    text-align: center;
-}
-
-.guide .guide-dates span {
-    display: inline-block;
-    vertical-align: middle;
-    width: 33%;
 }
 
 .box {

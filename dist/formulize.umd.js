@@ -42,7 +42,7 @@
         function StringHelper() {
         }
         StringHelper.isNumeric = function (value) {
-            return /^-?[\d,]+\.?\d*$/.test(value);
+            return /^-?[\d,]+\.?\d*$/.test(value) && typeof value !== 'object';
         };
         StringHelper.toNumber = function (value) {
             return value.replace(/[^\d-\.]/g, '');
@@ -56,7 +56,7 @@
         UIHelper.getDataValue = function (elem) {
             var value = $(elem).data('value') || $(elem).text();
             return StringHelper.isNumeric(value)
-                ? StringHelper.toNumber(value)
+                ? StringHelper.toNumber(String(value))
                 : value;
         };
         UIHelper.isOverDistance = function (position, targetPosition, distance) {
@@ -267,181 +267,6 @@
         };
         return FormulizeKeyHelper;
     }());
-
-    var UIElementHelper = /** @class */ (function () {
-        function UIElementHelper() {
-        }
-        UIElementHelper.getDragElement = function (id) {
-            return $("<div class=\"" + id + "-drag\"></div>")[0];
-        };
-        UIElementHelper.getCursorElement = function (id) {
-            return $("<div class=\"" + id + "-cursor\"></div>")[0];
-        };
-        UIElementHelper.getUnitElement = function (id, value) {
-            return $("<div class=\"" + id + "-item " + id + "-unit\">" + value + "</div>")[0];
-        };
-        UIElementHelper.getUnitDecimalElement = function (id, side, value) {
-            return $("<span class=\"" + id + "-" + side + " " + id + "-decimal-highlight\">" + value + "</span>")[0];
-        };
-        UIElementHelper.getOperatorElement = function (id, value) {
-            return $("<div class=\"" + id + "-item " + id + "-operator\">" + value.toLowerCase() + "</div>")[0];
-        };
-        UIElementHelper.getTextBoxElement = function (id) {
-            return $("<textarea id=\"" + id + "-text\" name=\"" + id + "-text\" class=\"" + id + "-text\"></textarea>")[0];
-        };
-        UIElementHelper.isElementType = function (id, type, elem) {
-            if (!elem)
-                return;
-            return $(elem).hasClass(id + "-" + type);
-        };
-        UIElementHelper.isDrag = function (id, elem) {
-            return UIElementHelper.isElementType(id, 'drag', elem);
-        };
-        UIElementHelper.isCursor = function (id, elem) {
-            return UIElementHelper.isElementType(id, 'cursor', elem);
-        };
-        UIElementHelper.isUnit = function (id, elem) {
-            return UIElementHelper.isElementType(id, 'unit', elem);
-        };
-        UIElementHelper.isOperator = function (id, elem) {
-            return UIElementHelper.isElementType(id, 'operator', elem);
-        };
-        return UIElementHelper;
-    }());
-
-    var FormulizeTokenHelper = /** @class */ (function () {
-        function FormulizeTokenHelper() {
-        }
-        FormulizeTokenHelper.toDecimal = function (value) {
-            var splitValue = StringHelper.toNumber(value).split('.');
-            if (splitValue.length)
-                splitValue[0] = splitValue[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            return splitValue.join('.');
-        };
-        FormulizeTokenHelper.isValid = function (value) {
-            return FormulizeTokenHelper.isNumeric(value) || FormulizeTokenHelper.supportValue(value);
-        };
-        FormulizeTokenHelper.isNumeric = function (value) {
-            return /[0-9\.]/.test(value);
-        };
-        FormulizeTokenHelper.isBracket = function (value) {
-            return /^[()]$/.test(value);
-        };
-        FormulizeTokenHelper.isComma = function (value) {
-            return value === ',';
-        };
-        FormulizeTokenHelper.supportValue = function (value) {
-            return supportedCharacters.includes(value);
-        };
-        return FormulizeTokenHelper;
-    }());
-
-    var UIDom = /** @class */ (function () {
-        function UIDom() {
-        }
-        Object.defineProperty(UIDom.prototype, "cursorIndex", {
-            get: function () {
-                return this.cursor
-                    ? this.cursor.index()
-                    : 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(UIDom.prototype, "dragElem", {
-            get: function () {
-                return this.container
-                    .find("." + this.options.id + "-drag");
-            },
-            enumerable: true,
-            configurable: true
-        });
-        UIDom.prototype.initializeDOM = function () {
-            this.container = $(this.elem);
-            this.container.addClass(this.options.id + "-container");
-            this.container.wrap("<div class=\"" + this.options.id + "-wrapper\"></div>");
-            this.statusBox = $("<div class=\"" + this.options.id + "-alert\">" + this.options.text.formula + "</div>");
-            this.statusBox.insertBefore(this.container);
-            this.textBox = $(UIElementHelper.getTextBoxElement(this.options.id));
-            this.textBox.insertAfter(this.container);
-            this.textBox.trigger('focus');
-        };
-        UIDom.prototype.isAlreadyInitialized = function () {
-            var selfAndContainer = $(this.elem)
-                .closest("." + this.options.id + "-container")
-                .add(this.elem);
-            return !!selfAndContainer.filter("." + this.options.id + "-container").length;
-        };
-        UIDom.prototype.attachEvents = function () {
-            throw new Error('method not implemented');
-        };
-        UIDom.prototype.getPrevUnit = function (elem) {
-            var prevElement = $(elem).prev();
-            return UIElementHelper.isCursor(this.options.id, prevElement.get(0))
-                ? prevElement.prev().get(0)
-                : prevElement.get(0);
-        };
-        UIDom.prototype.getNextUnit = function (elem) {
-            var nextElem = $(elem).next();
-            return UIElementHelper.isCursor(this.options.id, nextElem.get(0))
-                ? nextElem.next().get(0)
-                : nextElem.get(0);
-        };
-        UIDom.prototype.mergeUnit = function (baseElem) {
-            var _this = this;
-            var prevElem = $(this.getPrevUnit(baseElem));
-            var nextElem = $(this.getNextUnit(baseElem));
-            var unitElem = [prevElem, nextElem]
-                .find(function (elem) { return UIElementHelper.isUnit(_this.options.id, elem.get(0)); });
-            if (!unitElem)
-                return;
-            if (unitElem === prevElem) {
-                prevElem.prependTo(baseElem);
-                this.cursor.insertAfter(baseElem);
-            }
-            else if (unitElem === nextElem) {
-                nextElem.appendTo(baseElem);
-                this.cursor.insertBefore(baseElem);
-            }
-            var text = $(baseElem).text();
-            this.setUnitValue(baseElem, text);
-        };
-        UIDom.prototype.setUnitValue = function (elem, value) {
-            if (value === undefined)
-                return;
-            $(elem).empty();
-            var decimalValue = FormulizeTokenHelper.toDecimal(value);
-            var split = decimalValue.split('.');
-            var prefix = $(UIElementHelper.getUnitDecimalElement(this.options.id, 'prefix', split[0]));
-            prefix.appendTo($(elem));
-            if (split[1] === undefined)
-                return;
-            var suffix = $(UIElementHelper.getUnitDecimalElement(this.options.id, 'suffix', "." + split[1]));
-            suffix.appendTo($(elem));
-        };
-        UIDom.prototype.removeCursor = function () {
-            this.container
-                .find("." + this.options.id + "-cursor")
-                .remove();
-        };
-        UIDom.prototype.removeUnit = function () {
-            this.container
-                .find(":not(\"." + this.options.id + "-cursor\")")
-                .remove();
-        };
-        return UIDom;
-    }());
-
-    var UiAnalyzer = /** @class */ (function (_super) {
-        __extends(UiAnalyzer, _super);
-        function UiAnalyzer() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        UiAnalyzer.prototype.analyzeKey = function (keyCode, pressedCtrl, pressedShift) {
-            throw new Error('method not implemented');
-        };
-        return UiAnalyzer;
-    }(UIDom));
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -1449,6 +1274,181 @@
         return builder.build(data).code === success;
     }
 
+    var FormulizeTokenHelper = /** @class */ (function () {
+        function FormulizeTokenHelper() {
+        }
+        FormulizeTokenHelper.toDecimal = function (value) {
+            var splitValue = StringHelper.toNumber(value).split('.');
+            if (splitValue.length)
+                splitValue[0] = splitValue[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return splitValue.join('.');
+        };
+        FormulizeTokenHelper.isValid = function (value) {
+            return FormulizeTokenHelper.isNumeric(value) || FormulizeTokenHelper.supportValue(value);
+        };
+        FormulizeTokenHelper.isNumeric = function (value) {
+            return /[0-9\.]/.test(value);
+        };
+        FormulizeTokenHelper.isBracket = function (value) {
+            return /^[()]$/.test(value);
+        };
+        FormulizeTokenHelper.isComma = function (value) {
+            return value === ',';
+        };
+        FormulizeTokenHelper.supportValue = function (value) {
+            return supportedCharacters.includes(value);
+        };
+        return FormulizeTokenHelper;
+    }());
+
+    var UIElementHelper = /** @class */ (function () {
+        function UIElementHelper() {
+        }
+        UIElementHelper.getDragElement = function (id) {
+            return $("<div class=\"" + id + "-drag\"></div>")[0];
+        };
+        UIElementHelper.getCursorElement = function (id) {
+            return $("<div class=\"" + id + "-cursor\"></div>")[0];
+        };
+        UIElementHelper.getUnitElement = function (id, value) {
+            return $("<div class=\"" + id + "-item " + id + "-unit\">" + value + "</div>")[0];
+        };
+        UIElementHelper.getUnitDecimalElement = function (id, side, value) {
+            return $("<span class=\"" + id + "-" + side + " " + id + "-decimal-highlight\">" + value + "</span>")[0];
+        };
+        UIElementHelper.getOperatorElement = function (id, value) {
+            return $("<div class=\"" + id + "-item " + id + "-operator\">" + value.toLowerCase() + "</div>")[0];
+        };
+        UIElementHelper.getTextBoxElement = function (id) {
+            return $("<textarea id=\"" + id + "-text\" name=\"" + id + "-text\" class=\"" + id + "-text\"></textarea>")[0];
+        };
+        UIElementHelper.isElementType = function (id, type, elem) {
+            if (!elem)
+                return;
+            return $(elem).hasClass(id + "-" + type);
+        };
+        UIElementHelper.isDrag = function (id, elem) {
+            return UIElementHelper.isElementType(id, 'drag', elem);
+        };
+        UIElementHelper.isCursor = function (id, elem) {
+            return UIElementHelper.isElementType(id, 'cursor', elem);
+        };
+        UIElementHelper.isUnit = function (id, elem) {
+            return UIElementHelper.isElementType(id, 'unit', elem);
+        };
+        UIElementHelper.isOperator = function (id, elem) {
+            return UIElementHelper.isElementType(id, 'operator', elem);
+        };
+        return UIElementHelper;
+    }());
+
+    var UIDom = /** @class */ (function () {
+        function UIDom() {
+        }
+        Object.defineProperty(UIDom.prototype, "cursorIndex", {
+            get: function () {
+                return this.cursor
+                    ? this.cursor.index()
+                    : 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(UIDom.prototype, "dragElem", {
+            get: function () {
+                return this.container
+                    .find("." + this.options.id + "-drag");
+            },
+            enumerable: true,
+            configurable: true
+        });
+        UIDom.prototype.initializeDOM = function () {
+            this.container = $(this.elem);
+            this.container.addClass(this.options.id + "-container");
+            this.container.wrap("<div class=\"" + this.options.id + "-wrapper\"></div>");
+            this.statusBox = $("<div class=\"" + this.options.id + "-alert\">" + this.options.text.formula + "</div>");
+            this.statusBox.insertBefore(this.container);
+            this.textBox = $(UIElementHelper.getTextBoxElement(this.options.id));
+            this.textBox.insertAfter(this.container);
+            this.textBox.trigger('focus');
+        };
+        UIDom.prototype.isAlreadyInitialized = function () {
+            var selfAndContainer = $(this.elem)
+                .closest("." + this.options.id + "-container")
+                .add(this.elem);
+            return !!selfAndContainer.filter("." + this.options.id + "-container").length;
+        };
+        UIDom.prototype.attachEvents = function () {
+            throw new Error('method not implemented');
+        };
+        UIDom.prototype.getPrevUnit = function (elem) {
+            var prevElement = $(elem).prev();
+            return UIElementHelper.isCursor(this.options.id, prevElement.get(0))
+                ? prevElement.prev().get(0)
+                : prevElement.get(0);
+        };
+        UIDom.prototype.getNextUnit = function (elem) {
+            var nextElem = $(elem).next();
+            return UIElementHelper.isCursor(this.options.id, nextElem.get(0))
+                ? nextElem.next().get(0)
+                : nextElem.get(0);
+        };
+        UIDom.prototype.mergeUnit = function (baseElem) {
+            var _this = this;
+            var prevElem = $(this.getPrevUnit(baseElem));
+            var nextElem = $(this.getNextUnit(baseElem));
+            var unitElem = [prevElem, nextElem]
+                .find(function (elem) { return UIElementHelper.isUnit(_this.options.id, elem.get(0)); });
+            if (!unitElem)
+                return;
+            if (unitElem === prevElem) {
+                prevElem.prependTo(baseElem);
+                this.cursor.insertAfter(baseElem);
+            }
+            else if (unitElem === nextElem) {
+                nextElem.appendTo(baseElem);
+                this.cursor.insertBefore(baseElem);
+            }
+            var text = $(baseElem).text();
+            this.setUnitValue(baseElem, text);
+        };
+        UIDom.prototype.setUnitValue = function (elem, value) {
+            if (value === undefined)
+                return;
+            $(elem).empty();
+            var decimalValue = FormulizeTokenHelper.toDecimal(value);
+            var split = decimalValue.split('.');
+            var prefix = $(UIElementHelper.getUnitDecimalElement(this.options.id, 'prefix', split[0]));
+            prefix.appendTo($(elem));
+            if (split[1] === undefined)
+                return;
+            var suffix = $(UIElementHelper.getUnitDecimalElement(this.options.id, 'suffix', "." + split[1]));
+            suffix.appendTo($(elem));
+        };
+        UIDom.prototype.removeCursor = function () {
+            this.container
+                .find("." + this.options.id + "-cursor")
+                .remove();
+        };
+        UIDom.prototype.removeUnit = function () {
+            this.container
+                .find(":not(\"." + this.options.id + "-cursor\")")
+                .remove();
+        };
+        return UIDom;
+    }());
+
+    var UIAnalyzer = /** @class */ (function (_super) {
+        __extends(UIAnalyzer, _super);
+        function UIAnalyzer() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        UIAnalyzer.prototype.analyzeKey = function (keyCode, pressedCtrl, pressedShift) {
+            throw new Error('method not implemented');
+        };
+        return UIAnalyzer;
+    }(UIDom));
+
     var UIManager = /** @class */ (function (_super) {
         __extends(UIManager, _super);
         function UIManager() {
@@ -1563,6 +1563,14 @@
             return closestUnitPosition
                 ? closestUnitPosition.elem
                 : undefined;
+        };
+        UIManager.prototype.selectAll = function () {
+            this.removeDrag();
+            var dragElem = $(UIElementHelper.getDragElement(this.options.id));
+            dragElem.prependTo(this.container);
+            this.container
+                .children(":not(\"." + this.options.id + "-cursor\")")
+                .appendTo(dragElem);
         };
         UIManager.prototype.selectRange = function (start, end) {
             if (!this.dragElem.length)
@@ -1758,15 +1766,6 @@
             this.dragElem.remove();
             this.triggerUpdate();
         };
-        UIManager.prototype.selectAll = function () {
-            this.removeDrag();
-            var dragElem = $(UIElementHelper.getDragElement(this.options.id));
-            dragElem.prependTo(this.container);
-            this.container
-                .children(":not(\"." + this.options.id + "-cursor\")")
-                .toArray()
-                .forEach(function (elem) { return $(elem).appendTo(dragElem); });
-        };
         UIManager.prototype.insert = function (obj, position) {
             if (!obj)
                 return;
@@ -1776,7 +1775,7 @@
                 this.insertValue(String(obj));
                 return;
             }
-            if (!(obj instanceof HTMLElement))
+            if (!(obj instanceof HTMLElement || obj instanceof jQuery))
                 return;
             $(obj).addClass(this.options.id + "-item");
             $(obj).insertBefore(this.cursor);
@@ -1840,9 +1839,10 @@
             }
             if (extractor)
                 extractor(isValid);
+            return isValid;
         };
         return UIManager;
-    }(UiAnalyzer));
+    }(UIAnalyzer));
 
     var UIHook = /** @class */ (function (_super) {
         __extends(UIHook, _super);
@@ -1888,15 +1888,42 @@
             var _this = this;
             var behaviors = [
                 { predicate: FormulizeKeyHelper.isReload, doBehavior: FormulizeKeyHelper.doReload },
-                { predicate: FormulizeKeyHelper.isSelectAll, doBehavior: FormulizeKeyHelper.doAction(function () { return _this.selectAll(); }) },
-                { predicate: FormulizeKeyHelper.isBackspace, doBehavior: FormulizeKeyHelper.doAction(function () { return _this.removeBefore(); }) },
-                { predicate: FormulizeKeyHelper.isDelete, doBehavior: FormulizeKeyHelper.doAction(function () { return _this.removeAfter(); }) },
-                { predicate: FormulizeKeyHelper.isLeft, doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveLeftCursor(pressedShift); }) },
-                { predicate: FormulizeKeyHelper.isUp, doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveUpCursor(); }) },
-                { predicate: FormulizeKeyHelper.isRight, doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveRightCursor(pressedShift); }) },
-                { predicate: FormulizeKeyHelper.isDown, doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveDownCursor(); }) },
-                { predicate: FormulizeKeyHelper.isHome, doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveFirstCursor(pressedShift); }) },
-                { predicate: FormulizeKeyHelper.isEnd, doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveLastCursor(pressedShift); }) }
+                {
+                    predicate: FormulizeKeyHelper.isSelectAll,
+                    doBehavior: FormulizeKeyHelper.doAction(function () { return _this.selectAll(); })
+                },
+                {
+                    predicate: FormulizeKeyHelper.isBackspace,
+                    doBehavior: FormulizeKeyHelper.doAction(function () { return _this.removeBefore(); })
+                },
+                {
+                    predicate: FormulizeKeyHelper.isDelete,
+                    doBehavior: FormulizeKeyHelper.doAction(function () { return _this.removeAfter(); })
+                },
+                {
+                    predicate: FormulizeKeyHelper.isLeft,
+                    doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveLeftCursor(pressedShift); })
+                },
+                {
+                    predicate: FormulizeKeyHelper.isUp,
+                    doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveUpCursor(); })
+                },
+                {
+                    predicate: FormulizeKeyHelper.isRight,
+                    doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveRightCursor(pressedShift); })
+                },
+                {
+                    predicate: FormulizeKeyHelper.isDown,
+                    doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveDownCursor(); })
+                },
+                {
+                    predicate: FormulizeKeyHelper.isHome,
+                    doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveFirstCursor(pressedShift); })
+                },
+                {
+                    predicate: FormulizeKeyHelper.isEnd,
+                    doBehavior: FormulizeKeyHelper.doAction(function () { return _this.moveLastCursor(pressedShift); })
+                }
             ];
             var behavior = behaviors.find(function (behavior) { return behavior.predicate(keyCode, pressedCtrl, pressedShift); });
             if (!behavior)
@@ -1930,21 +1957,104 @@
         return UI;
     }(UIBase));
 
+    function methodBinder(name) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        this
+            .toArray()
+            .forEach(function (elem) {
+            var instance = $(elem).data('$formulize');
+            if (!instance)
+                return;
+            var base = new MethodBase(instance);
+            (_a = Object.getPrototypeOf(base)[name]).call.apply(_a, [base].concat(args));
+            var _a;
+        });
+        return this;
+    }
+    var MethodBase = /** @class */ (function () {
+        function MethodBase(formulize) {
+            this.formulize = formulize;
+        }
+        MethodBase.prototype.pick = function () {
+            this.formulize.pick();
+        };
+        MethodBase.prototype.clear = function () {
+            this.formulize.clear();
+        };
+        MethodBase.prototype.blur = function () {
+            this.formulize.blur();
+        };
+        MethodBase.prototype.setData = function (data) {
+            this.formulize.setData(data);
+        };
+        MethodBase.prototype.getData = function (extractor) {
+            return this.formulize.getData(extractor);
+        };
+        MethodBase.prototype.selectRange = function (start, end) {
+            this.formulize.selectRange(start, end);
+        };
+        MethodBase.prototype.selectAll = function () {
+            this.formulize.selectAll();
+        };
+        MethodBase.prototype.removeDrag = function () {
+            this.formulize.removeDrag();
+        };
+        MethodBase.prototype.insert = function (obj, position) {
+            this.formulize.insert(obj, position);
+        };
+        MethodBase.prototype.insertValue = function (value) {
+            this.formulize.insertValue(value);
+        };
+        MethodBase.prototype.insertData = function (data) {
+            this.formulize.insertData(data);
+        };
+        MethodBase.prototype.validate = function (extractor) {
+            return this.formulize.validate(extractor);
+        };
+        return MethodBase;
+    }());
+
+    function pluginBinder() {
+        var reflectedMethod = new MethodBase(null);
+        var reflectedMethodNames = Object.getOwnPropertyNames(Object.getPrototypeOf(reflectedMethod));
+        $.fn.formulize = Object.assign(function (options) {
+            this
+                .toArray()
+                .forEach(function (elem) {
+                $(elem).data('$formulize', new UI(elem, options));
+            });
+            return this;
+        }, __assign({}, defaultOptions));
+        reflectedMethodNames
+            .filter(function (name) { return name !== 'constructor'; })
+            .map(function (name) { return ({
+            name: name,
+            func: function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                console.log(name, 'a', this);
+                methodBinder.call.apply(methodBinder, [this, name].concat(args));
+            }
+        }); })
+            .forEach(function (binder) {
+            $.fn[binder.name] = binder.func;
+        });
+    }
+
     var _MODULE_VERSION_$1 = '0.0.1';
     function getVersion$1() {
         return _MODULE_VERSION_$1;
     }
-    $.fn.formulize = Object.assign(function (options) {
-        this
-            .toArray()
-            .forEach(function (elem) {
-            new UI(elem, options);
-        });
-        return this;
-    }, __assign({}, defaultOptions));
 
-    exports.getVersion = getVersion$1;
+    pluginBinder();
+
     exports.UI = UI;
+    exports.getVersion = getVersion$1;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

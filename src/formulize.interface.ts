@@ -1,8 +1,8 @@
-import { OptionCursor, OptionExporter, OptionImporter, OptionText } from './option.interface';
+import { OptionExporter, OptionImporter, OptionText } from './option.interface';
+import { Tree } from 'metric-parser/dist/types/tree/simple.tree/type';
 
 export interface FormulizeOptions {
     id: string;
-    cursor?: OptionCursor,
     text?: OptionText,
     import?: OptionImporter;
     export?: OptionExporter;
@@ -11,5 +11,3 @@ export interface FormulizeOptions {
 export interface FormulizeFunction {
     (options: FormulizeOptions): JQuery;
 }
-
-export interface FormulizePlugin extends FormulizeFunction { }
