@@ -25,7 +25,6 @@ export function pluginBinder() {
         .map(name => ({
             name,
             func: function (...args: any[]) {
-                console.log(name, 'a', this);
                 methodBinder.call(this, name, ...args);
             }
         }))

@@ -66,9 +66,8 @@ export abstract class UIManager extends UIAnalyzer {
     protected endDrag(position: Position): void {
         this.dragged = false;
 
-        if (this.moved) {
+        if (this.moved)
             return;
-        }
 
         this.moved = false;
         this.pick(position);
@@ -388,10 +387,7 @@ export abstract class UIManager extends UIAnalyzer {
     }
 
     public removeDrag(): void {
-        this.dragElem
-            .children()
-            .toArray()
-            .forEach(elem => $(elem).insertBefore(this.dragElem));
+        this.dragElem.children().insertBefore(this.dragElem);
         this.dragElem.remove();
         this.triggerUpdate();
     }

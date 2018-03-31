@@ -2031,7 +2031,6 @@
                 for (var _i = 0; _i < arguments.length; _i++) {
                     args[_i] = arguments[_i];
                 }
-                console.log(name, 'a', this);
                 methodBinder.call.apply(methodBinder, [this, name].concat(args));
             }
         }); })
