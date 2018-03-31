@@ -1495,9 +1495,8 @@
         };
         UIManager.prototype.endDrag = function (position) {
             this.dragged = false;
-            if (this.moved) {
+            if (this.moved)
                 return;
-            }
             this.moved = false;
             this.pick(position);
         };
@@ -1752,11 +1751,7 @@
             this.removeDrag();
         };
         UIManager.prototype.removeDrag = function () {
-            var _this = this;
-            this.dragElem
-                .children()
-                .toArray()
-                .forEach(function (elem) { return $(elem).insertBefore(_this.dragElem); });
+            this.dragElem.children().insertBefore(this.dragElem);
             this.dragElem.remove();
             this.triggerUpdate();
         };

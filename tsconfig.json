@@ -29,6 +29,7 @@
         "src"
     ],
     "exclude": [
+        "**/*.spec.ts",
         "dist"
     ]
 }
