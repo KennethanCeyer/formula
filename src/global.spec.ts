@@ -1,4 +1,5 @@
 import { getVersion } from './global';
+import { expect } from 'chai';
 
 describe('test method: getVersion()', () => {
     it('should return dot-separated string with ', () => {
