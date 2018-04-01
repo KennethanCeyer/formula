@@ -60,6 +60,7 @@ export abstract class UIManager extends UIAnalyzer {
         this.dragged = true;
         this.moved = false;
         this.prevPosition = position;
+        this.pick(position);
         this.prevCursorIndex = this.cursorIndex;
     }
 

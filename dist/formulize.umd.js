@@ -1491,6 +1491,7 @@
             this.dragged = true;
             this.moved = false;
             this.prevPosition = position;
+            this.pick(position);
             this.prevCursorIndex = this.cursorIndex;
         };
         UIManager.prototype.endDrag = function (position) {
