@@ -1,4 +1,4 @@
-<h1 align="center">formulize</h1>
+<h1 align="center">formulize :waxing_crescent_moon:</h1>
 
 <p align="center">formula UI generator</p>
 
