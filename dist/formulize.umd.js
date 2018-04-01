@@ -2089,7 +2089,7 @@
         });
     }
 
-    var _MODULE_VERSION_$1 = '0.0.1';
+    var _MODULE_VERSION_$1 = '0.0.2';
     function getVersion$1() {
         return _MODULE_VERSION_$1;
     }
