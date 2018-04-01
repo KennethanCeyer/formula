@@ -24,8 +24,13 @@ pre, code, code span {
     padding-bottom: 40px;
 }
 
-.inline pre {
-    display: inline;
+.inline pre,
+.inline code {
+    display: inline !important;
+}
+
+.inline pre,
+.inline code {
     padding: 0 !important;
     text-align: left;
     background-color: transparent !important;

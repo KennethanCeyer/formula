@@ -58,8 +58,8 @@
     </div>
     <div class="article">
         <div><h3><span>🤔 Get formula tree data</span></h3></div>
-        <div>Also you can get the <span class="ui label">javascript object</span> data by calling <span
-            class="ui label primary">getData();</span></div>
+        <div>Also you can get parsed formula expression to calling <span
+            class="code inline"><code class="language-typescript">$formulize.getData();</code></span></div>
         <div class="ui compact menu button-grow">
             <a href="#" class="item btn-get-data">getData</a>
         </div>
@@ -101,7 +101,7 @@ console.log(result.data);</code></pre>
             </td>
             <td class="center"><span class="ui label"><i class="fas fa-code"></i>string</span></td>
             <td>the identifier used class prefix</td>
-            <td class="code">formulize</td>
+            <td class="code inline"><code class="language-typescript">'formulize'</code></td>
         </tr>
         <tr id="event-text-formula">
             <td class="code inline">
@@ -109,7 +109,7 @@ console.log(result.data);</code></pre>
             </td>
             <td class="center"><span class="ui label"><i class="fas fa-code"></i>string</span></td>
             <td>text for a default status</td>
-            <td class="code">formula</td>
+            <td class="code inline"><code class="language-typescript">'formula'</code></td>
         </tr>
         <tr id="event-text-pass">
             <td class="code inline">
@@ -117,7 +117,7 @@ console.log(result.data);</code></pre>
             </td>
             <td class="center"><span class="ui label"><i class="fas fa-code"></i>string</span></td>
             <td>text for a pass status(ms)</td>
-            <td class="code">pass</td>
+            <td class="code inline"><code class="language-typescript">'pass'</code></td>
         </tr>
         <tr id="event-text-error">
             <td class="code inline">
@@ -125,7 +125,7 @@ console.log(result.data);</code></pre>
             </td>
             <td class="center"><span class="ui label"><i class="fas fa-code"></i>string</span></td>
             <td>text for an error status</td>
-            <td class="code">error</td>
+            <td class="code inline"><code class="language-typescript">'error'</code></td>
         </tr>
         <tr id="event-import">
             <td class="code inline">
@@ -133,7 +133,7 @@ console.log(result.data);</code></pre>
             </td>
             <td class="center"><span class="ui label"><i class="fas fa-code"></i>function</span></td>
             <td>a pipeline function for convert imported data</td>
-            <td class="code">undefined</td>
+            <td class="code inline"><code class="language-typescript">undefined</code></td>
         </tr>
         <tr id="event-export">
             <td class="code inline">
@@ -141,7 +141,7 @@ console.log(result.data);</code></pre>
             </td>
             <td class="center"><span class="ui label"><i class="fas fa-code"></i>function</span></td>
             <td>a pipeline function for convert exported data</td>
-            <td class="code">undefined</td>
+            <td class="code inline"><code class="language-typescript">undefined</code></td>
         </tr>
         </tbody>
     </table>
@@ -247,7 +247,8 @@ console.log(result.data);</code></pre>
             <td class="center">
                 <div class="ui label"><i class="fas fa-code"></i>function</div>
             </td>
-            <td>insert data, data can be <span class="code">HTMLElement</span> or <span class="code">JQuery</span></td>
+            <td>insert data, data can be <span class="code inline"><code class="language-typescript">HTMLElement</code></span>
+                or <span class="code inline"><code class="language-typescript">JQuery</code></span></td>
         </tr>
         <tr id="method-insert-data">
             <td class="code inline">
@@ -275,7 +276,8 @@ console.log(result.data);</code></pre>
             <td class="center">
                 <div class="ui label"><i class="fas fa-code"></i>function</div>
             </td>
-            <td>validate current expression validation, if it is valid, will returns <span class="code">true</span></td>
+            <td>validate current expression validation, if it is valid, will returns <span class="code inline"><code
+                class="language-typescript">true</code></span></td>
         </tr>
         </tbody>
     </table>
