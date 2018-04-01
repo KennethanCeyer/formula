@@ -948,6 +948,9 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-class">
 			<a href="../classes/uimanager.html" class="tsd-kind-icon">UIManager</a>
 		</li>
+		<li class=" tsd-kind-class">
+			<a href="../classes/uipipe.html" class="tsd-kind-icon">UIPipe</a>
+		</li>
 		<li class=" tsd-kind-interface">
 			<a href="behavior.html" class="tsd-kind-icon">Behavior</a>
 		</li>
@@ -961,18 +964,18 @@ img { max-width: 100%; }
 			<a href="formulizeoptions.html" class="tsd-kind-icon">Formulize<wbr>Options</a>
 			<ul>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="formulizeoptions.html#export" class="tsd-kind-icon">export</a>
-				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-interface">
 					<a href="formulizeoptions.html#id" class="tsd-kind-icon">id</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="formulizeoptions.html#import" class="tsd-kind-icon">import</a>
+					<a href="formulizeoptions.html#pipe" class="tsd-kind-icon">pipe</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
 					<a href="formulizeoptions.html#text" class="tsd-kind-icon">text</a>
 				</li>
 			</ul>
+		</li>
+		<li class=" tsd-kind-interface">
+			<a href="optionpipe.html" class="tsd-kind-icon">Option<wbr>Pipe</a>
 		</li>
 		<li class=" tsd-kind-interface">
 			<a href="optiontext.html" class="tsd-kind-icon">Option<wbr>Text</a>
@@ -981,10 +984,13 @@ img { max-width: 100%; }
 			<a href="position.html" class="tsd-kind-icon">Position</a>
 		</li>
 		<li class=" tsd-kind-type-alias">
-			<a href="../globals.html#optionexporter" class="tsd-kind-icon">Option<wbr>Exporter</a>
+			<a href="../globals.html#formulizedata" class="tsd-kind-icon">Formulize<wbr>Data</a>
 		</li>
 		<li class=" tsd-kind-type-alias">
-			<a href="../globals.html#optionimporter" class="tsd-kind-icon">Option<wbr>Importer</a>
+			<a href="../globals.html#pipeinsert" class="tsd-kind-icon">Pipe<wbr>Insert</a>
+		</li>
+		<li class=" tsd-kind-type-alias">
+			<a href="../globals.html#pipeparse" class="tsd-kind-icon">Pipe<wbr>Parse</a>
 		</li>
 		<li class=" tsd-kind-variable tsd-is-not-exported">
 			<a href="../globals.html#_module_version_" class="tsd-kind-icon">_MODULE_<wbr>VERSION_</a>
@@ -1026,9 +1032,8 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="formulizeoptions.html#export" class="tsd-kind-icon">export</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="formulizeoptions.html#id" class="tsd-kind-icon">id</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="formulizeoptions.html#import" class="tsd-kind-icon">import</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="formulizeoptions.html#pipe" class="tsd-kind-icon">pipe</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="formulizeoptions.html#text" class="tsd-kind-icon">text</a></li>
 						</ul>
 					</section>
@@ -1038,32 +1043,22 @@ img { max-width: 100%; }
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="export" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagOptional">Optional</span> export</h3>
-				<div class="tsd-signature tsd-kind-icon">export<span class="tsd-signature-symbol">:</span> <a href="../globals.html#optionexporter" class="tsd-signature-type">OptionExporter</a></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/formulize.interface.ts#L8">formulize.interface.ts:8</a></li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 				<a name="id" class="tsd-anchor"></a>
-				<h3>id</h3>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> id</h3>
 				<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/formulize.interface.ts#L5">formulize.interface.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/formulize.interface.ts#L4">formulize.interface.ts:4</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="import" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagOptional">Optional</span> import</h3>
-				<div class="tsd-signature tsd-kind-icon">import<span class="tsd-signature-symbol">:</span> <a href="../globals.html#optionimporter" class="tsd-signature-type">OptionImporter</a></div>
+				<a name="pipe" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> pipe</h3>
+				<div class="tsd-signature tsd-kind-icon">pipe<span class="tsd-signature-symbol">:</span> <a href="optionpipe.html" class="tsd-signature-type">OptionPipe</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/formulize.interface.ts#L7">formulize.interface.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/formulize.interface.ts#L6">formulize.interface.ts:6</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1073,7 +1068,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">:</span> <a href="optiontext.html" class="tsd-signature-type">OptionText</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/formulize.interface.ts#L6">formulize.interface.ts:6</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/formulize.interface.ts#L5">formulize.interface.ts:5</a></li>
 					</ul>
 				</aside>
 			</section>

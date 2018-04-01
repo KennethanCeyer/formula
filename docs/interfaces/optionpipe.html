@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Behavior | formulize</title>
+	<title>OptionPipe | formulize</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -951,16 +951,8 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-class">
 			<a href="../classes/uipipe.html" class="tsd-kind-icon">UIPipe</a>
 		</li>
-		<li class="current tsd-kind-interface">
+		<li class=" tsd-kind-interface">
 			<a href="behavior.html" class="tsd-kind-icon">Behavior</a>
-			<ul>
-				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="behavior.html#dobehavior" class="tsd-kind-icon">do<wbr>Behavior</a>
-				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-interface">
-					<a href="behavior.html#predicate" class="tsd-kind-icon">predicate</a>
-				</li>
-			</ul>
 		</li>
 		<li class=" tsd-kind-interface">
 			<a href="elementposition.html" class="tsd-kind-icon">Element<wbr>Position</a>
@@ -971,8 +963,16 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-interface">
 			<a href="formulizeoptions.html" class="tsd-kind-icon">Formulize<wbr>Options</a>
 		</li>
-		<li class=" tsd-kind-interface">
+		<li class="current tsd-kind-interface">
 			<a href="optionpipe.html" class="tsd-kind-icon">Option<wbr>Pipe</a>
+			<ul>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="optionpipe.html#insert" class="tsd-kind-icon">insert</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface">
+					<a href="optionpipe.html#parse" class="tsd-kind-icon">parse</a>
+				</li>
+			</ul>
 		</li>
 		<li class=" tsd-kind-interface">
 			<a href="optiontext.html" class="tsd-kind-icon">Option<wbr>Text</a>
@@ -1018,7 +1018,7 @@ img { max-width: 100%; }
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">Behavior</span>
+					<span class="target">OptionPipe</span>
 				</li>
 			</ul>
 		</section>
@@ -1029,8 +1029,8 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="behavior.html#dobehavior" class="tsd-kind-icon">do<wbr>Behavior</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="behavior.html#predicate" class="tsd-kind-icon">predicate</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="optionpipe.html#insert" class="tsd-kind-icon">insert</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="optionpipe.html#parse" class="tsd-kind-icon">parse</a></li>
 						</ul>
 					</section>
 				</div>
@@ -1039,60 +1039,24 @@ img { max-width: 100%; }
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Properties</h2>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="dobehavior" class="tsd-anchor"></a>
-				<h3>do<wbr>Behavior</h3>
-				<div class="tsd-signature tsd-kind-icon">do<wbr>Behavior<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+				<a name="insert" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> insert</h3>
+				<div class="tsd-signature tsd-kind-icon">insert<span class="tsd-signature-symbol">:</span> <a href="../globals.html#pipeinsert" class="tsd-signature-type">PipeInsert</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.interface.ts#L16">ui/ui.interface.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/formulize.interface.ts#L10">formulize.interface.ts:10</a></li>
 					</ul>
 				</aside>
-				<div class="tsd-type-declaration">
-					<h4>Type declaration</h4>
-					<ul class="tsd-parameters">
-						<li class="tsd-parameter-siganture">
-							<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported">
-								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-							</ul>
-							<ul class="tsd-descriptions">
-								<li class="tsd-description">
-									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-				<a name="predicate" class="tsd-anchor"></a>
-				<h3>predicate</h3>
-				<div class="tsd-signature tsd-kind-icon">predicate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+				<a name="parse" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> parse</h3>
+				<div class="tsd-signature tsd-kind-icon">parse<span class="tsd-signature-symbol">:</span> <a href="../globals.html#pipeparse" class="tsd-signature-type">PipeParse</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.interface.ts#L15">ui/ui.interface.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/formulize.interface.ts#L11">formulize.interface.ts:11</a></li>
 					</ul>
 				</aside>
-				<div class="tsd-type-declaration">
-					<h4>Type declaration</h4>
-					<ul class="tsd-parameters">
-						<li class="tsd-parameter-siganture">
-							<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported">
-								<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-							</ul>
-							<ul class="tsd-descriptions">
-								<li class="tsd-description">
-									<h4 class="tsd-parameters-title">Parameters</h4>
-									<ul class="tsd-parameters">
-										<li>
-											<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
-										</li>
-									</ul>
-									<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
 			</section>
 		</section>
 		<footer class="with-border-bottom">

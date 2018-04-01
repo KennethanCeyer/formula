@@ -1060,6 +1060,12 @@ img { max-width: 100%; }
 					<a href="uihook.html#pick" class="tsd-kind-icon">pick</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a href="uihook.html#pipeinsert" class="tsd-kind-icon">pipe<wbr>Insert</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a href="uihook.html#pipeparse" class="tsd-kind-icon">pipe<wbr>Parse</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a href="uihook.html#removeafter" class="tsd-kind-icon">remove<wbr>After</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
@@ -1103,6 +1109,9 @@ img { max-width: 100%; }
 		<li class=" tsd-kind-class">
 			<a href="uimanager.html" class="tsd-kind-icon">UIManager</a>
 		</li>
+		<li class=" tsd-kind-class">
+			<a href="uipipe.html" class="tsd-kind-icon">UIPipe</a>
+		</li>
 		<li class=" tsd-kind-interface">
 			<a href="../interfaces/behavior.html" class="tsd-kind-icon">Behavior</a>
 		</li>
@@ -1116,16 +1125,22 @@ img { max-width: 100%; }
 			<a href="../interfaces/formulizeoptions.html" class="tsd-kind-icon">Formulize<wbr>Options</a>
 		</li>
 		<li class=" tsd-kind-interface">
+			<a href="../interfaces/optionpipe.html" class="tsd-kind-icon">Option<wbr>Pipe</a>
+		</li>
+		<li class=" tsd-kind-interface">
 			<a href="../interfaces/optiontext.html" class="tsd-kind-icon">Option<wbr>Text</a>
 		</li>
 		<li class=" tsd-kind-interface">
 			<a href="../interfaces/position.html" class="tsd-kind-icon">Position</a>
 		</li>
 		<li class=" tsd-kind-type-alias">
-			<a href="../globals.html#optionexporter" class="tsd-kind-icon">Option<wbr>Exporter</a>
+			<a href="../globals.html#formulizedata" class="tsd-kind-icon">Formulize<wbr>Data</a>
 		</li>
 		<li class=" tsd-kind-type-alias">
-			<a href="../globals.html#optionimporter" class="tsd-kind-icon">Option<wbr>Importer</a>
+			<a href="../globals.html#pipeinsert" class="tsd-kind-icon">Pipe<wbr>Insert</a>
+		</li>
+		<li class=" tsd-kind-type-alias">
+			<a href="../globals.html#pipeparse" class="tsd-kind-icon">Pipe<wbr>Parse</a>
 		</li>
 		<li class=" tsd-kind-variable tsd-is-not-exported">
 			<a href="../globals.html#_module_version_" class="tsd-kind-icon">_MODULE_<wbr>VERSION_</a>
@@ -1225,6 +1240,8 @@ img { max-width: 100%; }
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="uihook.html#moverightcursor" class="tsd-kind-icon">move<wbr>Right<wbr>Cursor</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="uihook.html#moveupcursor" class="tsd-kind-icon">move<wbr>UpCursor</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="uihook.html#pick" class="tsd-kind-icon">pick</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="uihook.html#pipeinsert" class="tsd-kind-icon">pipe<wbr>Insert</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="uihook.html#pipeparse" class="tsd-kind-icon">pipe<wbr>Parse</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="uihook.html#removeafter" class="tsd-kind-icon">remove<wbr>After</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="uihook.html#removebefore" class="tsd-kind-icon">remove<wbr>Before</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="uihook.html#removecursor" class="tsd-kind-icon">remove<wbr>Cursor</a></li>
@@ -1257,7 +1274,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#container">container</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L7">ui/ui.dom.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L7">ui/ui.dom.ts:7</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1268,7 +1285,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#cursor">cursor</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L10">ui/ui.dom.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L10">ui/ui.dom.ts:10</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1279,7 +1296,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#dragged">dragged</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L12">ui/ui.manager.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L13">ui/ui.manager.ts:13</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1290,7 +1307,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#elem">elem</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L11">ui/ui.dom.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L11">ui/ui.dom.ts:11</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1301,7 +1318,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#moved">moved</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L13">ui/ui.manager.ts:13</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L14">ui/ui.manager.ts:14</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1312,7 +1329,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#options">options</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L12">ui/ui.dom.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L12">ui/ui.dom.ts:12</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1323,7 +1340,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#prevcursorindex">prevCursorIndex</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L10">ui/ui.manager.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L11">ui/ui.manager.ts:11</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1334,7 +1351,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#statusbox">statusBox</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L8">ui/ui.dom.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L8">ui/ui.dom.ts:8</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1345,7 +1362,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#textbox">textBox</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L9">ui/ui.dom.ts:9</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L9">ui/ui.dom.ts:9</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1359,7 +1376,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#cursorindex">cursorIndex</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L14">ui/ui.dom.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L14">ui/ui.dom.ts:14</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1370,7 +1387,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#dragelem">dragElem</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L20">ui/ui.dom.ts:20</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L20">ui/ui.dom.ts:20</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1388,7 +1405,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uianalyzer.html">UIAnalyzer</a>.<a href="uianalyzer.html#analyzekey">analyzeKey</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.analyzer.ts#L4">ui/ui.analyzer.ts:4</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.analyzer.ts#L4">ui/ui.analyzer.ts:4</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1424,7 +1441,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#attachevents">attachEvents</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L45">ui/ui.dom.ts:45</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L45">ui/ui.dom.ts:45</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1442,7 +1459,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#blur">blur</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L382">ui/ui.manager.ts:382</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L383">ui/ui.manager.ts:383</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1460,7 +1477,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#clear">clear</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L376">ui/ui.manager.ts:376</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L377">ui/ui.manager.ts:377</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1478,7 +1495,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#dragfirst">dragFirst</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L220">ui/ui.manager.ts:220</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L221">ui/ui.manager.ts:221</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1496,7 +1513,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#draglast">dragLast</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L225">ui/ui.manager.ts:225</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L226">ui/ui.manager.ts:226</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1514,7 +1531,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#dragleft">dragLeft</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L230">ui/ui.manager.ts:230</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L231">ui/ui.manager.ts:231</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1532,7 +1549,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#dragright">dragRight</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L248">ui/ui.manager.ts:248</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L249">ui/ui.manager.ts:249</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1550,7 +1567,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#enddrag">endDrag</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L67">ui/ui.manager.ts:67</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L68">ui/ui.manager.ts:68</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1574,7 +1591,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#getdata">getData</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L36">ui/ui.manager.ts:36</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L37">ui/ui.manager.ts:37</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1622,7 +1639,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#getnextunit">getNextUnit</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L56">ui/ui.dom.ts:56</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L56">ui/ui.dom.ts:56</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1646,7 +1663,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#getprevunit">getPrevUnit</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L49">ui/ui.dom.ts:49</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L49">ui/ui.dom.ts:49</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1669,7 +1686,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.hook.ts#L5">ui/ui.hook.ts:5</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.hook.ts#L5">ui/ui.hook.ts:5</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1693,7 +1710,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#initializedom">initializeDOM</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L25">ui/ui.dom.ts:25</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L25">ui/ui.dom.ts:25</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1704,20 +1721,20 @@ img { max-width: 100%; }
 				<a name="insert" class="tsd-anchor"></a>
 				<h3>insert</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<li class="tsd-signature tsd-kind-icon">insert<span class="tsd-signature-symbol">(</span>obj<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">JQuery</span>, position<span class="tsd-signature-symbol">?: </span><a href="../interfaces/position.html" class="tsd-signature-type">Position</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<li class="tsd-signature tsd-kind-icon">insert<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../globals.html#formulizedata" class="tsd-signature-type">FormulizeData</a>, position<span class="tsd-signature-symbol">?: </span><a href="../interfaces/position.html" class="tsd-signature-type">Position</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#insert">insert</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L396">ui/ui.manager.ts:396</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L397">ui/ui.manager.ts:397</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>obj: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">JQuery</span></h5>
+								<h5>data: <a href="../globals.html#formulizedata" class="tsd-signature-type">FormulizeData</a></h5>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> position: <a href="../interfaces/position.html" class="tsd-signature-type">Position</a></h5>
@@ -1738,7 +1755,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#insertdata">insertData</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L450">ui/ui.manager.ts:450</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L454">ui/ui.manager.ts:454</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1762,7 +1779,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#insertvalue">insertValue</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L417">ui/ui.manager.ts:417</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L421">ui/ui.manager.ts:421</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1786,7 +1803,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#isalreadyinitialized">isAlreadyInitialized</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L38">ui/ui.dom.ts:38</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L38">ui/ui.dom.ts:38</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -1804,7 +1821,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#mergeunit">mergeUnit</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L63">ui/ui.dom.ts:63</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L63">ui/ui.dom.ts:63</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1828,7 +1845,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#movedowncursor">moveDownCursor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L334">ui/ui.manager.ts:334</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L335">ui/ui.manager.ts:335</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1846,7 +1863,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#movedrag">moveDrag</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L77">ui/ui.manager.ts:77</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L78">ui/ui.manager.ts:78</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1870,7 +1887,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#movefirstcursor">moveFirstCursor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L344">ui/ui.manager.ts:344</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L345">ui/ui.manager.ts:345</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1894,7 +1911,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#movelastcursor">moveLastCursor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L360">ui/ui.manager.ts:360</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L361">ui/ui.manager.ts:361</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1918,7 +1935,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#moveleftcursor">moveLeftCursor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L280">ui/ui.manager.ts:280</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L281">ui/ui.manager.ts:281</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1942,7 +1959,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#moverightcursor">moveRightCursor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L312">ui/ui.manager.ts:312</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L313">ui/ui.manager.ts:313</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1966,7 +1983,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#moveupcursor">moveUpCursor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L302">ui/ui.manager.ts:302</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L303">ui/ui.manager.ts:303</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1984,7 +2001,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#pick">pick</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L15">ui/ui.manager.ts:15</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L16">ui/ui.manager.ts:16</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1994,6 +2011,54 @@ img { max-width: 100%; }
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+				<a name="pipeinsert" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagProtected">Protected</span> pipe<wbr>Insert</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<li class="tsd-signature tsd-kind-icon">pipe<wbr>Insert<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../globals.html#formulizedata" class="tsd-signature-type">FormulizeData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="uipipe.html">UIPipe</a>.<a href="uipipe.html#pipeinsert">pipeInsert</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.pipe.ts#L6">ui/ui.pipe.ts:6</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>data: <a href="../globals.html#formulizedata" class="tsd-signature-type">FormulizeData</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+				<a name="pipeparse" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagProtected">Protected</span> pipe<wbr>Parse</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<li class="tsd-signature tsd-kind-icon">pipe<wbr>Parse<span class="tsd-signature-symbol">(</span>elem<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="uipipe.html">UIPipe</a>.<a href="uipipe.html#pipeparse">pipeParse</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.pipe.ts#L13">ui/ui.pipe.ts:13</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>elem: <span class="tsd-signature-type">HTMLElement</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 					</li>
 				</ul>
 			</section>
@@ -2008,7 +2073,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#removeafter">removeAfter</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L196">ui/ui.manager.ts:196</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L197">ui/ui.manager.ts:197</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2026,7 +2091,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#removebefore">removeBefore</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L172">ui/ui.manager.ts:172</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L173">ui/ui.manager.ts:173</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2044,7 +2109,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#removecursor">removeCursor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L102">ui/ui.dom.ts:102</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L102">ui/ui.dom.ts:102</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2062,7 +2127,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#removedrag">removeDrag</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L390">ui/ui.manager.ts:390</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L391">ui/ui.manager.ts:391</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2080,7 +2145,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#removeunit">removeUnit</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L108">ui/ui.dom.ts:108</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L108">ui/ui.dom.ts:108</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2098,7 +2163,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#selectall">selectAll</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L151">ui/ui.manager.ts:151</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L152">ui/ui.manager.ts:152</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2116,7 +2181,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#selectrange">selectRange</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L160">ui/ui.manager.ts:160</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L161">ui/ui.manager.ts:161</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2143,7 +2208,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#setdata">setData</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L29">ui/ui.manager.ts:29</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L30">ui/ui.manager.ts:30</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2167,7 +2232,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uidom.html">UIDom</a>.<a href="uidom.html#setunitvalue">setUnitValue</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.dom.ts#L85">ui/ui.dom.ts:85</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.dom.ts#L85">ui/ui.dom.ts:85</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2194,7 +2259,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#startdrag">startDrag</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L59">ui/ui.manager.ts:59</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L60">ui/ui.manager.ts:60</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2218,7 +2283,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#triggerupdate">triggerUpdate</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L46">ui/ui.manager.ts:46</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L47">ui/ui.manager.ts:47</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2236,7 +2301,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#validate">validate</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L465">ui/ui.manager.ts:465</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L463">ui/ui.manager.ts:463</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2277,7 +2342,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Inherited from <a href="uimanager.html">UIManager</a>.<a href="uimanager.html#prevposition">prevPosition</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L11">ui/ui.manager.ts:11</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L12">ui/ui.manager.ts:12</a></li>
 					</ul>
 				</aside>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -2286,7 +2351,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">x<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L11">ui/ui.manager.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L12">ui/ui.manager.ts:12</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -2296,7 +2361,7 @@ img { max-width: 100%; }
 					<div class="tsd-signature tsd-kind-icon">y<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.manager.ts#L11">ui/ui.manager.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.manager.ts#L12">ui/ui.manager.ts:12</a></li>
 						</ul>
 					</aside>
 				</section>

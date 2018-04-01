@@ -946,6 +946,9 @@ img { max-width: 100%; }
 					<a href="uihelper.html#getdatavalue" class="tsd-kind-icon">get<wbr>Data<wbr>Value</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a href="uihelper.html#isdom" class="tsd-kind-icon">isDOM</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a href="uihelper.html#isoverdistance" class="tsd-kind-icon">is<wbr>Over<wbr>Distance</a>
 				</li>
 			</ul>
@@ -955,6 +958,9 @@ img { max-width: 100%; }
 		</li>
 		<li class=" tsd-kind-class">
 			<a href="uimanager.html" class="tsd-kind-icon">UIManager</a>
+		</li>
+		<li class=" tsd-kind-class">
+			<a href="uipipe.html" class="tsd-kind-icon">UIPipe</a>
 		</li>
 		<li class=" tsd-kind-interface">
 			<a href="../interfaces/behavior.html" class="tsd-kind-icon">Behavior</a>
@@ -969,16 +975,22 @@ img { max-width: 100%; }
 			<a href="../interfaces/formulizeoptions.html" class="tsd-kind-icon">Formulize<wbr>Options</a>
 		</li>
 		<li class=" tsd-kind-interface">
+			<a href="../interfaces/optionpipe.html" class="tsd-kind-icon">Option<wbr>Pipe</a>
+		</li>
+		<li class=" tsd-kind-interface">
 			<a href="../interfaces/optiontext.html" class="tsd-kind-icon">Option<wbr>Text</a>
 		</li>
 		<li class=" tsd-kind-interface">
 			<a href="../interfaces/position.html" class="tsd-kind-icon">Position</a>
 		</li>
 		<li class=" tsd-kind-type-alias">
-			<a href="../globals.html#optionexporter" class="tsd-kind-icon">Option<wbr>Exporter</a>
+			<a href="../globals.html#formulizedata" class="tsd-kind-icon">Formulize<wbr>Data</a>
 		</li>
 		<li class=" tsd-kind-type-alias">
-			<a href="../globals.html#optionimporter" class="tsd-kind-icon">Option<wbr>Importer</a>
+			<a href="../globals.html#pipeinsert" class="tsd-kind-icon">Pipe<wbr>Insert</a>
+		</li>
+		<li class=" tsd-kind-type-alias">
+			<a href="../globals.html#pipeparse" class="tsd-kind-icon">Pipe<wbr>Parse</a>
 		</li>
 		<li class=" tsd-kind-variable tsd-is-not-exported">
 			<a href="../globals.html#_module_version_" class="tsd-kind-icon">_MODULE_<wbr>VERSION_</a>
@@ -1021,6 +1033,7 @@ img { max-width: 100%; }
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="uihelper.html#getdatavalue" class="tsd-kind-icon">get<wbr>Data<wbr>Value</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="uihelper.html#isdom" class="tsd-kind-icon">isDOM</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="uihelper.html#isoverdistance" class="tsd-kind-icon">is<wbr>Over<wbr>Distance</a></li>
 						</ul>
 					</section>
@@ -1033,22 +1046,45 @@ img { max-width: 100%; }
 				<a name="getdatavalue" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagStatic">Static</span> get<wbr>Data<wbr>Value</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<li class="tsd-signature tsd-kind-icon">get<wbr>Data<wbr>Value<span class="tsd-signature-symbol">(</span>elem<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Data<wbr>Value<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../globals.html#formulizedata" class="tsd-signature-type">FormulizeData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.helper.ts#L5">ui/ui.helper.ts:5</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.helper.ts#L5">ui/ui.helper.ts:5</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>elem: <span class="tsd-signature-type">HTMLElement</span></h5>
+								<h5>data: <a href="../globals.html#formulizedata" class="tsd-signature-type">FormulizeData</a></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+				<a name="isdom" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagStatic">Static</span> isDOM</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<li class="tsd-signature tsd-kind-icon">isDOM<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><a href="../globals.html#formulizedata" class="tsd-signature-type">FormulizeData</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.helper.ts#L20">ui/ui.helper.ts:20</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>data: <a href="../globals.html#formulizedata" class="tsd-signature-type">FormulizeData</a></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 					</li>
 				</ul>
 			</section>
@@ -1062,7 +1098,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/4b95ffb/src/ui/ui.helper.ts#L12">ui/ui.helper.ts:12</a></li>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formula/blob/ebacd31/src/ui/ui.helper.ts#L15">ui/ui.helper.ts:15</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
