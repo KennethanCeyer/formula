@@ -25,7 +25,7 @@
     <a href="https://david-dm.org/KennethanCeyer/formulize?type=dev"><img src="https://david-dm.org/KennethanCeyer/formulize/dev-status.svg" alt="devDependencies Status"></a>
 </p>
 
-## Installation
+## :package: Installation
 
 #### git
 
@@ -45,7 +45,7 @@ $ npm install formulize
 $ yarn add formulize
 ```
 
-## Getting started
+## :clap: Getting started
 
 This plugin helps you to make formulas WYSWYG UI
 
@@ -55,7 +55,7 @@ This plugin helps you to make formulas WYSWYG UI
 
 ![Sample screen](http://www.pigno.se/barn/PIGNOSE-Formula/demo/img/screenshot_main.png)
 
-## Example (basic)
+## :page_with_curl: Example (basic)
 
 
 ```html
@@ -124,7 +124,7 @@ $(function() {
 });
 ```
 
-## Roadmap
+## :triangular_flag_on_post: Roadmap
 
 - [x] support typescript
 - [x] update formula tree parser
@@ -144,7 +144,7 @@ $(function() {
 - [ ] add contributor guidelines
 - [ ] support cdn
 
-## License
+## :mag: License
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FKennethanCeyer%2Fformulize.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FKennethanCeyer%2Fformulize?ref=badge_large)
 
