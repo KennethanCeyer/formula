@@ -3,23 +3,17 @@ import { FormulizeData } from './ui.interface';
 import { UIHelper } from './ui.helper';
 
 export class UIPipe extends UIAnalyzer {
-    protected pipeImport(data: FormulizeData): FormulizeData {
-        if (!this.options.import || !UIHelper.isDOM(data))
+    protected pipeInsert(data: FormulizeData): any {
+        if (!this.options.pipe || !this.options.pipe.insert)
             return data;
 
-        return this.options.import(this.getElem(<HTMLElement | JQuery>data));
+        return this.options.pipe.insert(data);
     }
 
-    protected pipeExport(data: FormulizeData): any {
-        if (!this.options.export || !UIHelper.isDOM(data))
-            return data;
+    protected pipeParse(elem: HTMLElement): any {
+        if (!this.options.pipe || !this.options.pipe.parse)
+            return UIHelper.getDataValue(elem);
 
-        return this.options.export(this.getElem(<HTMLElement | JQuery>data));
-    }
-
-    private getElem(data: JQuery | HTMLElement): HTMLElement {
-        return data instanceof jQuery
-            ? (<JQuery>data).get(0)
-            : <HTMLElement>data;
+        return this.options.pipe.parse(elem);
     }
 }

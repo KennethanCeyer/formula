@@ -1,4 +1,3 @@
-import { UIHelper } from './ui/ui.helper';
 import { FormulizeOptions } from './formulize.interface';
 
 export const defaultOptions: FormulizeOptions = {
@@ -7,6 +6,5 @@ export const defaultOptions: FormulizeOptions = {
         formula: 'formula',
         error: 'error',
         pass: 'passed'
-    },
-    export: (data: HTMLElement) => UIHelper.getDataValue(data)
+    }
 };

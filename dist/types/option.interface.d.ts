@@ -1,7 +1,8 @@
+import { FormulizeData } from './ui/ui.interface';
 export interface OptionText {
     formula?: string;
     error?: string;
     pass?: string;
 }
-export declare type OptionImporter = (elem: HTMLElement) => HTMLElement;
-export declare type OptionExporter = (elem: HTMLElement) => any;
+export declare type PipeInsert = (data: FormulizeData) => any;
+export declare type PipeParse = (elem: HTMLElement) => any;

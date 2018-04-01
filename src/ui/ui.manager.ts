@@ -54,7 +54,7 @@ export abstract class UIManager extends UIPipe {
         return this.container
             .find(`.${this.options.id}-item`)
             .toArray()
-            .map(elem => this.pipeExport(elem));
+            .map(elem => this.pipeParse(elem));
     }
 
     protected startDrag(position: Position): void {
@@ -398,12 +398,12 @@ export abstract class UIManager extends UIPipe {
         if (!data)
             return;
 
-        const pipedData = this.pipeImport(data);
+        const pipedData = this.pipeInsert(data);
 
         if (!this.cursor || !this.cursor.length || position)
             this.pick(position);
 
-        if (typeof pipedData === 'string' || typeof data === 'number') {
+        if (typeof pipedData === 'string' || typeof pipedData === 'number') {
             this.insertValue(String(pipedData));
             return;
         }
@@ -456,13 +456,7 @@ export abstract class UIManager extends UIPipe {
             ? data.split('')
             : data;
 
-        arrayData
-            .forEach(value => {
-                const inputValue = typeof value === 'string' || !this.options.import
-                    ? value
-                    : this.options.import(value);
-                this.insert(inputValue);
-            });
+        arrayData.forEach(value => this.insert(value));
         this.triggerUpdate();
     }
 

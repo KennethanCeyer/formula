@@ -6,6 +6,6 @@ export interface OptionText {
     pass?: string;
 }
 
-export type OptionImporter = (elem: HTMLElement) => HTMLElement;
+export type PipeInsert = (data: FormulizeData) => any;
 
-export type OptionExporter = (elem: HTMLElement) => any;
+export type PipeParse = (elem: HTMLElement) => any;
