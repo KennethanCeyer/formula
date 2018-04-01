@@ -25,9 +25,10 @@
     .formulize-wrapper .formulize-container .formulize-cursor {
       display: inline-block;
       vertical-align: middle;
-      height: 20px;
-      width: 1px;
-      background-color: rgba(0, 0, 0, 0.6); }
+      height: 16px;
+      width: 3px;
+      background-color: rgba(0, 0, 0, 0.6);
+      animation: blink .5s ease alternate infinite; }
     .formulize-wrapper .formulize-container .formulize-unit, .formulize-wrapper .formulize-container .formulize-operator {
       display: inline-block;
       vertical-align: middle;
@@ -105,18 +106,6 @@
     color: rgba(0, 0, 0, 0.7); }
   .formulize-wrapper .formulize-suffix {
     color: rgba(0, 0, 0, 0.3); }
-
-@-webkit-keyframes blink {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
-
-@-moz-keyframes blink {
-  0% {
-    opacity: 0; }
-  100% {
-    opacity: 1; } }
 
 @keyframes blink {
   0% {

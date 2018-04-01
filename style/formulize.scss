@@ -28,9 +28,10 @@
         .formulize-cursor {
             display: inline-block;
             vertical-align: middle;
-            height: 20px;
-            width: 1px;
+            height: 16px;
+            width: 3px;
             background-color: rgba(0, 0, 0, 0.6);
+            animation: blink .5s ease alternate infinite;
         }
         .formulize-unit, .formulize-operator {
             display: inline-block;
@@ -123,16 +124,6 @@
     .formulize-suffix {
         color: rgba(0, 0, 0, 0.3);
     }
-}
-
-@-webkit-keyframes blink {
-    0%   { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-@-moz-keyframes blink {
-    0%   { opacity: 0; }
-    100% { opacity: 1; }
 }
 
 @keyframes blink {
