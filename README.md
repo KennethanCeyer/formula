@@ -1,17 +1,31 @@
-# formulize
-formula UI generator
+<h1 align="center">formulize</h1>
 
-[![NPM](https://nodei.co/npm/formulize.png)](https://nodei.co/npm/formulize/)
+<p align="center">formula UI generator</p>
 
-[![npm version](https://badge.fury.io/js/formulize.svg)](https://badge.fury.io/js/formulize) [![Join the chat at https://gitter.im/KennethanCeyer/PIGNOSE](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KennethanCeyer/PIGNOSE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![GitHub forks](https://img.shields.io/github/forks/KennethanCeyer/formulize.svg)](https://github.com/KennethanCeyer/formulize/network) [![GitHub license](https://img.shields.io/github/license/KennethanCeyer/formulize.svg)](https://github.com/KennethanCeyer/formulize/blob/master/LICENSE)
+<p align="center"><a href="https://nodei.co/npm/formulize/"><img src="https://nodei.co/npm/formulize.png" alt="NPM"></a></p>
 
-[![Build Status](https://travis-ci.org/KennethanCeyer/formulize.svg?branch=master)](https://travis-ci.org/KennethanCeyer/formulize) [![codecov](https://codecov.io/gh/KennethanCeyer/formulize/branch/master/graph/badge.svg)](https://codecov.io/gh/KennethanCeyer/formulize) [![Coverage Status](https://coveralls.io/repos/github/KennethanCeyer/formulize/badge.svg?branch=master)](https://coveralls.io/github/KennethanCeyer/formulize?branch=master) [![Test Coverage](https://api.codeclimate.com/v1/badges/e8bbc8a49edebf28cb2a/test_coverage)](https://codeclimate.com/github/KennethanCeyer/formulize/test_coverage)
+<p align="center">
+    <a href="https://badge.fury.io/js/formulize"><img src="https://badge.fury.io/js/formulize.svg" alt="npm version"></a>
+    <a href="https://gitter.im/KennethanCeyer/PIGNOSE?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/KennethanCeyer/PIGNOSE"></a>
+    <a href="https://github.com/KennethanCeyer/formulize/network"><img src="https://img.shields.io/github/forks/KennethanCeyer/formulize.svg" alt="GitHub forks"></a>
+    <a href="https://github.com/KennethanCeyer/formulize/blob/master/LICENSE"><img src="https://img.shields.io/github/license/KennethanCeyer/formulize.svg" alt="GitHub license"></a>
+</p>
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/e8bbc8a49edebf28cb2a/maintainability)](https://codeclimate.com/github/KennethanCeyer/formulize/maintainability) [![CodeFactor](https://www.codefactor.io/repository/github/kennethanceyer/formulize/badge)](https://www.codefactor.io/repository/github/kennethanceyer/formulize) [![dependencies Status](https://david-dm.org/KennethanCeyer/formulize/status.svg)](https://david-dm.org/KennethanCeyer/formulize) [![devDependencies Status](https://david-dm.org/KennethanCeyer/formulize/dev-status.svg)](https://david-dm.org/KennethanCeyer/formulize?type=dev) 
+<p align="center">
+    <a href="https://travis-ci.org/KennethanCeyer/formulize"><img src="https://travis-ci.org/KennethanCeyer/formulize.svg?branch=master" alt="Build Status"></a>
+    <a href="https://codecov.io/gh/KennethanCeyer/formulize"><img src="https://codecov.io/gh/KennethanCeyer/formulize/branch/master/graph/badge.svg" alt="codecov"></a>
+    <a href="https://coveralls.io/github/KennethanCeyer/formulize?branch=master"><img src="https://coveralls.io/repos/github/KennethanCeyer/formulize/badge.svg?branch=master" alt="Coverage Status"></a>
+    <a href="https://codeclimate.com/github/KennethanCeyer/formulize/test_coverage"><img src="https://api.codeclimate.com/v1/badges/e8bbc8a49edebf28cb2a/test_coverage" alt="Test Coverage"></a>
+</p>
 
-----
+<p align="center">
+    <a href="https://codeclimate.com/github/KennethanCeyer/formulize/maintainability"><img src="https://api.codeclimate.com/v1/badges/e8bbc8a49edebf28cb2a/maintainability" alt="Maintainability"></a>
+    <a href="https://www.codefactor.io/repository/github/kennethanceyer/formulize"><img src="https://www.codefactor.io/repository/github/kennethanceyer/formulize/badge" alt="CodeFactor"></a>
+    <a href="https://david-dm.org/KennethanCeyer/formulize"><img src="https://david-dm.org/KennethanCeyer/formulize/status.svg" alt="dependencies Status"></a>
+    <a href="https://david-dm.org/KennethanCeyer/formulize?type=dev"><img src="https://david-dm.org/KennethanCeyer/formulize/dev-status.svg" alt="devDependencies Status"></a>
+</p>
 
-### Installation
+## Installation
 
 #### git
 
@@ -31,9 +45,7 @@ $ npm install formulize
 $ yarn add formulize
 ```
 
-----
-
-### Getting started
+## Getting started
 
 This plugin helps you to make formulas WYSWYG UI
 
@@ -43,9 +55,7 @@ This plugin helps you to make formulas WYSWYG UI
 
 ![Sample screen](http://www.pigno.se/barn/PIGNOSE-Formula/demo/img/screenshot_main.png)
 
-----
-
-### Example (basic)
+## Example (basic)
 
 
 ```html
@@ -114,9 +124,7 @@ $(function() {
 });
 ```
 
-----
-
-### Roadmap
+## Roadmap
 
 - [x] support typescript
 - [x] update formula tree parser
@@ -136,9 +144,7 @@ $(function() {
 - [ ] add contributor guidelines
 - [ ] support cdn
 
-----
-
-### License
+## License
 
 The MIT License (MIT)
 
