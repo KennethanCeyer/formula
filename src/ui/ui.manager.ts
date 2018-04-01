@@ -2,11 +2,12 @@ import { convert, valid } from 'metric-parser';
 import { FormulizeTokenHelper } from '../token.helper';
 import { Tree } from 'metric-parser/dist/types/tree/simple.tree/type';
 import { UIElementHelper } from './ui.element.helper';
-import { ElementPosition, Position } from './ui.interface';
-import { UIAnalyzer } from './ui.analyzer';
+import { ElementPosition, FormulizeData, Position } from './ui.interface';
 import { UIHelper } from './ui.helper';
+import { UIPipe } from './ui.pipe';
+import { ParseData } from 'metric-parser/dist/types/parser/parser';
 
-export abstract class UIManager extends UIAnalyzer {
+export abstract class UIManager extends UIPipe {
     protected prevCursorIndex = 0;
     protected prevPosition: Position = { x: 0, y: 0 };
     protected dragged: boolean;
@@ -35,7 +36,7 @@ export abstract class UIManager extends UIAnalyzer {
 
     public getData<T extends Tree>(extractor?: (data: T) => void): T {
         const expression = this.getExpression();
-        const result = convert(expression);
+        const result = convert(<string[]>expression);
 
         if (extractor)
             extractor(result.data);
@@ -49,11 +50,11 @@ export abstract class UIManager extends UIAnalyzer {
             .triggerHandler(`${this.options.id}.input`, this.getData());
     }
 
-    private getExpression(): string[] {
+    private getExpression(): FormulizeData[] {
         return this.container
             .find(`.${this.options.id}-item`)
             .toArray()
-            .map(elem => UIHelper.getDataValue(elem));
+            .map(elem => this.pipeExport(elem));
     }
 
     protected startDrag(position: Position): void {
@@ -393,23 +394,26 @@ export abstract class UIManager extends UIAnalyzer {
         this.triggerUpdate();
     }
 
-    public insert(obj: string | number | HTMLElement | JQuery, position?: Position): void {
-        if (!obj)
+    public insert(data: FormulizeData, position?: Position): void {
+        if (!data)
             return;
+
+        const pipedData = this.pipeImport(data);
 
         if (!this.cursor || !this.cursor.length || position)
             this.pick(position);
 
-        if (typeof obj === 'string' || typeof obj === 'number') {
-            this.insertValue(String(obj));
+        if (typeof pipedData === 'string' || typeof data === 'number') {
+            this.insertValue(String(pipedData));
             return;
         }
 
-        if (!(obj instanceof HTMLElement || obj instanceof jQuery))
+        if (!UIHelper.isDOM(pipedData))
             return;
 
-        $(obj).addClass(`${this.options.id}-item`);
-        $(obj).insertBefore(this.cursor);
+        const insertElem = <HTMLElement | JQuery>pipedData;
+        $(insertElem).addClass(`${this.options.id}-item`);
+        $(insertElem).insertBefore(this.cursor);
 
         this.triggerUpdate();
     }

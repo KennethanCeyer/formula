@@ -1,7 +1,7 @@
 import { Tree } from 'metric-parser/dist/types/tree/simple.tree/type';
-import { Position } from './ui.interface';
-import { UIAnalyzer } from './ui.analyzer';
-export declare abstract class UIManager extends UIAnalyzer {
+import { FormulizeData, Position } from './ui.interface';
+import { UIPipe } from './ui.pipe';
+export declare abstract class UIManager extends UIPipe {
     protected prevCursorIndex: number;
     protected prevPosition: Position;
     protected dragged: boolean;
@@ -34,7 +34,7 @@ export declare abstract class UIManager extends UIAnalyzer {
     clear(): void;
     blur(): void;
     removeDrag(): void;
-    insert(obj: string | number | HTMLElement | JQuery, position?: Position): void;
+    insert(data: FormulizeData, position?: Position): void;
     insertValue(value: string): void;
     insertData(data: string | string[] | any[]): void;
     validate(extractor?: (valid: boolean) => void): boolean;

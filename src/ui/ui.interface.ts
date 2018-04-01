@@ -15,3 +15,5 @@ export interface Behavior {
     predicate: (...args: any[]) => boolean;
     doBehavior: () => any;
 }
+
+export type FormulizeData =  string | number | HTMLElement | JQuery;

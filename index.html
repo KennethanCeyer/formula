@@ -461,7 +461,6 @@ formulize.setData(data);</code></pre>
         $('.btn-get-data')
             .on('click', function (event) {
                 event.preventDefault();
-                console.log('fire');
                 $('.formulize-advanced').getData(function (data) {
                     $('.formulize-get-json .formulize-get-json-data')
                         .html(getHtmlFromJson(data)).closest('.formulize-get-json').addClass('filled');

@@ -6,7 +6,7 @@ export abstract class UIBase extends UIHook {
     public constructor(elem: HTMLElement, options: FormulizeOptions = { ...defaultOptions }) {
         super();
         this.elem = elem;
-        this.options = options;
+        this.options = { ...defaultOptions, ...options };
 
         if (this.isAlreadyInitialized())
             return;

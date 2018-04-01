@@ -8,5 +8,5 @@ export const defaultOptions: FormulizeOptions = {
         error: 'error',
         pass: 'passed'
     },
-    export: (elem: HTMLElement) => UIHelper.getDataValue(elem)
+    export: (data: HTMLElement) => UIHelper.getDataValue(data)
 };

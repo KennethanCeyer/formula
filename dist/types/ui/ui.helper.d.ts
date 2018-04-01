@@ -1,5 +1,6 @@
-import { Position } from './ui.interface';
+import { FormulizeData, Position } from './ui.interface';
 export declare class UIHelper {
-    static getDataValue(elem: HTMLElement): string;
+    static getDataValue(data: FormulizeData): string;
     static isOverDistance(position: Position, targetPosition: Position, distance: number): boolean;
+    static isDOM(data: FormulizeData): boolean;
 }

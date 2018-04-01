@@ -53,8 +53,10 @@
     var UIHelper = /** @class */ (function () {
         function UIHelper() {
         }
-        UIHelper.getDataValue = function (elem) {
-            var value = $(elem).data('value') || $(elem).text();
+        UIHelper.getDataValue = function (data) {
+            if (!UIHelper.isDOM(data))
+                return String(data);
+            var value = $(data).data('value') || $(data).text();
             return StringHelper.isNumeric(value)
                 ? StringHelper.toNumber(String(value))
                 : value;
@@ -62,6 +64,9 @@
         UIHelper.isOverDistance = function (position, targetPosition, distance) {
             return Math.abs(position.x - targetPosition.x) > distance ||
                 Math.abs(position.y - targetPosition.y) > distance;
+        };
+        UIHelper.isDOM = function (data) {
+            return data instanceof HTMLElement || data instanceof jQuery;
         };
         return UIHelper;
     }());
@@ -73,7 +78,7 @@
             error: 'error',
             pass: 'passed'
         },
-        export: function (elem) { return UIHelper.getDataValue(elem); }
+        export: function (data) { return UIHelper.getDataValue(data); }
     };
 
     var Key;
@@ -1497,6 +1502,29 @@
         return UIAnalyzer;
     }(UIDom));
 
+    var UIPipe = /** @class */ (function (_super) {
+        __extends(UIPipe, _super);
+        function UIPipe() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        UIPipe.prototype.pipeImport = function (data) {
+            if (!this.options.import || !UIHelper.isDOM(data))
+                return data;
+            return this.options.import(this.getElem(data));
+        };
+        UIPipe.prototype.pipeExport = function (data) {
+            if (!this.options.export || !UIHelper.isDOM(data))
+                return data;
+            return this.options.export(this.getElem(data));
+        };
+        UIPipe.prototype.getElem = function (data) {
+            return data instanceof jQuery
+                ? data.get(0)
+                : data;
+        };
+        return UIPipe;
+    }(UIAnalyzer));
+
     var UIManager = /** @class */ (function (_super) {
         __extends(UIManager, _super);
         function UIManager() {
@@ -1536,10 +1564,11 @@
                 .triggerHandler(this.options.id + ".input", this.getData());
         };
         UIManager.prototype.getExpression = function () {
+            var _this = this;
             return this.container
                 .find("." + this.options.id + "-item")
                 .toArray()
-                .map(function (elem) { return UIHelper.getDataValue(elem); });
+                .map(function (elem) { return _this.pipeExport(elem); });
         };
         UIManager.prototype.startDrag = function (position) {
             this.dragged = true;
@@ -1810,19 +1839,21 @@
             this.dragElem.remove();
             this.triggerUpdate();
         };
-        UIManager.prototype.insert = function (obj, position) {
-            if (!obj)
+        UIManager.prototype.insert = function (data, position) {
+            if (!data)
                 return;
+            var pipedData = this.pipeImport(data);
             if (!this.cursor || !this.cursor.length || position)
                 this.pick(position);
-            if (typeof obj === 'string' || typeof obj === 'number') {
-                this.insertValue(String(obj));
+            if (typeof pipedData === 'string' || typeof data === 'number') {
+                this.insertValue(String(pipedData));
                 return;
             }
-            if (!(obj instanceof HTMLElement || obj instanceof jQuery))
+            if (!UIHelper.isDOM(pipedData))
                 return;
-            $(obj).addClass(this.options.id + "-item");
-            $(obj).insertBefore(this.cursor);
+            var insertElem = pipedData;
+            $(insertElem).addClass(this.options.id + "-item");
+            $(insertElem).insertBefore(this.cursor);
             this.triggerUpdate();
         };
         UIManager.prototype.insertValue = function (value) {
@@ -1886,7 +1917,7 @@
             return isValid;
         };
         return UIManager;
-    }(UIAnalyzer));
+    }(UIPipe));
 
     var UIHook = /** @class */ (function (_super) {
         __extends(UIHook, _super);
@@ -1913,7 +1944,7 @@
             if (options === void 0) { options = __assign({}, defaultOptions); }
             var _this = _super.call(this) || this;
             _this.elem = elem;
-            _this.options = options;
+            _this.options = __assign({}, defaultOptions, options);
             if (_this.isAlreadyInitialized())
                 return _this;
             _this.initializeDOM();

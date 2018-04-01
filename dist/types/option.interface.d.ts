@@ -3,5 +3,5 @@ export interface OptionText {
     error?: string;
     pass?: string;
 }
-export declare type OptionImporter = <T>(data: any) => T;
+export declare type OptionImporter = (elem: HTMLElement) => HTMLElement;
 export declare type OptionExporter = (elem: HTMLElement) => any;
