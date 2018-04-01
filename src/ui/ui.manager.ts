@@ -36,7 +36,7 @@ export abstract class UIManager extends UIPipe {
 
     public getData<T extends Tree>(extractor?: (data: T) => void): T {
         const expression = this.getExpression();
-        const result = convert(<string[]>expression);
+        const result = convert(expression);
 
         if (extractor)
             extractor(result.data);

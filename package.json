@@ -61,7 +61,7 @@
   },
   "homepage": "https://github.com/KennethanCeyer/formulize#readme",
   "dependencies": {
-    "metric-parser": "0.0.8"
+    "metric-parser": "0.0.9"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
