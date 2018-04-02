@@ -1,3 +1,5 @@
+import { FormulizeTokenHelper } from '../token.helper';
+
 export class UIElementHelper {
     public static getDragElement(id: string): HTMLElement {
         return $(`<div class="${id}-drag"></div>`)[0];
@@ -8,7 +10,26 @@ export class UIElementHelper {
     }
 
     public static getUnitElement(id: string, value: string): HTMLElement {
-        return $(`<div class="${id}-item ${id}-unit">${value}</div>`)[0];
+        const unitElem = $(`<div class="${id}-item ${id}-unit"></div>`);
+        UIElementHelper.setUnitValue(id, unitElem[0], value);
+        return unitElem[0];
+    }
+
+    public static setUnitValue(id: string, elem: HTMLElement, value: string): void {
+        if (value === undefined)
+            return;
+
+        $(elem).empty();
+        const decimalValue = FormulizeTokenHelper.toDecimal(value);
+        const split = decimalValue.split('.');
+        const prefix = $(UIElementHelper.getUnitDecimalElement(id, 'prefix', split[0]));
+        prefix.appendTo($(elem));
+
+        if (split[1] === undefined)
+            return;
+
+        const suffix = $(UIElementHelper.getUnitDecimalElement(id, 'suffix', `.${split[1]}`));
+        suffix.appendTo($(elem));
     }
 
     public static getUnitDecimalElement(id: string, side: 'prefix' | 'suffix', value: string): HTMLElement {

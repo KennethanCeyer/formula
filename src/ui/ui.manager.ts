@@ -188,7 +188,7 @@ export abstract class UIManager extends UIPipe {
             prevCursorElem.text().length > 1
         ) {
             const text = prevCursorElem.text();
-            this.setUnitValue(prevCursorElem.get(0), text.substring(0, text.length - 1));
+            UIElementHelper.setUnitValue(this.options.id, prevCursorElem.get(0), text.substring(0, text.length - 1));
         } else
             prevCursorElem.remove();
 
@@ -212,7 +212,7 @@ export abstract class UIManager extends UIPipe {
             nextCursorElem.text().length > 1
         ) {
             const text = nextCursorElem.text();
-            this.setUnitValue(nextCursorElem.get(0), text.substring(1, text.length));
+            UIElementHelper.setUnitValue(this.options.id, nextCursorElem.get(0), text.substring(1, text.length));
         } else
             nextCursorElem.remove();
 

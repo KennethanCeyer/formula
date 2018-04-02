@@ -88,24 +88,7 @@ export abstract class UIDom {
         }
 
         const text = $(baseElem).text();
-        this.setUnitValue(baseElem, text);
-    }
-
-    protected setUnitValue(elem: HTMLElement, value: string) {
-        if (value === undefined)
-            return;
-
-        $(elem).empty();
-        const decimalValue = FormulizeTokenHelper.toDecimal(value);
-        const split = decimalValue.split('.');
-        const prefix = $(UIElementHelper.getUnitDecimalElement(this.options.id, 'prefix', split[0]));
-        prefix.appendTo($(elem));
-
-        if (split[1] === undefined)
-            return;
-
-        const suffix = $(UIElementHelper.getUnitDecimalElement(this.options.id, 'suffix', `.${split[1]}`));
-        suffix.appendTo($(elem));
+        UIElementHelper.setUnitValue(this.options.id, baseElem, text);
     }
 
     protected removeCursor(): void {
