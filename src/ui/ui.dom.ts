@@ -35,6 +35,12 @@ export abstract class UIDom {
         this.textBox.trigger('focus');
     }
 
+    protected bindingDOM() {
+        this.container = $(this.elem);
+        this.statusBox = this.container.prevAll(`.${this.options.id}-alert`).last();
+        this.textBox = this.container.nextAll(`.${this.options.id}-alert`).first();
+    }
+
     protected isAlreadyInitialized(): boolean {
         const selfAndContainer = $(this.elem)
             .closest(`.${this.options.id}-container`)

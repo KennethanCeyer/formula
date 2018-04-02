@@ -8,8 +8,10 @@ export abstract class UIBase extends UIHook {
         this.elem = elem;
         this.options = { ...defaultOptions, ...options };
 
-        if (this.isAlreadyInitialized())
+        if (this.isAlreadyInitialized()) {
+            this.bindingDOM();
             return;
+        }
 
         this.initializeDOM();
         this.attachEvents();
