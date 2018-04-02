@@ -426,7 +426,19 @@ formulize.setData(data);</code></pre>
         // Plugin version confirmation.
         $('.version strong').text('v' + formulize.getVersion());
 
-        var $formula = $('.formulize').formulize();
+        var $formula = $('.formulize').formulize({
+            pipe: {
+                parse: function(elem) {
+                    var $elem = $(elem);
+                    if ($elem.data('value'))
+                        return {
+                            value: $elem.data('value'),
+                            test: $elem.data('test')
+                        };
+                    else return $elem.text();
+                }
+            }
+        });
         var data = {
             operator: '+',
             operand1: {
@@ -437,6 +449,10 @@ formulize.setData(data);</code></pre>
             operand2: {value: {type: 'unit', unit: 3}}
         };
         $formula.setData(data);
+
+        const advancedFormulize = $formula.filter('.formulize-advanced').data('$formulize');
+        advancedFormulize.insert('*');
+        advancedFormulize.insert($('<span class="formulize-item formulize-custom" data-value="2", data-test="2">custom item</span>'));
 
         $('.formulize-custom')
             .draggable({
