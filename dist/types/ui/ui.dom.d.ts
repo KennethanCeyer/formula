@@ -1,5 +1,6 @@
 import { FormulizeOptions } from '../formulize.interface';
 export declare abstract class UIDom {
+    protected wrapper: JQuery;
     protected container: JQuery;
     protected statusBox: JQuery;
     protected textBox: JQuery;

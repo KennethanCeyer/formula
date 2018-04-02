@@ -1415,16 +1415,16 @@
         });
         Object.defineProperty(UIDom.prototype, "dragElem", {
             get: function () {
-                return this.container
-                    .find("." + this.options.id + "-drag");
+                return this.container.find("." + this.options.id + "-drag");
             },
             enumerable: true,
             configurable: true
         });
         UIDom.prototype.initializeDOM = function () {
-            this.container = $(this.elem);
-            this.container.addClass(this.options.id + "-container");
-            this.container.wrap("<div class=\"" + this.options.id + "-wrapper\"></div>");
+            this.wrapper = $(this.elem);
+            this.wrapper.addClass(this.options.id + "-wrapper");
+            this.container = $("<div class=\"" + this.options.id + "-container\"></div>");
+            this.container.appendTo(this.wrapper);
             this.statusBox = $("<div class=\"" + this.options.id + "-alert\">" + this.options.text.formula + "</div>");
             this.statusBox.insertBefore(this.container);
             this.textBox = $(UIElementHelper.getTextBoxElement(this.options.id));
@@ -1432,9 +1432,10 @@
             this.textBox.trigger('focus');
         };
         UIDom.prototype.bindingDOM = function () {
-            this.container = $(this.elem);
-            this.statusBox = this.container.prevAll("." + this.options.id + "-alert").last();
-            this.textBox = this.container.nextAll("." + this.options.id + "-alert").first();
+            this.wrapper = $(this.elem);
+            this.container = this.wrapper.find("." + this.options.id + "-container");
+            this.statusBox = this.wrapper.find("." + this.options.id + "-alert");
+            this.textBox = this.wrapper.find("." + this.options.id + "-text");
         };
         UIDom.prototype.isAlreadyInitialized = function () {
             var selfAndContainer = $(this.elem)

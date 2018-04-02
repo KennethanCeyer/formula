@@ -4,6 +4,7 @@ import { UIElementHelper } from './ui.element.helper';
 import { FormulizeTokenHelper } from '../token.helper';
 
 export abstract class UIDom {
+    protected wrapper: JQuery;
     protected container: JQuery;
     protected statusBox: JQuery;
     protected textBox: JQuery;
@@ -18,14 +19,15 @@ export abstract class UIDom {
     }
 
     protected get dragElem(): JQuery {
-        return this.container
-            .find(`.${this.options.id}-drag`);
+        return this.container.find(`.${this.options.id}-drag`);
     }
 
     protected initializeDOM() {
-        this.container = $(this.elem);
-        this.container.addClass(`${this.options.id}-container`);
-        this.container.wrap(`<div class="${this.options.id}-wrapper"></div>`);
+        this.wrapper = $(this.elem);
+        this.wrapper.addClass(`${this.options.id}-wrapper`);
+
+        this.container = $(`<div class="${this.options.id}-container"></div>`);
+        this.container.appendTo(this.wrapper);
 
         this.statusBox = $(`<div class="${this.options.id}-alert">${this.options.text.formula}</div>`);
         this.statusBox.insertBefore(this.container);
@@ -36,9 +38,10 @@ export abstract class UIDom {
     }
 
     protected bindingDOM() {
-        this.container = $(this.elem);
-        this.statusBox = this.container.prevAll(`.${this.options.id}-alert`).last();
-        this.textBox = this.container.nextAll(`.${this.options.id}-alert`).first();
+        this.wrapper = $(this.elem);
+        this.container = this.wrapper.find(`.${this.options.id}-container`);
+        this.statusBox = this.wrapper.find(`.${this.options.id}-alert`);
+        this.textBox = this.wrapper.find(`.${this.options.id}-text`);
     }
 
     protected isAlreadyInitialized(): boolean {

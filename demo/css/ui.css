@@ -44,7 +44,7 @@
     border: 1px solid #d8d8d8;
 }
 
-.formulize-wrapper .formulize {
+.formulize-wrapper .formulize-container {
     background-color: #f2f2f2;
     height: 300px;
 }
