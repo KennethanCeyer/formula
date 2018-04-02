@@ -2129,7 +2129,7 @@
         });
     }
 
-    var _MODULE_VERSION_$1 = '0.0.5';
+    var _MODULE_VERSION_$1 = '0.0.6';
     function getVersion$1() {
         return _MODULE_VERSION_$1;
     }
