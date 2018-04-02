@@ -7,7 +7,11 @@ export class UIPipe extends UIAnalyzer {
         if (!this.options.pipe || !this.options.pipe.insert)
             return data;
 
-        return this.options.pipe.insert(data);
+        const insertData = UIHelper.isDOM(data)
+            ? UIHelper.getDOM(data)
+            : data;
+
+        return this.options.pipe.insert(insertData);
     }
 
     protected pipeParse(elem: HTMLElement): any {

@@ -13,4 +13,4 @@ export interface Behavior {
     predicate: (...args: any[]) => boolean;
     doBehavior: () => any;
 }
-export declare type FormulizeData = string | number | HTMLElement | JQuery;
+export declare type FormulizeData = string | number | HTMLElement | JQuery | any;

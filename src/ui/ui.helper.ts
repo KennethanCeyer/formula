@@ -20,4 +20,10 @@ export class UIHelper {
     public static isDOM(data: FormulizeData): boolean {
         return data instanceof HTMLElement || data instanceof jQuery;
     }
+
+    public static getDOM(elem: HTMLElement | JQuery): HTMLElement {
+        return elem instanceof jQuery
+            ? (<JQuery>elem)[0]
+            : <HTMLElement>elem;
+    }
 }

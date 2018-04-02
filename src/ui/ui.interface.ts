@@ -16,4 +16,4 @@ export interface Behavior {
     doBehavior: () => any;
 }
 
-export type FormulizeData =  string | number | HTMLElement | JQuery;
+export type FormulizeData =  string | number | HTMLElement | JQuery | any;

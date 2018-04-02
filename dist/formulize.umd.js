@@ -1391,6 +1391,11 @@
         UIHelper.isDOM = function (data) {
             return data instanceof HTMLElement || data instanceof jQuery;
         };
+        UIHelper.getDOM = function (elem) {
+            return elem instanceof jQuery
+                ? elem[0]
+                : elem;
+        };
         return UIHelper;
     }());
 
@@ -1509,7 +1514,10 @@
         UIPipe.prototype.pipeInsert = function (data) {
             if (!this.options.pipe || !this.options.pipe.insert)
                 return data;
-            return this.options.pipe.insert(data);
+            var insertData = UIHelper.isDOM(data)
+                ? UIHelper.getDOM(data)
+                : data;
+            return this.options.pipe.insert(insertData);
         };
         UIPipe.prototype.pipeParse = function (elem) {
             if (!this.options.pipe || !this.options.pipe.parse)
@@ -1845,9 +1853,9 @@
             }
             if (!UIHelper.isDOM(pipedData))
                 return;
-            var insertElem = pipedData;
-            $(insertElem).addClass(this.options.id + "-item");
-            $(insertElem).insertBefore(this.cursor);
+            var insertElem = $(pipedData);
+            insertElem.addClass(this.options.id + "-item");
+            insertElem.insertBefore(this.cursor);
             this.triggerUpdate();
         };
         UIManager.prototype.insertValue = function (value) {
