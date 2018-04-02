@@ -14,11 +14,13 @@
 }
 
 .formulize-custom {
+    height: auto !important;
     font-family: 'Inconsolata', 'Consolas', sans-serif !important;
+    border-radius: 0 !important;
     color: #000000;
     font-weight: 600;
     border: 1px solid #d8d8d8;
-    padding: .6em 1em;
+    padding: .6em 1em !important;
     background-color: #ffffff;
     box-shadow: 2px 3px 1px rgba(0, 0, 0, .125);
     margin: 0 1.6em;
@@ -26,6 +28,10 @@
 
 .formulize-custom:hover {
     background-color: #fafafa;
+}
+
+.formulize-wrapper .formulize-custom {
+    padding: .2em .6em !important;
 }
 
 .formulize-drop .formulize-drop-items {

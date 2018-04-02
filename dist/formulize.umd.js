@@ -1378,7 +1378,9 @@
         }
         UIHelper.getDataValue = function (data) {
             if (!UIHelper.isDOM(data))
-                return String(data);
+                return StringHelper$1.isNumeric(data)
+                    ? StringHelper$1.toNumber(String(data))
+                    : data;
             var value = $(data).data('value') || $(data).text();
             return StringHelper$1.isNumeric(value)
                 ? StringHelper$1.toNumber(String(value))
@@ -1570,7 +1572,8 @@
             return this.container
                 .find("." + this.options.id + "-item")
                 .toArray()
-                .map(function (elem) { return _this.pipeParse(elem); });
+                .map(function (elem) { return _this.pipeParse(elem); })
+                .map(function (value) { return UIHelper.getDataValue(value); });
         };
         UIManager.prototype.startDrag = function (position) {
             this.dragged = true;

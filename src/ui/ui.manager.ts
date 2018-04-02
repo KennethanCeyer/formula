@@ -54,7 +54,8 @@ export abstract class UIManager extends UIPipe {
         return this.container
             .find(`.${this.options.id}-item`)
             .toArray()
-            .map(elem => this.pipeParse(elem));
+            .map(elem => this.pipeParse(elem))
+            .map(value => UIHelper.getDataValue(value));
     }
 
     protected startDrag(position: Position): void {
