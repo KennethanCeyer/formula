@@ -1,4 +1,4 @@
-const _MODULE_VERSION_ = '0.0.3';
+const _MODULE_VERSION_ = '0.0.4';
 
 export function getVersion(): string {
     return _MODULE_VERSION_;
