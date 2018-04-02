@@ -9,6 +9,7 @@ export declare abstract class UIDom {
     protected readonly cursorIndex: number;
     protected readonly dragElem: JQuery;
     protected initializeDOM(): void;
+    protected bindingDOM(): void;
     protected isAlreadyInitialized(): boolean;
     protected attachEvents(): void;
     protected getPrevUnit(elem: HTMLElement): HTMLElement;

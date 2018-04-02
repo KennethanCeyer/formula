@@ -1431,6 +1431,11 @@
             this.textBox.insertAfter(this.container);
             this.textBox.trigger('focus');
         };
+        UIDom.prototype.bindingDOM = function () {
+            this.container = $(this.elem);
+            this.statusBox = this.container.prevAll("." + this.options.id + "-alert").last();
+            this.textBox = this.container.nextAll("." + this.options.id + "-alert").first();
+        };
         UIDom.prototype.isAlreadyInitialized = function () {
             var selfAndContainer = $(this.elem)
                 .closest("." + this.options.id + "-container")
@@ -1944,8 +1949,10 @@
             var _this = _super.call(this) || this;
             _this.elem = elem;
             _this.options = __assign({}, defaultOptions, options);
-            if (_this.isAlreadyInitialized())
+            if (_this.isAlreadyInitialized()) {
+                _this.bindingDOM();
                 return _this;
+            }
             _this.initializeDOM();
             _this.attachEvents();
             return _this;
@@ -2119,7 +2126,7 @@
         });
     }
 
-    var _MODULE_VERSION_$1 = '0.0.4';
+    var _MODULE_VERSION_$1 = '0.0.5';
     function getVersion$1() {
         return _MODULE_VERSION_$1;
     }
