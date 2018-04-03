@@ -175,6 +175,10 @@ pre, code, code span {
     font-style: italic;
 }
 
+.token.operator {
+    background-color: transparent;
+}
+
 .token.function,
 .token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol, .token.deleted {
     color: #ff4848;
