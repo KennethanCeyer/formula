@@ -45,10 +45,7 @@ export abstract class UIDom {
     }
 
     protected isAlreadyInitialized(): boolean {
-        const selfAndContainer = $(this.elem)
-            .closest(`.${this.options.id}-container`)
-            .add(this.elem);
-        return !!selfAndContainer.filter(`.${this.options.id}-container`).length;
+        return !!$(this.elem).data('$formulize');
     }
 
     protected attachEvents() {
