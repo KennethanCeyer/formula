@@ -1453,7 +1453,7 @@
             this.textBox = this.wrapper.find("." + this.options.id + "-text");
         };
         UIDom.prototype.isAlreadyInitialized = function () {
-            return !!$(this.elem).data('$formulize');
+            return $(this.elem).hasClass("." + this.options.id + "-wrapper");
         };
         UIDom.prototype.attachEvents = function () {
             throw new Error('method not implemented');
@@ -2126,7 +2126,7 @@
         });
     }
 
-    var _MODULE_VERSION_$1 = '0.0.7';
+    var _MODULE_VERSION_$1 = '0.0.8';
     function getVersion$1() {
         return _MODULE_VERSION_$1;
     }
