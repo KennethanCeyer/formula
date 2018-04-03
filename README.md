@@ -7,7 +7,7 @@
 <p align="center">
     <a href="https://badge.fury.io/js/formulize"><img src="https://badge.fury.io/js/formulize.svg" alt="npm version"></a>
     <a href="https://gitter.im/KennethanCeyer/PIGNOSE?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/KennethanCeyer/PIGNOSE"></a>
-    <a href="https://github.com/KennethanCeyer/formulize/network"><img src="https://img.shields.io/github/forks/KennethanCeyer/formulize.svg" alt="GitHub forks"></a>
+    <a href="https://github.com/KennethanCeyer/formulize/network"><img src="https://img.shields.io/github/stars/KennethanCeyer/formulize.svg" alt="GitHub stars"></a>
     <a href="https://github.com/KennethanCeyer/formulize/blob/master/LICENSE"><img src="https://img.shields.io/github/license/KennethanCeyer/formulize.svg" alt="GitHub license"></a>
 </p>
 
