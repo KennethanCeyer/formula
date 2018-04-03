@@ -45,7 +45,7 @@ export abstract class UIDom {
     }
 
     protected isAlreadyInitialized(): boolean {
-        return !!$(this.elem).data('$formulize');
+        return $(this.elem).hasClass(`.${this.options.id}-wrapper`);
     }
 
     protected attachEvents() {
