@@ -1,6 +1,6 @@
 {
   "name": "formulize",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "formula UI generator",
   "main": "dist/formulize.umd.js",
   "typings": "dist/types/formulize.d.ts",
