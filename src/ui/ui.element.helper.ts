@@ -15,6 +15,18 @@ export class UIElementHelper {
         return unitElem[0];
     }
 
+    public static getUnitDecimalElement(id: string, side: 'prefix' | 'suffix', value: string): HTMLElement {
+        return $(`<span class="${id}-${side} ${id}-decimal-highlight">${value || ''}</span>`)[0];
+    }
+
+    public static getOperatorElement(id: string, value: string): HTMLElement {
+        return $(`<div class="${id}-item ${id}-operator">${(value || '').toLowerCase()}</div>`)[0];
+    }
+
+    public static getTextBoxElement(id: string): HTMLElement {
+        return $(`<textarea id="${id}-text" name="${id}-text" class="${id}-text"></textarea>`)[0];
+    }
+
     public static setUnitValue(id: string, elem: HTMLElement, value: string): void {
         if (value === undefined)
             return;
@@ -32,23 +44,10 @@ export class UIElementHelper {
         suffix.appendTo($(elem));
     }
 
-    public static getUnitDecimalElement(id: string, side: 'prefix' | 'suffix', value: string): HTMLElement {
-        return $(`<span class="${id}-${side} ${id}-decimal-highlight">${value}</span>`)[0];
-    }
-
-    public static getOperatorElement(id: string, value: string): HTMLElement {
-        return $(`<div class="${id}-item ${id}-operator">${value.toLowerCase()}</div>`)[0];
-    }
-
-    public static getTextBoxElement(id: string): HTMLElement {
-        return $(`<textarea id="${id}-text" name="${id}-text" class="${id}-text"></textarea>`)[0];
-    }
-
     public static isElementType(id: string, type: string, elem: HTMLElement): boolean {
-        if (!elem)
-            return;
-
-        return $(elem).hasClass(`${id}-${type}`);
+        return elem
+            ? $(elem).hasClass(`${id}-${type}`)
+            : false;
     }
 
     public static isDrag(id: string, elem: HTMLElement): boolean {
