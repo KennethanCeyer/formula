@@ -34,9 +34,17 @@ describe('test class: UIElementHelper', () => {
             expect(elem.classList.contains(`${id}-unit`)).to.be.true;
             expect(elem.children.length).to.equal(0);
         });
-    });
 
-    describe('test method: UIElementHelper.getUnitElement()', () => {
+        it('should return an HTMLElement contained an child what contained empty child with +', () => {
+            const elem = UIElementHelper.getUnitElement(id, '+');
+            expect(elem.classList.contains(`${id}-item`)).to.be.true;
+            expect(elem.classList.contains(`${id}-unit`)).to.be.true;
+            expect(elem.children.length).to.equal(1);
+            expect(elem.children[0].classList.contains(`${id}-prefix`)).to.be.true;
+            expect(elem.children[0].classList.contains(`${id}-decimal-highlight`)).to.be.true;
+            expect(elem.children[0].textContent).to.be.empty;
+        });
+
         it('should return an HTMLElement contained a prefix child child with 1', () => {
             const elem = UIElementHelper.getUnitElement(id, '1');
             expect(elem.classList.contains(`${id}-item`)).to.be.true;
@@ -46,9 +54,7 @@ describe('test class: UIElementHelper', () => {
             expect(elem.children[0].classList.contains(`${id}-decimal-highlight`)).to.be.true;
             expect(elem.children[0].textContent).to.equal('1');
         });
-    });
 
-    describe('test method: UIElementHelper.getUnitElement()', () => {
         it('should return an HTMLElement contained a prefix child child with 1000', () => {
             const elem = UIElementHelper.getUnitElement(id, '1000');
             expect(elem.classList.contains(`${id}-item`)).to.be.true;
@@ -58,9 +64,7 @@ describe('test class: UIElementHelper', () => {
             expect(elem.children[0].classList.contains(`${id}-decimal-highlight`)).to.be.true;
             expect(elem.children[0].textContent).to.equal('1,000');
         });
-    });
 
-    describe('test method: UIElementHelper.getUnitElement()', () => {
         it('should return an HTMLElement contained a prefix child child with 1000.1', () => {
             const elem = UIElementHelper.getUnitElement(id, '1000.1');
             expect(elem.classList.contains(`${id}-item`)).to.be.true;
