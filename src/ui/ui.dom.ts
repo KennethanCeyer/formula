@@ -100,17 +100,23 @@ export abstract class UIDom {
             .remove();
     }
 
-    protected turnValid(): void {
-        this.statusBox
-            .text(this.options.text.pass)
-            .addClass(`${this.options.id}-alert-good`)
-            .removeClass(`${this.options.id}-alert-error`);
-    }
+    protected updateStatus(valid: boolean = false): void {
+        const statusText = valid
+            ? this.options.text.pass
+            : this.options.text.error;
 
-    protected turnInvalid(): void {
+        const addClass = valid
+            ? `${this.options.id}-alert-good`
+            : `${this.options.id}-alert-error`;
+
+        const removeClass = valid
+            ? `${this.options.id}-alert-error`
+            : `${this.options.id}-alert-good`;
+
+
         this.statusBox
-            .text(this.options.text.error)
-            .removeClass(`${this.options.id}-alert-good`)
-            .addClass(`${this.options.id}-alert-error`);
+            .text(statusText)
+            .addClass(addClass)
+            .removeClass(removeClass);
     }
 }
