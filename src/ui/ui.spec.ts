@@ -17,7 +17,6 @@ describe('test class: UI', () => {
     });
 
     describe('test method: new UI()', () => {
-
         it('should expected to work without exception', () => {
             expect(() => new UI(elem)).to.be.not.throws;
         });
