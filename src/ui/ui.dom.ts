@@ -99,4 +99,18 @@ export abstract class UIDom {
             .find(`:not(".${this.options.id}-cursor")`)
             .remove();
     }
+
+    protected turnValid(): void {
+        this.statusBox
+            .text(this.options.text.pass)
+            .addClass(`${this.options.id}-alert-good`)
+            .removeClass(`${this.options.id}-alert-error`);
+    }
+
+    protected turnInvalid(): void {
+        this.statusBox
+            .text(this.options.text.error)
+            .removeClass(`${this.options.id}-alert-good`)
+            .addClass(`${this.options.id}-alert-error`);
+    }
 }

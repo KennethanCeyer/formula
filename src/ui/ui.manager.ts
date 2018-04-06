@@ -468,18 +468,10 @@ export abstract class UIManager extends UIPipe {
             return;
 
         const isValid = valid(data);
-        if (isValid) {
-            this.statusBox
-                .text(this.options.text.pass)
-                .addClass(`${this.options.id}-alert-good`)
-                .removeClass(`${this.options.id}-alert-error`);
-        }
-        else {
-            this.statusBox
-                .text(this.options.text.error)
-                .removeClass(`${this.options.id}-alert-good`)
-                .addClass(`${this.options.id}-alert-error`);
-        }
+
+        isValid
+            ? this.turnValid()
+            : this.turnInvalid();
 
         if (extractor)
             extractor(isValid);
