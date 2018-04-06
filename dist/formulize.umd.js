@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('metric-parser/dist/types/ast.d')) :
-    typeof define === 'function' && define.amd ? define(['exports', 'metric-parser/dist/types/ast.d'], factory) :
-    (factory((global.formulize = {}),global.ast_d));
-}(this, (function (exports,ast_d) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+    typeof define === 'function' && define.amd ? define(['exports'], factory) :
+    (factory((global.formulize = {})));
+}(this, (function (exports) { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -2187,7 +2187,6 @@
 
     pluginBinder();
 
-    Object.keys(ast_d).forEach(function (key) { exports[key] = ast_d[key]; });
     exports.UI = UI;
     exports.getVersion = getVersion$1;
 
