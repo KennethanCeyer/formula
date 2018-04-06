@@ -105,18 +105,14 @@ export abstract class UIDom {
             ? this.options.text.pass
             : this.options.text.error;
 
-        const addClass = valid
-            ? `${this.options.id}-alert-good`
-            : `${this.options.id}-alert-error`;
-
-        const removeClass = valid
-            ? `${this.options.id}-alert-error`
-            : `${this.options.id}-alert-good`;
-
+        const statusBaseClasses = ['good', 'error'];
+        const statusClasses = valid
+            ? statusBaseClasses
+            : statusBaseClasses.reverse();
 
         this.statusBox
             .text(statusText)
-            .addClass(addClass)
-            .removeClass(removeClass);
+            .addClass(`${this.options.id}-alert-${statusClasses[0]}`)
+            .removeClass(`${this.options.id}-alert-${statusClasses[1]}`);
     }
 }

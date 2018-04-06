@@ -468,7 +468,7 @@ export abstract class UIManager extends UIPipe {
             return;
 
         const isValid = valid(data);
-        
+
         this.updateStatus(isValid);
 
         if (extractor)
