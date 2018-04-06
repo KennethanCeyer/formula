@@ -1397,6 +1397,15 @@
             UIElementHelper.setUnitValue(id, unitElem[0], value);
             return unitElem[0];
         };
+        UIElementHelper.getUnitDecimalElement = function (id, side, value) {
+            return $("<span class=\"" + id + "-" + side + " " + id + "-decimal-highlight\">" + (value || '') + "</span>")[0];
+        };
+        UIElementHelper.getOperatorElement = function (id, value) {
+            return $("<div class=\"" + id + "-item " + id + "-operator\">" + (value || '').toLowerCase() + "</div>")[0];
+        };
+        UIElementHelper.getTextBoxElement = function (id) {
+            return $("<textarea id=\"" + id + "-text\" name=\"" + id + "-text\" class=\"" + id + "-text\"></textarea>")[0];
+        };
         UIElementHelper.setUnitValue = function (id, elem, value) {
             if (value === undefined)
                 return;
@@ -1410,19 +1419,10 @@
             var suffix = $(UIElementHelper.getUnitDecimalElement(id, 'suffix', "." + split[1]));
             suffix.appendTo($(elem));
         };
-        UIElementHelper.getUnitDecimalElement = function (id, side, value) {
-            return $("<span class=\"" + id + "-" + side + " " + id + "-decimal-highlight\">" + value + "</span>")[0];
-        };
-        UIElementHelper.getOperatorElement = function (id, value) {
-            return $("<div class=\"" + id + "-item " + id + "-operator\">" + value.toLowerCase() + "</div>")[0];
-        };
-        UIElementHelper.getTextBoxElement = function (id) {
-            return $("<textarea id=\"" + id + "-text\" name=\"" + id + "-text\" class=\"" + id + "-text\"></textarea>")[0];
-        };
         UIElementHelper.isElementType = function (id, type, elem) {
-            if (!elem)
-                return;
-            return $(elem).hasClass(id + "-" + type);
+            return elem
+                ? $(elem).hasClass(id + "-" + type)
+                : false;
         };
         UIElementHelper.isDrag = function (id, elem) {
             return UIElementHelper.isElementType(id, 'drag', elem);
@@ -1549,6 +1549,20 @@
             this.container
                 .find(":not(\"." + this.options.id + "-cursor\")")
                 .remove();
+        };
+        UIDom.prototype.updateStatus = function (valid) {
+            if (valid === void 0) { valid = false; }
+            var statusText = valid
+                ? this.options.text.pass
+                : this.options.text.error;
+            var statusBaseClasses = ['good', 'error'];
+            var statusClasses = valid
+                ? statusBaseClasses
+                : statusBaseClasses.reverse();
+            this.statusBox
+                .text(statusText)
+                .addClass(this.options.id + "-alert-" + statusClasses[0])
+                .removeClass(this.options.id + "-alert-" + statusClasses[1]);
         };
         return UIDom;
     }());
@@ -1955,18 +1969,7 @@
             if (!data)
                 return;
             var isValid = valid(data);
-            if (isValid) {
-                this.statusBox
-                    .text(this.options.text.pass)
-                    .addClass(this.options.id + "-alert-good")
-                    .removeClass(this.options.id + "-alert-error");
-            }
-            else {
-                this.statusBox
-                    .text(this.options.text.error)
-                    .removeClass(this.options.id + "-alert-good")
-                    .addClass(this.options.id + "-alert-error");
-            }
+            this.updateStatus(isValid);
             if (extractor)
                 extractor(isValid);
             return isValid;

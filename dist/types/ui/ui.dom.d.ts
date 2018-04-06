@@ -18,4 +18,5 @@ export declare abstract class UIDom {
     protected mergeUnit(baseElem: HTMLElement): void;
     protected removeCursor(): void;
     protected removeUnit(): void;
+    protected updateStatus(valid?: boolean): void;
 }
