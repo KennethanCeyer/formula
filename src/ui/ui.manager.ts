@@ -104,32 +104,18 @@ export abstract class UIManager extends UIPipe {
     }
 
     private findClosestUnit(position: Position): HTMLElement {
-        const containerPosition = {
-            x: this.container.offset().left,
-            y: this.container.offset().top
-        };
-
-        const parentPadding: Position = {
-            x: Number(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
-            y: Number(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
-        };
-
         const unitPositions: ElementPosition[] = this.container
             .children(`*:not(".${this.options.id}-cursor")`)
             .toArray()
             .map(elem => ({
                 elem,
-                x: $(elem).offset().left - containerPosition.x + parentPadding.x,
-                y: $(elem).offset().top - containerPosition.y
+                x: $(elem).position().left + $(elem).outerWidth(),
+                y: $(elem).position().top
             }));
 
-        let maxY = 0;
         const closestUnitPositions = unitPositions
-            .filter(unitPosition => unitPosition.x <= position.x)
+            .filter(unitPosition => unitPosition.x <= position.x && unitPosition.y <= position.y)
             .map(unitPosition => {
-                if (unitPosition.y < maxY * 0.5)
-                    return undefined;
-
                 const diffX = Math.abs(position.x - unitPosition.x);
                 const diffY = Math.abs(position.y - unitPosition.y);
                 return {
@@ -138,6 +124,7 @@ export abstract class UIManager extends UIPipe {
                 };
             })
             .filter(unitPosition => !!unitPosition);
+        const maxY = Math.max(...closestUnitPositions.map(unitPosition => unitPosition.y));
         const filteredUnitPositions = closestUnitPositions.filter(unitPosition => unitPosition.y === maxY).length
             ? closestUnitPositions.filter(unitPosition => unitPosition.y === maxY)
             : closestUnitPositions.filter(unitPosition => unitPosition.y <= position.y);

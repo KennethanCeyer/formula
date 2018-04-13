@@ -1680,33 +1680,23 @@
             this.selectRange(positions[0], positions[1]);
         };
         UIManager.prototype.findClosestUnit = function (position) {
-            var containerPosition = {
-                x: this.container.offset().left,
-                y: this.container.offset().top
-            };
-            var parentPadding = {
-                x: Number(this.container.css('padding-left').replace(/[^\d.]/gi, '')),
-                y: Number(this.container.css('padding-top').replace(/[^\d.]/gi, ''))
-            };
             var unitPositions = this.container
                 .children("*:not(\"." + this.options.id + "-cursor\")")
                 .toArray()
                 .map(function (elem) { return ({
                 elem: elem,
-                x: $(elem).offset().left - containerPosition.x + parentPadding.x,
-                y: $(elem).offset().top - containerPosition.y
+                x: $(elem).position().left + $(elem).outerWidth(),
+                y: $(elem).position().top
             }); });
-            var maxY = 0;
             var closestUnitPositions = unitPositions
-                .filter(function (unitPosition) { return unitPosition.x <= position.x; })
+                .filter(function (unitPosition) { return unitPosition.x <= position.x && unitPosition.y <= position.y; })
                 .map(function (unitPosition) {
-                if (unitPosition.y < maxY * 0.5)
-                    return undefined;
                 var diffX = Math.abs(position.x - unitPosition.x);
                 var diffY = Math.abs(position.y - unitPosition.y);
                 return __assign({}, unitPosition, { diff: { x: diffX, y: diffY } });
             })
                 .filter(function (unitPosition) { return !!unitPosition; });
+            var maxY = Math.max.apply(Math, closestUnitPositions.map(function (unitPosition) { return unitPosition.y; }));
             var filteredUnitPositions = closestUnitPositions.filter(function (unitPosition) { return unitPosition.y === maxY; }).length
                 ? closestUnitPositions.filter(function (unitPosition) { return unitPosition.y === maxY; })
                 : closestUnitPositions.filter(function (unitPosition) { return unitPosition.y <= position.y; });
