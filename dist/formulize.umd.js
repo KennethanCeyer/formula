@@ -2170,7 +2170,7 @@
         });
     }
 
-    var _MODULE_VERSION_$1 = '0.0.10';
+    var _MODULE_VERSION_$1 = '0.0.11';
     function getVersion$1() {
         return _MODULE_VERSION_$1;
     }
