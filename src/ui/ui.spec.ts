@@ -1,9 +1,11 @@
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { UI } from './ui';
+import { FormulizeGlobal } from '../formulize.interface';
+
+declare const global: FormulizeGlobal;
 
 describe('test class: UI', () => {
-    const id = 'formulize';
     let elem: HTMLElement;
 
     beforeEach(() => {

@@ -1,6 +1,9 @@
 import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { UIElementHelper } from './ui.element.helper';
+import { FormulizeGlobal } from '../formulize.interface';
+
+declare const global: FormulizeGlobal;
 
 describe('test class: UIElementHelper', () => {
     const id = 'formulize';
