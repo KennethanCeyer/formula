@@ -958,6 +958,9 @@ img { max-width: 100%; }
 			<a href="elementposition.html" class="tsd-kind-icon">Element<wbr>Position</a>
 		</li>
 		<li class=" tsd-kind-interface">
+			<a href="formulizeeventoptions.html" class="tsd-kind-icon">Formulize<wbr>Event<wbr>Options</a>
+		</li>
+		<li class=" tsd-kind-interface">
 			<a href="formulizefunction.html" class="tsd-kind-icon">Formulize<wbr>Function</a>
 		</li>
 		<li class=" tsd-kind-interface">
@@ -975,6 +978,9 @@ img { max-width: 100%; }
 				<li class=" tsd-kind-property tsd-parent-kind-interface">
 					<a href="formulizeoptions.html#text" class="tsd-kind-icon">text</a>
 				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited">
+					<a href="formulizeoptions.html#input" class="tsd-kind-icon">input</a>
+				</li>
 			</ul>
 		</li>
 		<li class=" tsd-kind-interface">
@@ -988,6 +994,9 @@ img { max-width: 100%; }
 		</li>
 		<li class=" tsd-kind-type-alias">
 			<a href="../globals.html#formulizedata" class="tsd-kind-icon">Formulize<wbr>Data</a>
+		</li>
+		<li class=" tsd-kind-type-alias">
+			<a href="../globals.html#formulizeevent" class="tsd-kind-icon">Formulize<wbr>Event</a>
 		</li>
 		<li class=" tsd-kind-type-alias">
 			<a href="../globals.html#pipeinsert" class="tsd-kind-icon">Pipe<wbr>Insert</a>
@@ -1027,7 +1036,12 @@ img { max-width: 100%; }
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">FormulizeOptions</span>
+					<a href="formulizeeventoptions.html" class="tsd-signature-type">FormulizeEventOptions</a>
+					<ul class="tsd-hierarchy">
+						<li>
+							<span class="target">FormulizeOptions</span>
+						</li>
+					</ul>
 				</li>
 			</ul>
 		</section>
@@ -1043,6 +1057,12 @@ img { max-width: 100%; }
 							<li class="tsd-kind-property tsd-parent-kind-interface"><a href="formulizeoptions.html#text" class="tsd-kind-icon">text</a></li>
 						</ul>
 					</section>
+					<section class="tsd-index-section tsd-is-inherited">
+						<h3>Methods</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited"><a href="formulizeoptions.html#input" class="tsd-kind-icon">input</a></li>
+						</ul>
+					</section>
 				</div>
 			</section>
 		</section>
@@ -1054,7 +1074,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formulize/blob/0315532/src/formulize.interface.ts#L14">formulize.interface.ts:14</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formulize/blob/6561ca7/src/formulize.interface.ts#L16">formulize.interface.ts:16</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1064,7 +1084,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">pipe<span class="tsd-signature-symbol">:</span> <a href="optionpipe.html" class="tsd-signature-type">OptionPipe</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formulize/blob/0315532/src/formulize.interface.ts#L16">formulize.interface.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formulize/blob/6561ca7/src/formulize.interface.ts#L18">formulize.interface.ts:18</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1074,9 +1094,42 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">text<span class="tsd-signature-symbol">:</span> <a href="optiontext.html" class="tsd-signature-type">OptionText</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/KennethanCeyer/formulize/blob/0315532/src/formulize.interface.ts#L15">formulize.interface.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/KennethanCeyer/formulize/blob/6561ca7/src/formulize.interface.ts#L17">formulize.interface.ts:17</a></li>
 					</ul>
 				</aside>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited">
+				<a name="input" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> input</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">input&lt;T&gt;<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="formulizeeventoptions.html">FormulizeEventOptions</a>.<a href="formulizeeventoptions.html#input">input</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/KennethanCeyer/formulize/blob/6561ca7/src/formulize.interface.ts#L22">formulize.interface.ts:22</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Tree</span></h4>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>value: <span class="tsd-signature-type">T</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
 			</section>
 		</section>
 		<footer class="with-border-bottom">
