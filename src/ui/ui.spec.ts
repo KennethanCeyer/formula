@@ -34,22 +34,82 @@ describe('test class: UI', () => {
         });
     });
 
-    describe('test method: setData() and getData()', () => {
-       it('should returns correct data with 1 + 2 + 3', () => {
-           const ui = new UI(elem);
-           const data = {
-               operator: '+',
-               operand1: {
-                   operator: '+',
-                   operand1: { value: { type: 'unit', unit: 1 } },
-                   operand2:{ value: { type: 'unit', unit: 2 } }
-               },
-               operand2: { value: { type: 'unit', unit: 3 } }
-           };
+    describe('test method: setData()', () => {
+        it('should not throws error', () => {
+            const ui = new UI(elem);
+            const data = {
+                operator: '+',
+                operand1: {
+                    operator: '+',
+                    operand1: { value: { type: 'unit', unit: 1 } },
+                    operand2:{ value: { type: 'unit', unit: 2 } }
+                },
+                operand2: { value: { type: 'unit', unit: 3 } }
+            };
 
-           ui.setData(data);
-           expect(ui.getData()).to.be.deep.equal(data);
-       });
+            expect(() => ui.setData(data)).to.be.not.throws;
+        });
+    });
+
+    describe('test method: getData()', () => {
+        it('should returns correct data with 1 + 2 + 3', () => {
+            const ui = new UI(elem);
+            const data = {
+                operator: '+',
+                operand1: {
+                    operator: '+',
+                    operand1: { value: { type: 'unit', unit: 1 } },
+                    operand2:{ value: { type: 'unit', unit: 2 } }
+                },
+                operand2: { value: { type: 'unit', unit: 3 } }
+            };
+
+            ui.setData(data);
+            expect(ui.getData()).to.be.deep.equal(data);
+        });
+    });
+
+    describe('test method: selectAll()', () => {
+        it('should 5 items are dragged', () => {
+            const ui = new UI(elem);
+            const data = {
+                operator: '+',
+                operand1: {
+                    operator: '+',
+                    operand1: { value: { type: 'unit', unit: 1 } },
+                    operand2:{ value: { type: 'unit', unit: 2 } }
+                },
+                operand2: { value: { type: 'unit', unit: 3 } }
+            };
+
+            ui.setData(data);
+            ui.selectAll();
+            const $selectedItems = $(elem).find(`.${ui.options.id}-drag .${ui.options.id}-item`);
+            expect($selectedItems.length).to.be.equal(5);
+        });
+    });
+
+    describe('test method: removeDrag()', () => {
+        it('should 0 items are dragged', () => {
+            const ui = new UI(elem);
+            const data = {
+                operator: '+',
+                operand1: {
+                    operator: '+',
+                    operand1: { value: { type: 'unit', unit: 1 } },
+                    operand2:{ value: { type: 'unit', unit: 2 } }
+                },
+                operand2: { value: { type: 'unit', unit: 3 } }
+            };
+
+            ui.setData(data);
+            ui.selectAll();
+            ui.removeDrag();
+            const $items = $(elem).find(`.${ui.options.id}-item`);
+            const $selectedItems = $(elem).find(`.${ui.options.id}-drag .${ui.options.id}-item`);
+            expect($items.length).to.be.equal(5);
+            expect($selectedItems.length).to.be.equal(0);
+        });
     });
 
     describe('test method: blur()', () => {
