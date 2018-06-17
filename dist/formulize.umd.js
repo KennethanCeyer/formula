@@ -1628,6 +1628,7 @@
             this.cursor = $(UIElementHelper.getCursorElement(this.options.id));
             this.cursor.appendTo(this.container);
             var closestUnitElem = this.findClosestUnit(position);
+            console.log('closed', closestUnitElem);
             if (closestUnitElem)
                 this.cursor.insertAfter(closestUnitElem);
             else

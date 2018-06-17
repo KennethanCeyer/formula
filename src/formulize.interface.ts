@@ -6,6 +6,7 @@ export * from 'metric-parser/dist/types/tree/simple.tree/type.d';
 export interface FormulizeGlobal extends NodeJS.Global {
     window: Window;
     document: Document;
+    HTMLElement: typeof HTMLElement;
     $: JQueryStatic;
     jQuery: JQueryStatic;
 }

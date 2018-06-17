@@ -1,16 +1,14 @@
 import { FormulizeOptions } from '../formulize.interface';
-import { defaultOptions } from '../option.value';
 import { UIElementHelper } from './ui.element.helper';
-import { FormulizeTokenHelper } from '../token.helper';
 
 export abstract class UIDom {
+    public options: Readonly<FormulizeOptions>;
     protected wrapper: JQuery;
     protected container: JQuery;
     protected statusBox: JQuery;
     protected textBox: JQuery;
     protected cursor: JQuery;
     protected elem: HTMLElement;
-    protected options: FormulizeOptions;
 
     protected get cursorIndex(): number {
         return this.cursor
