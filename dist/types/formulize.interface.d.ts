@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference types="mocha" />
 /// <reference types="jquery" />
 import { OptionText, PipeParse, PipeInsert } from './option.interface';
 export * from 'metric-parser/dist/types/ast.d';

@@ -10,11 +10,11 @@ export declare abstract class UIManager extends UIPipe {
     setData(data: Tree): void;
     getData<T extends Tree>(extractor?: (data: T) => void): T;
     protected triggerUpdate(): void;
-    private getExpression();
+    private getExpression;
     protected startDrag(position: Position): void;
     protected endDrag(position: Position): void;
     protected moveDrag(position: Position): void;
-    private findClosestUnit(position);
+    private findClosestUnit;
     selectAll(): void;
     selectRange(start: number, end: number): void;
     protected removeBefore(): void;
@@ -23,8 +23,8 @@ export declare abstract class UIManager extends UIPipe {
     protected dragLast(): void;
     protected dragLeft(): void;
     protected dragRight(): void;
-    private moveCursorBefore(elem);
-    private moveCursorAfter(elem);
+    private moveCursorBefore;
+    private moveCursorAfter;
     protected moveLeftCursor(dragMode?: boolean): void;
     protected moveUpCursor(): void;
     protected moveRightCursor(dragMode?: boolean): void;
