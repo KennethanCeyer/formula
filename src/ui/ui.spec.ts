@@ -79,4 +79,64 @@ describe('test class: UI', () => {
             expect($afterBlurCursor.length).to.be.equal(0);
         });
     });
+
+    describe('test option: input()', () => {
+        it('should returns 1 + 2 + 3 with input() function', done => {
+            let streamIndex = 0;
+            const data = {
+                operator: '+',
+                operand1: {
+                    operator: '+',
+                    operand1: { value: { type: 'unit', unit: 1 } },
+                    operand2:{ value: { type: 'unit', unit: 2 } }
+                },
+                operand2: { value: { type: 'unit', unit: 3 } }
+            };
+            const ui = new UI(elem, {
+                input: value => {
+                    streamIndex += 1;
+                    if (streamIndex < 6)
+                        return;
+
+                    try {
+                        expect(value).to.be.deep.equal(data);
+                        done();
+                    } catch(e) {
+                        done(e);
+                    }
+                }
+            });
+
+            ui.setData(data);
+        });
+
+        it('should returns 1 + 2 + 3 with on(`input`) function', done => {
+            const ui = new UI(elem);
+            const data = {
+                operator: '+',
+                operand1: {
+                    operator: '+',
+                    operand1: { value: { type: 'unit', unit: 1 } },
+                    operand2:{ value: { type: 'unit', unit: 2 } }
+                },
+                operand2: { value: { type: 'unit', unit: 3 } }
+            };
+            let streamIndex = 0;
+
+            $(elem).on(`${ui.options.id}.input`, (_: JQuery.Event, value) => {
+                streamIndex += 1;
+                if (streamIndex < 6)
+                    return;
+
+                try {
+                    expect(value).to.be.deep.equal(data);
+                    done();
+                } catch(e) {
+                    done(e);
+                }
+            });
+
+            ui.setData(data);
+        });
+    });
 });
