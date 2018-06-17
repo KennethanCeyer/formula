@@ -17,3 +17,5 @@ export interface Behavior {
 }
 
 export type FormulizeData =  string | number | HTMLElement | JQuery | any;
+
+export type FormulizeEvent = 'input';

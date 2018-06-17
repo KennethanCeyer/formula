@@ -1611,6 +1611,12 @@
                 return UIHelper.getDataValue(elem);
             return this.options.pipe.parse(elem);
         };
+        UIPipe.prototype.pipeTrigger = function (name, value) {
+            $(this.elem).triggerHandler(this.options.id + "." + name, value);
+            var eventPipe = this.options[name];
+            if (eventPipe)
+                eventPipe(value);
+        };
         return UIPipe;
     }(UIAnalyzer));
 
@@ -1628,7 +1634,6 @@
             this.cursor = $(UIElementHelper.getCursorElement(this.options.id));
             this.cursor.appendTo(this.container);
             var closestUnitElem = this.findClosestUnit(position);
-            console.log('closest', closestUnitElem);
             if (closestUnitElem)
                 this.cursor.insertAfter(closestUnitElem);
             else
@@ -1650,8 +1655,7 @@
         };
         UIManager.prototype.triggerUpdate = function () {
             this.validate();
-            $(this.elem)
-                .triggerHandler(this.options.id + ".input", this.getData());
+            this.pipeTrigger('input', this.getData());
         };
         UIManager.prototype.getExpression = function () {
             var _this = this;

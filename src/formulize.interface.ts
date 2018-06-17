@@ -1,4 +1,5 @@
 import { OptionText, PipeParse, PipeInsert } from './option.interface';
+import { Tree } from 'metric-parser/dist/types/tree/simple.tree/type';
 
 export * from 'metric-parser/dist/types/ast.d';
 export * from 'metric-parser/dist/types/tree/simple.tree/type.d';
@@ -11,10 +12,14 @@ export interface FormulizeGlobal extends NodeJS.Global {
     jQuery: JQueryStatic;
 }
 
-export interface FormulizeOptions {
+export interface FormulizeOptions extends FormulizeEventOptions {
     id?: string;
     text?: OptionText,
     pipe?: OptionPipe
+}
+
+export interface FormulizeEventOptions {
+    input?<T extends Tree>(value: T): void
 }
 
 export interface OptionPipe {

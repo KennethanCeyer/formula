@@ -45,8 +45,7 @@ export abstract class UIManager extends UIPipe {
 
     protected triggerUpdate(): void {
         this.validate();
-        $(this.elem)
-            .triggerHandler(`${this.options.id}.input`, this.getData());
+        this.pipeTrigger('input', this.getData());
     }
 
     private getExpression(): FormulizeData[] {

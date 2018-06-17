@@ -1,5 +1,5 @@
 import { UIAnalyzer } from './ui.analyzer';
-import { FormulizeData } from './ui.interface';
+import { FormulizeData, FormulizeEvent } from './ui.interface';
 import { UIHelper } from './ui.helper';
 
 export class UIPipe extends UIAnalyzer {
@@ -19,5 +19,12 @@ export class UIPipe extends UIAnalyzer {
             return UIHelper.getDataValue(elem);
 
         return this.options.pipe.parse(elem);
+    }
+
+    protected pipeTrigger(name: FormulizeEvent, value: any): void {
+        $(this.elem).triggerHandler(`${this.options.id}.${name}`, value);
+        const eventPipe: Function = (<any>this.options)[name];
+        if (eventPipe)
+            eventPipe(value);
     }
 }

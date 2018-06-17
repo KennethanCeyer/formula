@@ -14,3 +14,4 @@ export interface Behavior {
     doBehavior: () => any;
 }
 export declare type FormulizeData = string | number | HTMLElement | JQuery | any;
+export declare type FormulizeEvent = 'input';
