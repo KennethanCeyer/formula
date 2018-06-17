@@ -2185,7 +2185,7 @@
         });
     }
 
-    var _MODULE_VERSION_$1 = '0.0.12';
+    var _MODULE_VERSION_$1 = '0.0.13';
     function getVersion$1() {
         return _MODULE_VERSION_$1;
     }
