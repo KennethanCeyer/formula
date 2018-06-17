@@ -2,6 +2,8 @@ import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { UIElementHelper } from './ui.element.helper';
 import { FormulizeGlobal } from '../formulize.interface';
+import * as fs from 'fs';
+import * as path from 'path';
 
 declare const global: FormulizeGlobal;
 
