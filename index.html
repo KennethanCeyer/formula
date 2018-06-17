@@ -286,8 +286,8 @@ console.log(result.data);</code></pre>
     <h3>
         <span>⚡ Event</span>
     </h3>
-    <div>You can receive an event to use <strong class="inline">
-        <pre><code class="language-typescript">$('.formula').on('formulize.event', (event: Event, ...args?: any[]) => {})</code></pre>
+    <div>All events also can use as <strong class="inline">
+        <pre><code class="language-typescript">$formulize.on('formulize.eventName', (event: Event, value: any) => {})</code></pre>
     </strong></div>
     <table class="ui table celled">
         <colgroup>
@@ -305,7 +305,7 @@ console.log(result.data);</code></pre>
         <tbody>
         <tr id="event-input">
             <td class="code inline">
-                <pre><code class="language-typescript">formulize.input</code></pre>
+                <pre><code class="language-typescript">input(value: Tree) => void</code></pre>
             </td>
             <td class="center">
                 <div class="ui label"><i class="fas fa-code"></i>event</div>
