@@ -34,8 +34,8 @@ describe('test class: UI', () => {
         });
     });
 
-    describe('test method: pick()', () => {
-       it('should last item will be picked', () => {
+    describe('test method: setData() and getData()', () => {
+       it('should returns correct data with 1 + 2 + 3', () => {
            const ui = new UI(elem);
            const data = {
                operator: '+',
@@ -46,19 +46,37 @@ describe('test class: UI', () => {
                },
                operand2: { value: { type: 'unit', unit: 3 } }
            };
-           const position: Position = {
-               x: $(elem).outerWidth(),
-               y: $(elem).outerHeight()
-           };
 
            ui.setData(data);
-           ui.pick(position);
-
-
-           const $lastUnit = $(elem).find(`.${ui.options.id}-unit:last`);
-           const $cursorPrevUnit = $(elem).find(`.${ui.options.id}-cursor`).prev();
-
-           expect($lastUnit.is($cursorPrevUnit)).to.be.true;
+           expect(ui.getData()).to.be.deep.equal(data);
        });
+    });
+
+    describe('test method: blur()', () => {
+        it('should cursor must be removed after blur()', () => {
+            const ui = new UI(elem);
+            const data = {
+                operator: '+',
+                operand1: {
+                    operator: '+',
+                    operand1: { value: { type: 'unit', unit: 1 } },
+                    operand2:{ value: { type: 'unit', unit: 2 } }
+                },
+                operand2: { value: { type: 'unit', unit: 3 } }
+            };
+
+            ui.setData(data);
+            ui.pick({
+                x: $(elem).width(),
+                y: $(elem).height()
+            });
+
+            const $cursor = $(elem).find(`.${ui.options.id}-cursor`);
+            expect($cursor.length).to.be.equal(1);
+
+            ui.blur();
+            const $afterBlurCursor = $(elem).find(`.${ui.options.id}-cursor`);
+            expect($afterBlurCursor.length).to.be.equal(0);
+        });
     });
 });

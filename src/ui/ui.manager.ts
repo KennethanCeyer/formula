@@ -122,7 +122,7 @@ export abstract class UIManager extends UIPipe {
                     diff: { x: diffX, y: diffY }
                 };
             })
-            .filter(unitPosition => !!unitPosition);
+            .filter(unitPosition => unitPosition);;
         const maxY = Math.max(...closestUnitPositions.map(unitPosition => unitPosition.y));
         const filteredUnitPositions = closestUnitPositions.filter(unitPosition => unitPosition.y === maxY).length
             ? closestUnitPositions.filter(unitPosition => unitPosition.y === maxY)

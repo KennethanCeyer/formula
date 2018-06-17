@@ -1628,7 +1628,7 @@
             this.cursor = $(UIElementHelper.getCursorElement(this.options.id));
             this.cursor.appendTo(this.container);
             var closestUnitElem = this.findClosestUnit(position);
-            console.log('closed', closestUnitElem);
+            console.log('closest', closestUnitElem);
             if (closestUnitElem)
                 this.cursor.insertAfter(closestUnitElem);
             else
@@ -1711,7 +1711,7 @@
                 var diffY = Math.abs(position.y - unitPosition.y);
                 return __assign({}, unitPosition, { diff: { x: diffX, y: diffY } });
             })
-                .filter(function (unitPosition) { return !!unitPosition; });
+                .filter(function (unitPosition) { return unitPosition; });
             var maxY = Math.max.apply(Math, closestUnitPositions.map(function (unitPosition) { return unitPosition.y; }));
             var filteredUnitPositions = closestUnitPositions.filter(function (unitPosition) { return unitPosition.y === maxY; }).length
                 ? closestUnitPositions.filter(function (unitPosition) { return unitPosition.y === maxY; })
@@ -2119,8 +2119,8 @@
         function MethodBase(formulize) {
             this.formulize = formulize;
         }
-        MethodBase.prototype.pick = function () {
-            this.formulize.pick();
+        MethodBase.prototype.pick = function (position) {
+            this.formulize.pick(position);
         };
         MethodBase.prototype.clear = function () {
             this.formulize.clear();

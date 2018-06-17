@@ -24,8 +24,8 @@ export class MethodBase implements FormulizePluginMethods {
         this.formulize = formulize;
     }
 
-    pick(): void {
-        this.formulize.pick();
+    pick(position: Position): void {
+        this.formulize.pick(position);
     }
 
     clear(): void {

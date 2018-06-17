@@ -6,7 +6,7 @@ export declare function methodBinder(this: JQuery, name: string, ...args: any[])
 export declare class MethodBase implements FormulizePluginMethods {
     protected formulize: UI;
     constructor(formulize: UI);
-    pick(): void;
+    pick(position: Position): void;
     clear(): void;
     blur(): void;
     setData(data: Tree): void;
