@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { JSDOM } from 'jsdom';
 import { UI } from './ui';
 import { FormulizeGlobal } from '../formulize.interface';
-import { Position } from './ui.interface';
 import * as fs from 'fs';
 import * as path from 'path';
 
