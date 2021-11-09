@@ -21,8 +21,6 @@
 <p align="center">
     <a href="https://codeclimate.com/github/KennethanCeyer/formulize/maintainability"><img src="https://api.codeclimate.com/v1/badges/e8bbc8a49edebf28cb2a/maintainability" alt="Maintainability"></a>
     <a href="https://www.codefactor.io/repository/github/kennethanceyer/formulize"><img src="https://www.codefactor.io/repository/github/kennethanceyer/formulize/badge" alt="CodeFactor"></a>
-    <a href="https://david-dm.org/KennethanCeyer/formulize"><img src="https://david-dm.org/KennethanCeyer/formulize/status.svg" alt="dependencies Status"></a>
-    <a href="https://david-dm.org/KennethanCeyer/formulize?type=dev"><img src="https://david-dm.org/KennethanCeyer/formulize/dev-status.svg" alt="devDependencies Status"></a>
 </p>
 
 ## :package: Installation
